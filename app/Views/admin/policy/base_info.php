@@ -47,7 +47,7 @@
             <tbody><tr>
                 <th>상호(회사명)</th>
                 <td class="form-inline">
-                    <input type="text" name="company_name" value="" class="form-control width-md">
+                    <input type="text" name="company_name" value="<?= old('company_name', $data['company_name'] ?? '') ?>" class="form-control width-md">
                 </td>
                 <th>사업자등록번호</th>
                 <td class="form-inline">

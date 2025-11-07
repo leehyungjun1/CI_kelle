@@ -11,6 +11,7 @@ class PolicyController extends BaseController
 {
     public function base_info($id = null) {
         $model = new JySiteInfo();
+        $id = 1;
         if ($id) {
             // 수정 모드
             $data = $model->find($id);
@@ -22,9 +23,6 @@ class PolicyController extends BaseController
                 </script>";
                 return; // 이후 코드 실행 방지
             }
-        } else {
-            // 새로 만들기 모드
-            $data = null; // 또는 기본값 배열
         }
 
         return view('admin/policy/base_info', ['data' => $data]);
