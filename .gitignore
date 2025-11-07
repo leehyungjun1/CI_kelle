@@ -1,0 +1,60 @@
+.env
+app/Config/Database.php
+
+# Composer 관련
+/vendor/
+/composer.lock
+
+# 로그 & 캐시 (writable)
+writable/*
+!writable/index.html
+!writable/uploads/
+!writable/uploads/.gitkeep
+
+# Logs / Cache 내부 세부 경로
+app/Logs/*
+writable/logs/*
+writable/cache/*
+writable/debugbar/*
+
+# 빌드 아티팩트 (예: Node, Vite, React 등)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+public/build/
+public/hot
+public/mix-manifest.json
+
+# IDE / OS 파일
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 백업 / 임시 파일
+*.bak
+*.tmp
+*.old
+*.log
+*.zip
+*.tar.gz
+
+# 환경별 파일
+.env.local
+.env.production
+.env.development
+
+# 테스트 관련
+phpunit.xml
+phpunit.xml.dist
+coverage/
+tests/_output/
+
+# ---------------------------------------------------
+# writable 예외 (업로드 폴더는 추적 가능)
+# ---------------------------------------------------
+!writable/uploads/
+!writable/uploads/.gitkeep

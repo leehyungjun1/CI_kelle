@@ -1,0 +1,93 @@
+html, body {
+    font-size:14px;
+    font-family:'Outfit',"Noto Sans KR", sans-serif, serif;
+}
+
+.top-bar {
+    background-color: #003366;
+    padding: 5px 0;
+}
+.top-bar a {
+    color: #fff;
+    font-size:1rem;
+    text-decoration: none;
+    margin-left: 15px;
+}
+
+.topIcon img {
+    display: inline-block;
+    height: auto;
+    vertical-align: middle;
+}
+
+.navbar {
+    background-color: #fff !important;
+    border-bottom: 1px solid #ddd;
+}
+
+.nav-link {
+    color: #003366 !important;
+    font-weight: 500;
+}
+.nav-link:hover {
+    color: #0d6efd !important;
+}
+
+.logo {
+    max-width: 200px;
+    height: auto;
+}
+
+.footer-section {
+    background-color: #f8f9fa; /* A light gray background for the footer */
+    border-top: 1px solid #e0e0e0;
+}
+.footer-section .logo-bar {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+}
+.footer-section  img {
+    height: 40px; /* Adjust as needed */
+    margin: 0 15px;
+}
+.footer-info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.footer-info-item img {
+    margin-right: 15px;
+    height: 60px; /* Adjust size of main logo */
+}
+.copyright {
+    background-color: #343a40; /* A dark gray background for the copyright line */
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+}
+
+@media (max-width: 768px) {
+    .logo {
+        max-width: 120px;
+        height:auto;
+    }
+
+    .footer-info-item {
+        flex-wrap: wrap;   /* 모바일에서 줄 바꿈 허용 */
+    }
+
+    footer .copyright .reserved {
+        display: block;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .navbar-toggler {
+        display: none;
+    }
+    .offcanvas {
+        display: none !important;
+    }
+}
