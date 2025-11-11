@@ -2,12 +2,15 @@
 
 namespace App\Controllers;
 
+use App\Models\JySiteInfo;
+use CodeIgniter\Config\Services;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+
 
 /**
  * Class BaseController
@@ -36,6 +39,9 @@ abstract class BaseController extends Controller
      * @var list<string>
      */
     protected $helpers = [];
+    protected $jySiteInfo;
+    protected $data = [];
+
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -50,16 +56,12 @@ abstract class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
-
-//        // 공통 데이터 설정
-//        $appConfig = config('App');
-//        $this->data['baseURL']  = $appConfig->baseURL;
-//        $this->data['host']     = parse_url($appConfig->baseURL,PHP_URL_HOST);
-//        $this->data['title']    = $appConfig->defaultTitle;
-//        $this->data['description'] = '기본 설명';
-//        $this->data['keywords'] = '키워드1, 키워드2';
+        $this->jySiteInfo = new JySiteInfo();
+        $footerInfo = $this->jySiteInfo->getFooterInfo();
 
         helper('form_component');
+
+        Services::renderer()->setVar('footerInfo', $footerInfo);
     }
 
     protected function render(string $view, array $pageData = [])

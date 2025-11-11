@@ -45,4 +45,8 @@ class JySiteInfo extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getFooterInfo() {
+        return $this->find(1);
+    }
 }
