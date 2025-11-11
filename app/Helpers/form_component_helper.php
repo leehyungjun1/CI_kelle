@@ -1,47 +1,31 @@
 <?php
-if( ! function_exists('email_input')) {
+if (!function_exists('email_input')) {
+    function email_input(string $idName, string $domainName, ?string $idValue = '')
+    {
 
-    /**
-     *이메일 입력 컴포넌트
-     * @param string $namId
-     * @param string $nameDomain
-     * @param string $valueId
-     * @param string $valueDomain
-     * @return string
-     */
+        $domainValue = '';
 
-    function email_input(
-        string $nameId = 'email_id',
-        string $nameDomain = 'email_domain',
-        string $valueId = '',
-        string $valueDomain = ''
-    ): string {
-        // CodeIgniter esc() 함수 사용 시 반드시 view 로드 이후라야 함
-        // 여기서는 PHP 기본 htmlspecialchars 로 처리하는게 더 안전합니다.
-        $valueId     = htmlspecialchars($valueId, ENT_QUOTES, 'UTF-8');
-        $valueDomain = htmlspecialchars($valueDomain, ENT_QUOTES, 'UTF-8');
-        $nameId      = htmlspecialchars($nameId, ENT_QUOTES, 'UTF-8');
-        $nameDomain  = htmlspecialchars($nameDomain, ENT_QUOTES, 'UTF-8');
+        if ($idValue && str_contains($idValue, '@')) {
+            [$idValue, $domainValue] = explode('@', $idValue, 2);
+        }
 
         $options = ['hanmail.net','daum.net','nate.com','hotmail.com','gamil.com','icloud.com'];
 
         $optionHtml = '<option value="">직접입력</option>';
         foreach ($options as $option) {
-            $selected = ($valueDomain === $option) ? ' selected="selected"' : '';
+            $selected = ($domainValue === $option) ? ' selected="selected"' : '';
             $optionHtml .= '<option value="'.$option.'"'.$selected.'>'.$option.'</option>';
         }
 
-        return <<<HTML
-    <input type="text" name="{$nameId}" value="{$valueId}" class="form-control width-lg"> @
-    <input type="text" name="{$nameDomain}" value="{$valueDomain}" class="form-control email_domain width-md">
-
-    <div class="display-inline-block">
-        <select class="email_select">
-            {$optionHtml}
-        </select>
-    </div>
-
-HTML;
+        return '
+        <div class="email-group">
+            <input type="text" name="'.$idName.'" value="'.esc($idValue).'" placeholder="이메일 아이디" class="form-control width-sm" />
+            @
+            <input type="text" name="'.$domainName.'" value="'.esc($domainValue).'" placeholder="도메인" class="form-control email_domain width-sm" />
+            <div class="display-inline-block">
+                <select class="email_select">'.$optionHtml.'</select>
+            </div>
+        </div>';
     }
 }
 

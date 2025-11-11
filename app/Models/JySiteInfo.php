@@ -3,19 +3,21 @@
 namespace App\Models;
 
 use CodeIgniter\Model;
+use App\Entities\SiteInfo;
+use Config\Services;
 
 class JySiteInfo extends Model
 {
     protected $table            = 'jy_site_info';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = SiteInfo::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields = ['site_name', 'site_name_en', 'top_title', 'favicon_path', 'company_name', 'business_number', 'ceo_name', 'business_number', 'ceo_name', 'business_type', 'business_item', 'email', 'zipcode', 'address', 'address_detail', 'phone', 'fax', 'cs_phone12', 'cs_phone2', 'cs_fax', 'cs_email', 'business_hours'];
+    protected $allowedFields = ['site_name', 'site_name_en', 'top_title', 'favicon_path', 'company_name', 'business_number', 'ceo_name', 'business_number', 'business_type', 'business_item', 'email', 'zipcode', 'address', 'address_detail', 'phone', 'fax', 'cs_phone1', 'cs_phone2', 'cs_fax', 'cs_email', 'business_hours'];
 
     protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
+    protected bool $updateOnlyChanged = false;
 
     protected array $casts = [];
     protected array $castHandlers = [];

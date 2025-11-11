@@ -5,6 +5,7 @@ use App\Controllers\BaseController;
 use App\Models\JyAdmin;
 use App\Models\JySetting;
 use App\Models\JySiteInfo;
+use App\Entities\SiteInfo;
 use Config\Services;
 
 class PolicyController extends BaseController
@@ -15,7 +16,6 @@ class PolicyController extends BaseController
         if ($id) {
             // 수정 모드
             $data = $model->find($id);
-
             if (!$data) {
                 echo "<script>
                     alert('데이터가 없습니다.');
@@ -25,7 +25,10 @@ class PolicyController extends BaseController
             }
         }
 
-        return view('admin/policy/base_info', ['data' => $data]);
+        $businessParts = explode('-', $data->business_number ?? '---');
+        $business_number = array_pad($businessParts, 3, '');
+
+        return view('admin/policy/base_info', ['data' => $data, 'business_number' => $business_number]);
     }
 
     public function base_info_save() {
@@ -83,11 +86,11 @@ class PolicyController extends BaseController
         $model = new JySiteInfo();
 
         try {
-            $saveData = [
+            $saveData = new SiteInfo([
                 'site_name'    => $data['site_name'] ?? '',
                 'site_name_en' => $data['site_name_en'] ?? '',
                 'top_title'    => $data['top_title'] ?? '',
-                'favicon_path' => $newName ?? '',
+                'company_name'  => $data['company_name'] ?? '',
                 'business_number' => implode('-', $data['business_number'] ?? []),
                 'ceo_name'      => $data['ceo_name'] ?? '',
                 'business_type' => $data['business_type'] ?? '',
@@ -101,12 +104,17 @@ class PolicyController extends BaseController
                 'cs_phone1'     => $data['cs_phone1'] ?? '',
                 'cs_phone2'     => $data['cs_phone2'] ?? '',
                 'cs_fax'        => $data['cs_fax'] ?? '',
+                'cs_email'      => $cs_email,
                 'cs_address1'   => $data['cs_address1'] ?? '',
                 'business_hours'    => $data['business_hours'] ?? '',
-            ];
+            ]);
 
-            if (isset($data['id']) && is_numeric($data['id'])) {
-                $saveData['id'] = (int)$data['id'];
+            if (!empty($data['id'])) {
+                $saveData->id = (int) $data['id'];
+            }
+
+            if (!empty($newName)) {
+                $saveData->favicon_path = $newName;
             }
 
             $model->save($saveData);
