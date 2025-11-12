@@ -4,7 +4,6 @@ $(document).ready(function() {
         var $form = $("#frm");
         var formData = new FormData($form[0]);
         var actionUrl = $form.attr("action");
-
         $.ajax({
             url: actionUrl,
             type: "POST",
@@ -15,6 +14,7 @@ $(document).ready(function() {
             success: function(res) {
                 if (res.status === 'success') {
                     alert(res.message);
+                    document.location.href = res.url;
                 } else {
                     // 배열 형태 메시지를 보기 좋게 변환
                     let errorMsg = '';

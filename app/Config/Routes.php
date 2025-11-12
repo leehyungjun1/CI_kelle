@@ -35,4 +35,11 @@ $routes->group('admin', function ($routes) {
         $routes->get('member_register/(:num)?', 'Admin\MemberController::member_register/$1');
         $routes->post('member_register', 'Admin\MemberController::member_register_save',['as'=>'member_save']);
     });
+
+    $routes->group('board', function($routes) {
+        $routes->get('board_list', 'Admin\BoardController::board_list');
+        $routes->get('board_register', 'Admin\BoardController::board_register');
+        $routes->get('board_register/(:num)', 'Admin\BoardController::board_register/$1');
+        $routes->post('submit', 'Admin\BoardController::submit');
+    });
 });

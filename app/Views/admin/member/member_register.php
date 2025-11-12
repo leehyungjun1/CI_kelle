@@ -11,7 +11,7 @@
         </div>
     </div>
     <input type="hidden" name="mode" id="mode" value="<?=$mode ?>">
-    <input type="hidden" name="id" value="<?=$user['id'] ?>">
+    <input type="hidden" name="id" value="<?=$user['id'] ?? '' ?>">
     <div class="table-title gd-help-manual"> 기본정보 </div>
     <div class="form-inline">
         <table class="table table-cols">
@@ -53,7 +53,7 @@
                 <th class="require">아이디</th>
                 <td>
                     <span>
-                        <? if($user['userid']) : ?>
+                        <? if(isset($user['userid'])) : ?>
                             <strong><?=$user['userid'] ?? '';?></strong>
                         <? else : ?>
                         <input type="text" name="userid" id="userid" value="<?=$user['userid'] ?? '';?>" class="form-control error">
