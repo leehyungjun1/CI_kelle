@@ -41,5 +41,8 @@ $routes->group('admin', function ($routes) {
         $routes->get('board_register', 'Admin\BoardController::board_register');
         $routes->get('board_register/(:num)', 'Admin\BoardController::board_register/$1');
         $routes->post('submit', 'Admin\BoardController::submit');
+        $routes->get('article_list', 'Admin\BoardController::article_list');
+        $routes->get('article_register', 'Admin\BoardController::article_register');
+        $routes->get('article_register/(:segment)', 'Admin\BoardController::article_register/$1');
     });
 });

@@ -14,7 +14,6 @@
     <link type="text/css" href="/css/gd_share/bootstrap-dialog.css?ts=<?= time() ?>" rel="stylesheet">
     <link type="text/css" href="/css/gd_share/jquery-ui.css?ts=<?= time() ?>" rel="stylesheet">
     <link type="text/css" href="/css/gd_share/style.css?ts=<?= time() ?>" rel="stylesheet">
-    <link type="text/css" href="/css/gd_share/non-responsive.css?ts=<?= time() ?>" rel="stylesheet">
     <link type="text/css" href="/css/gd_share/flags.css?ts=<?= time() ?>" rel="stylesheet">
     <link type="text/css" href="/css/gd_share/jquery.countdownTimer.css?ts=<?= time() ?>" rel="stylesheet">
     <link type="text/css" href="/css/gd_share/gd5-style.css?ts=<?= time() ?>" rel="stylesheet">
@@ -77,6 +76,13 @@
 </head>
 <body class="policy base-info layout-basic">
 
+<?php if (session()->has('error')): ?>
+    <script>
+        alert(<?= json_encode(session('error')) ?>);
+    </script>
+<?php endif; ?>
+
+
 <div id="container-wrap" class="container-fluid">
     <div id="container" class="row">
         <div id="header" class="col-xs-12">
@@ -112,15 +118,9 @@
 
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav reform">
-                            <li class="active">
-                                <a href="<?= base_url('admin/policy/manage') ?>" id="menu_policy" style="width:89.615384615385px;">기본설정                                                                </a>
-                            </li>
-                            <li class="">
-                                <a href="/member/member_list.php" id="menu_member" style="width:89.615384615385px;">회원                                                                </a>
-                            </li>
-                            <li class="">
-                                <a href="/board/board_list.php" id="menu_board" style="width:89.615384615385px;">게시판                                                                </a>
-                            </li>
+                            <li class="active"><a href="<?= base_url('admin/policy/manage') ?>">기본설정</a></li>
+                            <li class=""><a href="<?=base_url('admin/member/member_list') ?>">회원</a></li>
+                            <li class=""><a href="<?=base_url('admin/board/board_list') ?>">게시판</a></li>
                         </ul>
                     </div><!-- /.navbar-collapse -->
 
@@ -174,99 +174,6 @@
             </div>
         </div>
         <div id="footer" class="col-xs-12">
-            <script>
-                $(function(){
-                    // 검색버튼 클릭시
-                    $("#goseller_search_btn").on('click',function (){
-                        var gosellerSearchWord = $("#goseller_search_box").val().toUpperCase();
-                        // 검색어 유지를 위해 로컬스토리지에 저장
-                        localStorage.setItem("gosellerSearchWord", gosellerSearchWord);
-
-                        $(".video_list").hide();
-                        $(".no_result").hide();
-
-                        $.each($(".video_list"), function () {
-                            var v_list = $(this).find('.txt').text().toUpperCase();
-                            var menuTitle = $(this).find('#video_menu').text().toUpperCase();
-
-                            // 메뉴명을 제외한 콘텐츠 제목+추가설명
-                            v_list = v_list.replace(menuTitle, '');
-
-                            if (v_list.match(gosellerSearchWord)) {
-                                $(this).show();
-                            }
-                        });
-
-                        if ($(".video_list:visible").length === 0) {
-                            $(".no_result").show();
-                        }
-                    });
-
-                    // 검색어 입력후 엔터시
-                    $('#goseller_search_box').keyup(function(e) {
-                        if (e.keyCode == 13) {
-                            $('#goseller_search_btn').trigger('click');
-                        }
-                    });
-
-                    // open_layer
-                    $('.btn_goseller').on('click',function(){
-                        if (!localStorage.getItem('gosellerSearchWord')) {
-                            $("#goseller_search_box").prop('value','');
-                            $("#goseller_search_btn").trigger('click');
-                            $(".no_result").hide();
-                        }
-
-                        $('.ly_goseller').show();
-                        var data = {
-                            'mode': 'saveGosellerDisplayConfig',
-                            'key': 'displayFl',
-                            'val': 'true'
-                        }
-                        $.ajax('/base/layer_goseller_guide_ps.php', {type: "post", data: data});
-                    });
-
-                    // goseller 검색 인풋 텍스트 지우기 버튼 211201 고셀러TV 추가
-                    $('#goseller_search_box').focusin(function() {
-                        $('.btn_goseller_erase').css({'display':'inline-block'});
-                    });
-
-                    $('#goseller_search_box').focusout(function() {
-                        if ($('#goseller_search_box').val() == '') {
-                            $('.btn_goseller_erase').css({'display':'none'});
-                        } else {
-                            $('.btn_goseller_erase').css({'display':'inline-block'});
-                        }
-                    });
-
-                    // goseller 검색 인풋 텍스트 삭제 211201 고셀러TV 추가
-                    $('.btn_goseller_erase').on('click',function(){
-                        $(this).closest('div').find('input').val("");
-                        $(this).css({'display':'none'});
-                    });
-
-                    // close_layer
-                    $('.btn_close').on('click',function(){
-                        if (localStorage.getItem('gosellerSearchWord')) {
-                            localStorage.removeItem('gosellerSearchWord');
-                        }
-                        $('.ly_goseller').hide();
-                        var data = {
-                            'mode': 'saveGosellerDisplayConfig',
-                            'key': 'displayFl',
-                            'val': 'false'
-                        }
-                        $.ajax('/base/layer_goseller_guide_ps.php', {type: "post", data: data});
-                    });
-
-                    // 검색어 유지
-                    if (localStorage.getItem('gosellerSearchWord')) {
-                        $("#goseller_search_box").attr('value',localStorage.getItem('gosellerSearchWord'));
-                        $("#goseller_search_btn").trigger('click');
-                    }
-                });
-            </script>
-            <!-- // 211201 고셀러TV 추가 -->
 
             <div id="legalRequirementsContainer"></div>
 
@@ -393,29 +300,6 @@
 
             <div class="footer">
             </div>
-            <script type="text/javascript">
-                <!--
-                $(document).ready(function () {
-
-                    $.ajax('../base/main_setting_ps.php', {
-                        method: "post",
-                        data: {mode: 'orderPresentationNew'},
-                        global_complete: false,
-                        beforeSend: function () {
-                            $('.js-oder-count-new').addClass('display-none')
-                        },
-                        success: function () {
-                            if (arguments[0].success === 'OK') {
-                                var result = arguments[0].result;
-                                if (result === true) {
-                                    $('.js-oder-count-new').removeClass('display-none');
-                                }
-                            }
-                        }
-                    });
-                });
-                //-->
-            </script>
         </div>
     </div>
 </div>
