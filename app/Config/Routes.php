@@ -7,8 +7,13 @@ use CodeIgniter\Router\RouteCollection;
  */
 //$routes->get('/', 'Home::index');
 
+
+
 $routes->get('/', 'MainController::main');
 $routes->get("/main", 'MainController::main');
+$routes->get("editor/upload", 'EditorController::upload');
+$routes->post('editor/upload_process_json', 'EditorController::upload_process_json');
+
 
 $routes->group('admin', function ($routes) {
     $routes->get('/', 'Admin\AdminController::index');
@@ -44,5 +49,6 @@ $routes->group('admin', function ($routes) {
         $routes->get('article_list', 'Admin\BoardController::article_list');
         $routes->get('article_register', 'Admin\BoardController::article_register');
         $routes->get('article_register/(:segment)', 'Admin\BoardController::article_register/$1');
+        $routes->post('article_submit', 'Admin\BoardController::article_submit');
     });
 });

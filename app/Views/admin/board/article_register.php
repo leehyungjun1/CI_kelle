@@ -1,7 +1,7 @@
 <?php echo $this->extend('layouts/admin_sub') ?>
 <?php echo $this->section('content') ?>
 
-<form action="<?= site_url('admin/board/submit') ?>" method="post" id="frm">
+<form action="<?= site_url('admin/board/article_submit') ?>" method="post" id="frm">
     <?=csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($board['id'] ?? '') ?>">
     <div class="page-header js-affix affix-top">
@@ -42,25 +42,59 @@
                 <td class="form-inline">
                     <ul class="pdl0" id="uploadBox">
                         <li class="form-inline mgb5">
-                            <input type="file" name="upfiles[]" id="filestyle-0" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);">
+                            <input type="file" name="upfiles[]" id="filestyle-0">
                             <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm">추가</a>
                         </li>
 
                         <li class="form-inline mgb5">
-                            <input type="file" name="upfiles[]" id="filestyle-1" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);">
+                            <input type="file" name="upfiles[]" id="filestyle-1">
                             <a class="btn btn-white btn-icon-minus minusUploadBtn btn-sm">삭제</a>
                         </li>
                     </ul>
+                    <input type="hidden" id="fileCnt" value="1" />
                 </td>
             </tr>
             <tr>
                 <th>내용</th>
                 <td class="form-inline">
-
+                    <textarea name="content" id="editor" rows="10" cols="100" style="width:100%; height:300px;"></textarea>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </form>
+
+<script src="/editor/js/service/HuskyEZCreator.js"></script>
+<script>
+    var oEditors = [];
+
+    nhn.husky.EZCreator.createInIFrame({
+        oAppRef: oEditors,
+        elPlaceHolder: "editor", // textarea id
+        sSkinURI: "/editor/SmartEditor2Skin.html",
+        htParams: {
+            // 툴바 이미지/파일 업로드 버튼 활성
+            bUseToolbar : true,
+            bUseVerticalResizer : true,
+            bUseModeChanger : true,
+            fOnBeforeUnload : function(){},
+            fOnAppLoad : function() {
+
+            }
+        },
+        fCreator: "createSEditor2"
+    });
+
+    function submitContents() {
+        oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []); // textarea에 반영
+        document.forms[0].submit();
+    }
+
+    function openEditorFileUpload() {
+        window.open('/editor/upload', 'fileUpload', 'width=500,height=300');
+    }
+</script>
+
+
 <?php echo $this->endSection() ?>

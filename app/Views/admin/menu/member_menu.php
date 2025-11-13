@@ -4,10 +4,8 @@
 <div class="panel ">
     <div class="panel-heading menu-icon-minus active">회원 관리</div>
     <ul class="list-group">
-        <li class="list-group-item active">
-            <a href="member_list.php">회원 리스트</a></li>
-        <li class="list-group-item ">
-            <a href="member_register.php">회원 등록</a></li>
+        <li class="list-group-item <?= is_active('admin/member/member_list') ?>"><a href="<?=base_url('admin/member/member_list') ?>">회원 리스트</a></li>
+        <li class="list-group-item <?= is_active('admin/member/member_register') ?>"><a href="<?=base_url('admin/member/member_register') ?>">회원 등록</a></li>
         <li class="list-group-item ">
             <a href="excel_member_up.php">회원 엑셀 업로드</a></li>
         <li class="list-group-item ">

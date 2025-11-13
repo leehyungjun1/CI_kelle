@@ -40,8 +40,10 @@
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.7/underscore-min.js"></script>
+
     <script src="/script/jy_share/lib.js"></script>
     <script src="/script/jy_share/common.js"></script>
+
     <script>
         console.log("Underscore 로드 확인:", typeof _);
         // 여기서 _가 object/ function인지 확인

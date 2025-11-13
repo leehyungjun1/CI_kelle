@@ -161,9 +161,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-
     init_file_style();
 })
 
@@ -203,6 +200,35 @@ function postcode_search(zipcode, address1, address2) {
 function goList(url) {
     location.href=url;
 }
+
+
+$(document).on("click", ".addUploadBtn", function() {
+    // 현재 개수 파악해서 id 중복 방지
+    const count = $("#uploadBox li").length;
+
+    if(count > 10) {
+        alert("최대 10개까지만 가능합니다.");
+        return false;
+    }
+
+    // 새 input 생성
+    const newItem = $(`
+        <li class="form-inline mgb5">
+            <input type="file" name="upfiles[]" id="filestyle-${count}">
+            <a class="btn btn-white btn-icon-minus minusUploadBtn btn-sm">삭제</a>
+        </li>
+    `);
+
+    $("#uploadBox").append(newItem);
+
+    init_file_style();
+
+});
+
+$(document).on("click", ".minusUploadBtn", function() {
+    $("#uploadBox li:last").remove();
+});
+
 
 
 
