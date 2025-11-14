@@ -5,13 +5,13 @@
     <?=csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($board['id'] ?? '') ?>">
     <div class="page-header js-affix affix-top">
-        <h3>게시글 등록 </h3>
+        <h3><?=esc($pageTitle) ?></h3>
         <div class="btn-group">
-            <input type="button" value="목록" class="btn btn-white btn-icon-list" onclick=goList('<?= base_url("admin/board/board_list") ?>')>
+            <input type="button" value="목록" class="btn btn-white btn-icon-list" onclick=goList('<?= base_url("admin/board/article_list") ?>')>
             <input type="button" value="저장" class="btn btn-red btn-register">
         </div>
     </div>
-    <div class="table-title gd-help-manual"> 게시글 등록 </div>
+    <div class="table-title gd-help-manual"> <?=esc($pageTitle) ?> </div>
     <div>
         <table class="table table-cols">
             <colgroup>
@@ -24,13 +24,17 @@
             <tr>
                 <th class="require">게시판</th>
                 <td>
+                    <?php if (esc($article['id']) && esc($article['board_id'])): ?>
+                        <strong><?= $article['board_id'] ?></strong>
+                    <?php else : ?>
                     <span>
-                        <select name="board_setting_id" >
+                        <select name="board_setting_id" id="board_setting_id">
                             <?php foreach ($boardLists as $board): ?>
                                 <option value="<?=esc($board['id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
                             <? endforeach; ?>
                         </select>
                     </span>
+                    <?php endif; ?>
                 </td>
                 <th>노출 여부</th>
                 <td>
@@ -105,6 +109,7 @@
         oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []); // textarea에 반영
         document.forms[0].submit();
     }
+
 
 
 </script>

@@ -26,7 +26,7 @@
                     <td>
                         <select class="form-control" id="board_id" name="board_id">
                             <?php foreach ($boardLists as $board): ?>
-                                <option value="<?=esc($board['id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
+                                <option value="<?=esc($board['board_id']) ?>" <? if($board_id == $board['board_id'] ) :?> selected <? endif;?>><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
                             <? endforeach; ?>
                         </select>
                     </td>
@@ -166,6 +166,13 @@
         margin-right: 2px;
     }
 </style>
+
+<script>
+    $(document).on("change", "#board_id", function() {
+        url = $(this).find("option:selected").val();
+        goList("<?= base_url('admin/board/article_list') ?>/"+url);
+    });
+</script>
 
 <?php echo $this->endSection() ?>
 
