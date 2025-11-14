@@ -26,7 +26,7 @@
                     <td>
                         <select class="form-control" id="board_id" name="board_id">
                             <?php foreach ($boardLists as $board): ?>
-                                <option value="<?=esc($board['board_id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
+                                <option value="<?=esc($board['id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
                             <? endforeach; ?>
                         </select>
                     </td>
@@ -40,7 +40,6 @@
                     <td colspan="3">
                         <select class=" form-control" id="key" name="key">
                             <option value="mobile" <?=(($_GET['key'] ?? '') === 'title')? 'selected' : '' ?>>제목</option>
-                            <option value="userid" <?=(($_GET['key'] ?? '') === 'user_id') ? 'selected' : '' ?>>아이디</option>
                             <option value="name" <?=(($_GET['key'] ?? '') === 'name') ? 'selected' : '' ?>>이름</option>
                             <option value="nickname" <?=(($_GET['key'] ?? '') === 'nickname')? 'selected' : '' ?>>닉네임</option>
                             <option value="phone" <?=(($_GET['key'] ?? '') === 'phone')? 'selected' : '' ?>>내용</option>
@@ -63,8 +62,8 @@
                             </select>
                             <?= dateRangePicker([
                                 'name' => 'entryDt[]',
-                                'start' => '2025-09-27',
-                                'end' => '2025-10-03',
+                                'start' => date('Y-m-d', strtotime('-6 days')),
+                                'end' => date('Y-m-d'),
                                 'periods' => [
                                     ['label'=>'오늘','value'=>0],
                                     ['label'=>'7일','value'=>6,'active'=>true],
@@ -97,46 +96,42 @@
     </div>
 
     <table class="table table-rows">
-        <colgroup>
-            <col class="width-xs">
-            <col class="width-xs">
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-            <col>
-        </colgroup>
         <thead>
         <tr>
-            <th>
+            <th class="width-2xs">
                 <input type="checkbox" id="chk_all" class="js-checkall" data-target-name="chk">
             </th>
-            <th>번호</th>
+            <th class="width-2xs">번호</th>
             <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-            <th>조회</th>
-            <th>답변상태</th>
-            <th>답변일</th>
-            <th>수정/답변</th>
+            <th class="width-sm">작성자</th>
+            <th class="width-sm">작성일</th>
+            <th class="width-2xs">조회</th>
+            <th class="width-sm">답변상태</th>
+            <th class="width-sm">답변일</th>
+            <th class="width-sm">수정/답변</th>
         </tr>
         </thead>
         <tbody>
         <?php if(!empty($boards)) : ?>
+            <?php
+            $startNo = $searchCount - (($page - 1) * $perPage);
+            ?>
             <?php foreach($boards as $i => $board) : ?>
                 <tr class="center" data-member-no="<?=esc($board['id'] ?? '') ?>">
                     <td>
                         <input type="checkbox" name="chk[]" value="<?=esc($board['id'] ?? '') ?>">
                     </td>
-                    <td class="font-num"><span class="number js-layer-crm hand"><?=$i +1 ?></span></td>
-                    <td><span class="font-eng js-layer-crm hand"><?=esc($board['board_id'] ?? '') ?></span></td>
-                    <td><span class="js-layer-crm hand"><?=esc($board['name'] ?? '') ?></span></td>
+                    <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo - $i ?></span></td>
+                    <td align="left"><span class="font-eng js-layer-crm hand"><?=esc($board['title'] ?? '') ?></span></td>
+                    <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['new'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['total'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['reply'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['type_name'] ?? '') ?> </span></td>
-                    <td><button type="button" class="btn btn-white btn-sm btnModify" onClick=goList('<?= base_url("admin/board/board_register/{$board['id']}") ?>')>수정</button></td>
+                    <td>
+                        <button type="button" class="btn btn-white btn-sm btnModify" onClick=goList('<?= base_url("admin/board/article_register/{$board['board_id']}/{$board['id']}") ?>')>수정</button>
+                        <button type="button" class="btn btn-white btn-sm btnModify" onClick=goList('<?= base_url("admin/board/board_register/{$board['id']}") ?>')>답변</button>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         <?php else : ?>
@@ -159,8 +154,8 @@
     .date-filter-wrapper {
         display: flex;
         align-items: center;
-        flex-wrap: wrap; /* 화면이 좁을 땐 자동 줄바꿈 */
-        gap: 8px; /* 요소 간 여백 */
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     .date-range-picker .input-group {

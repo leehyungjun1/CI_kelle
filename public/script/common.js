@@ -5,7 +5,7 @@
  */
 //@formatter:off
 var rootPath = get_script_dirpath('script/common.js');
-var blankPath = rootPath + 'blank.php';
+//var blankPath = rootPath + 'blank.php';
 
 // Alert override
 (function () {

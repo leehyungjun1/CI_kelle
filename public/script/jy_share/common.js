@@ -1,6 +1,10 @@
 $(document).ready(function() {
     $(".btn-register").on("click", function(e) {
         e.preventDefault();
+        if (typeof oEditors !== "undefined" && oEditors.getById["editor"]) {
+            oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []);
+        }
+
         var $form = $("#frm");
         var formData = new FormData($form[0]);
         var actionUrl = $form.attr("action");

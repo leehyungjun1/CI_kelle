@@ -17,6 +17,8 @@
             <colgroup>
                 <col class="width10p">
                 <col>
+                <col class="width-sm">
+                <col class="width-3xl">
             </colgroup>
             <tbody>
             <tr>
@@ -25,30 +27,30 @@
                     <span>
                         <select name="board_setting_id" >
                             <?php foreach ($boardLists as $board): ?>
-                                <option value="<?=esc($board['board_id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
+                                <option value="<?=esc($board['id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
                             <? endforeach; ?>
                         </select>
                     </span>
                 </td>
+                <th>노출 여부</th>
+                <td>
+                    <label class="radio-inline"><input type="radio" name="use_yn" value="Y" checked>노출</label>
+                    <label class="radio-inline"><input type="radio" name="use_yn" value="N">미노출</label>
+                </td>
             </tr>
             <tr>
                 <th class="require">제목</th>
-                <td>
-                    <input type="text" name="title" id="title" class="form-control" value="<?=$board['title'] ?? '' ?>">
+                <td colspan="3">
+                    <input type="text" name="title" id="title" class="form-control" value="<?=$article['title'] ?? '' ?>">
                 </td>
             </tr>
             <tr>
                 <th>파일첨부</th>
-                <td class="form-inline">
+                <td class="form-inline" colspan="3">
                     <ul class="pdl0" id="uploadBox">
                         <li class="form-inline mgb5">
                             <input type="file" name="upfiles[]" id="filestyle-0">
                             <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm">추가</a>
-                        </li>
-
-                        <li class="form-inline mgb5">
-                            <input type="file" name="upfiles[]" id="filestyle-1">
-                            <a class="btn btn-white btn-icon-minus minusUploadBtn btn-sm">삭제</a>
                         </li>
                     </ul>
                     <input type="hidden" id="fileCnt" value="1" />
@@ -56,12 +58,25 @@
             </tr>
             <tr>
                 <th>내용</th>
-                <td class="form-inline">
-                    <textarea name="content" id="editor" rows="10" cols="100" style="width:100%; height:300px;"></textarea>
+                <td class="form-inline" colspan="3">
+                    <div>
+                        <input type="checkbox" name="is_notice" id="is_notice" value="Y">
+                        <label for="is_notice" class="mgr20">공지사항</label>
+                        <input type="checkbox" name="secret" id="secret" value="Y">
+                        <label for="secret">비밀글</label>
+                    </div>
+                    <div class="mgt5">
+                        <textarea name="content" id="editor" rows="10" cols="100" style="width:100%; height:300px;">
+                            <?= esc($article['content'] ?? '') ?>
+                        </textarea>
+                    </div>
                 </td>
             </tr>
             </tbody>
         </table>
+        <div class="text-center">
+            <button class="btn btn-white" type="button" onclick="btnList('cooperation')">목록가기</button>
+        </div>
     </div>
 </form>
 
@@ -91,9 +106,7 @@
         document.forms[0].submit();
     }
 
-    function openEditorFileUpload() {
-        window.open('/editor/upload', 'fileUpload', 'width=500,height=300');
-    }
+
 </script>
 
 

@@ -102,12 +102,15 @@
         </thead>
         <tbody>
         <?php if(!empty($boards)) : ?>
+            <?php
+            $startNo = $searchCount - (($page - 1) * $perPage);
+            ?>
             <?php foreach($boards as $i => $board) : ?>
                 <tr class="center" data-member-no="<?=esc($board['id'] ?? '') ?>">
                     <td>
                         <input type="checkbox" name="chk[]" value="<?=esc($board['id'] ?? '') ?>">
                     </td>
-                    <td class="font-num"><span class="number js-layer-crm hand"><?=$i +1 ?></span></td>
+                    <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo - $i ?></span></td>
                     <td><span class="font-eng js-layer-crm hand"><?=esc($board['board_id'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['name'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['new'] ?? 0)) ?></span></td>
