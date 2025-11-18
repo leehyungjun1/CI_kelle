@@ -3,7 +3,7 @@
 
 <form action="<?= site_url('admin/board/article_submit') ?>" method="post" id="frm">
     <?=csrf_field() ?>
-    <input type="hidden" name="id" value="<?= esc($board['id'] ?? '') ?>">
+    <input type="hidden" name="id" value="<?= esc($article['id'] ?? '') ?>">
     <div class="page-header js-affix affix-top">
         <h3><?=esc($pageTitle) ?></h3>
         <div class="btn-group">
@@ -28,9 +28,9 @@
                         <strong><?= $article['board_id'] ?></strong>
                     <?php else : ?>
                     <span>
-                        <select name="board_setting_id" id="board_setting_id">
+                        <select name="board_id" id="board_id">
                             <?php foreach ($boardLists as $board): ?>
-                                <option value="<?=esc($board['id']) ?>" ><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
+                                <option value="<?=esc($board['board_id']) ?>" <?php if($board_id == $board['board_id']) : ?>selected <?php endif;?>><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
                             <? endforeach; ?>
                         </select>
                     </span>
@@ -64,9 +64,9 @@
                 <th>내용</th>
                 <td class="form-inline" colspan="3">
                     <div>
-                        <input type="checkbox" name="is_notice" id="is_notice" value="Y">
+                        <input type="checkbox" name="is_notice" id="is_notice" value="Y" <?= ($article['is_notice'] ?? '') === 'Y' ? 'checked' : '' ?>>
                         <label for="is_notice" class="mgr20">공지사항</label>
-                        <input type="checkbox" name="secret" id="secret" value="Y">
+                        <input type="checkbox" name="secret" id="secret" value="Y" <?= ($article['secret'] ?? '') === 'Y' ? 'checked' : '' ?>>
                         <label for="secret">비밀글</label>
                     </div>
                     <div class="mgt5">
@@ -79,7 +79,7 @@
             </tbody>
         </table>
         <div class="text-center">
-            <button class="btn btn-white" type="button" onclick="btnList('cooperation')">목록가기</button>
+            <button class="btn btn-white" type="button" onclick="goList('<?= base_url('admin/board/article_list') ?>/<?= esc($article['board_id'] ?? '') ?>')">목록가기</button>
         </div>
     </div>
 </form>
@@ -109,6 +109,11 @@
         oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []); // textarea에 반영
         document.forms[0].submit();
     }
+
+    $(document).on("change", "#board_id", function() {
+        var url = $(this).find("option:selected").val();
+        goList("<?= base_url('admin/board/article_register') ?>/"+url);
+    });
 
 
 

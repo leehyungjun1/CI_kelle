@@ -4,7 +4,7 @@
 
 <div class="page-header js-affix affix-top" style="width: 1634px;">
     <h3>게시글 관리 </h3>
-    <input type="button" value="등록" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/article_register") ?>")'>
+    <input type="button" value="등록" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/article_register/{$board_id}") ?>")'>
 </div>
 <form id="frmSearchBase" method="get" class="content-form js-search-form js-form-enter-submit">
     <input type="hidden" name="sort" value="" id="searchsort">
@@ -39,7 +39,7 @@
                     <th>검색어</th>
                     <td colspan="3">
                         <select class=" form-control" id="key" name="key">
-                            <option value="mobile" <?=(($_GET['key'] ?? '') === 'title')? 'selected' : '' ?>>제목</option>
+                            <option value="title" <?=(($_GET['key'] ?? '') === 'title')? 'selected' : '' ?>>제목</option>
                             <option value="name" <?=(($_GET['key'] ?? '') === 'name') ? 'selected' : '' ?>>이름</option>
                             <option value="nickname" <?=(($_GET['key'] ?? '') === 'nickname')? 'selected' : '' ?>>닉네임</option>
                             <option value="phone" <?=(($_GET['key'] ?? '') === 'phone')? 'selected' : '' ?>>내용</option>
@@ -88,7 +88,7 @@
     <div class="table-header form-inline">
         <div class="pull-left">
             검색
-            <strong><?=number_format($searchCount) ?></strong>
+            <strong><?=number_format($totalSearch) ?></strong>
             명 / 전체
             <strong><?=number_format($totalCount) ?></strong>
             명
@@ -114,7 +114,7 @@
         <tbody>
         <?php if(!empty($boards)) : ?>
             <?php
-            $startNo = $searchCount - (($page - 1) * $perPage);
+            $startNo = $totalSearch - (($page - 1) * $perPage);
             ?>
             <?php foreach($boards as $i => $board) : ?>
                 <tr class="center" data-member-no="<?=esc($board['id'] ?? '') ?>">
@@ -124,7 +124,7 @@
                     <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo - $i ?></span></td>
                     <td align="left"><span class="font-eng js-layer-crm hand"><?=esc($board['title'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
-                    <td><span class="js-layer-crm hand"><?=esc(number_format($board['new'] ?? 0)) ?></span></td>
+                    <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($board['created_at']))) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['total'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['reply'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['type_name'] ?? '') ?> </span></td>
@@ -147,7 +147,11 @@
         </div>
     </div>
 
-    <div class="center"><nav><ul class="pagination pagination-sm"></ul></nav></div>
+    <div class="center">
+        <nav>
+            <?= $pager->links() ?>
+        </nav>
+    </div>
 </form>
 
 <style>
@@ -171,6 +175,13 @@
     $(document).on("change", "#board_id", function() {
         url = $(this).find("option:selected").val();
         goList("<?= base_url('admin/board/article_list') ?>/"+url);
+    });
+
+
+    $(document).on("click", "#btnDelete", function() {
+        handleAdminAction("<?=base_url('admin/board/article_delete') ?>",
+            '선택된 게시물을 삭제하시겠습니까?',
+        );
     });
 </script>
 

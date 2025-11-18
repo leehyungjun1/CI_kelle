@@ -188,8 +188,38 @@ function init_file_style_destroy() {
     }
 }
 
+function handleAdminAction(action , confirmMsg, mode ='delete') {
+    const checked = $('input[name="chk[]"]:checked');
+    if (checked.length === 0) {
+        alert('선택된 체크박스가 없습니다.');
+        return false;
+    }
 
+    const ids = checked.map(function() {
+        return $(this).val();
+    }).get();
 
+    dialog_confirm(confirmMsg, function (result) {
+        if(result) {
+            $.ajax({
+                method: "POST",
+                url: action,
+                data: {ids: ids, action: action, mode: mode},
+                success: function (res) {
+                    if (res.status === 'success') {
+                        alert(res.message);
+                        setTimeout(() => location.reload(), 1500);
+                    } else {
+                        alert(res.message || '처리 중 오류가 발생했습니다.');
+                    }
+                },
+                error: function () {
+                    alert('서버 통신 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    });
+}
 
 function postcode_search(zipcode, address1, address2) {
     new daum.Postcode({

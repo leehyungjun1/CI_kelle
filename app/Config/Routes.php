@@ -48,9 +48,11 @@ $routes->group('admin', function ($routes) {
         $routes->post('submit', 'Admin\BoardController::submit');
         $routes->get('article_list', 'Admin\BoardController::article_list');
         $routes->get('article_list/(:segment)', 'Admin\BoardController::article_list/$1');
+        $routes->get('article_view/(:num)', 'Admin\BoardController::article_view/$1');
         $routes->get('article_register', 'Admin\BoardController::article_register');
         $routes->get('article_register/(:segment)', 'Admin\BoardController::article_register/$1');
         $routes->get('article_register/(:segment)/(:num)', 'Admin\BoardController::article_register/$1/$2');
+        $routes->post('article_delete', 'Admin\BoardController::article_delete');
         $routes->post('article_submit', 'Admin\BoardController::article_submit');
     });
 });

@@ -289,7 +289,7 @@ class PolicyController extends BaseController
 
     public function manage_action() {
         $ids = $this->request->getPost('ids');
-        $action = $this->request->getPost('action');
+        $mode = $this->request->getPost('mode');
 
         if (empty($ids) || !is_array($ids)) {
             return $this->response->setJSON([
@@ -300,7 +300,7 @@ class PolicyController extends BaseController
 
         $adminModel = new JyAdmin();
         $db = \Config\Database::connect();
-        switch ($action) {
+        switch ($mode) {
             case 'approve':
                 // 승인 처리
                 $adminModel->whereIn('id', $ids)
