@@ -2,7 +2,7 @@
 
 <?php echo $this->section('content') ?>
 
-<div class="page-header js-affix affix-top" style="width: 1634px;">
+<div class="page-header js-affix affix-top">
     <h3>게시글 관리 </h3>
     <input type="button" value="등록" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/article_register/{$board_id}") ?>")'>
 </div>
@@ -116,14 +116,14 @@
             <?php
             $startNo = $totalSearch - (($page - 1) * $perPage);
             ?>
-            <?php foreach($boards as $i => $board) : ?>
+            <?php foreach($boards as $board) : ?>
                 <tr class="center" data-member-no="<?=esc($board['id'] ?? '') ?>">
                     <td>
                         <input type="checkbox" name="chk[]" value="<?=esc($board['id'] ?? '') ?>">
                     </td>
-                    <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo - $i ?></span></td>
-                    <td align="left"><span class="font-eng js-layer-crm hand"><?=esc($board['title'] ?? '') ?></span></td>
-                    <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
+                    <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo-- ?></span></td>
+                    <td align="left"><span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_view/'.$board['id']);?>"?><?=esc($board['title'] ?? '') ?></a></span></td>
+                    <td><span class="js-layer-crm hand"><?=esc($board['writer_name'] ?? '') ?> (<?=esc($board['writer_uid'] ?? '') ?>)</span></td>
                     <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($board['created_at']))) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['total'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['reply'] ?? 0)) ?></span></td>
@@ -133,6 +133,26 @@
                         <button type="button" class="btn btn-white btn-sm btnModify" onClick=goList('<?= base_url("admin/board/board_register/{$board['id']}") ?>')>답변</button>
                     </td>
                 </tr>
+
+                <?php if (!empty($board['replies'])): ?>
+                    <?php foreach ($board['replies'] as $reply): ?>
+                    <tr class="center" data-member-no="<?=esc($reply['id'] ?? '') ?>">
+                        <td>
+                            <input type="checkbox" name="chk[]" value="<?=esc($reply['id'] ?? '') ?>">
+                        </td>
+                        <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo-- ?></span></td>
+                        <td align="left"><span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_view/'.$reply['id']);?>"?><?=esc($reply['title'] ?? '') ?></a></span></td>
+                        <td><span class="js-layer-crm hand"><?=esc($reply['writer_type'] ?? '') ?> (<?=esc($reply['writer_uid'] ?? '') ?>)</span></td>
+                        <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($reply['created_at']))) ?></span></td>
+                        <td><span class="js-layer-crm hand"><?=esc(number_format($reply['total'] ?? 0)) ?></span></td>
+                        <td><span class="js-layer-crm hand"><?=esc(number_format($reply['reply'] ?? 0)) ?></span></td>
+                        <td><span class="js-layer-crm hand"><?=esc($reply['type_name'] ?? '') ?> </span></td>
+                        <td>
+                            <button type="button" class="btn btn-white btn-sm btnModify" onClick=goList('<?= base_url("admin/board/article_register/{$reply['board_id']}/{$reply['id']}") ?>')>수정</button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php else : ?>
             <tr><td class="center" colspan="9">검색된 정보가 없습니다.</td></tr>
