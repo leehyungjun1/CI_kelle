@@ -1,10 +1,9 @@
 $(document).ready(function() {
-    $(".btn-register").on("click", function(e) {
+    $(document).on("click", ".btn-register", function(e) {
         e.preventDefault();
         if (typeof oEditors !== "undefined" && oEditors.getById["editor"]) {
             oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []);
         }
-
         var $form = $("#frm");
         var formData = new FormData($form[0]);
         var actionUrl = $form.attr("action");
@@ -17,8 +16,11 @@ $(document).ready(function() {
             contentType:false,
             success: function(res) {
                 if (res.status === 'success') {
-                    alert(res.message);
-                    document.location.href = res.url;
+                    dialog_alert(res.message, '알림', {
+                        callback: function() {
+                            location.href = res.url;
+                        }
+                    });
                 } else {
                     // 배열 형태 메시지를 보기 좋게 변환
                     let errorMsg = '';
@@ -188,16 +190,30 @@ function init_file_style_destroy() {
     }
 }
 
-function handleAdminAction(action , confirmMsg, mode ='delete') {
-    const checked = $('input[name="chk[]"]:checked');
-    if (checked.length === 0) {
-        alert('선택된 체크박스가 없습니다.');
-        return false;
-    }
+/* 리스트 전체 체크 TRUE / FALSE */
+$(document).on("change", "#chk_all", function () {
+    const checked = $(this).is(':checked');
+    $('input[name="chk[]"]').prop('checked', checked);
+});
 
-    const ids = checked.map(function() {
-        return $(this).val();
-    }).get();
+$(document).on('change', 'input[name="chk[]"]', function () {
+    const total = $('input[name="chk[]"]').length;
+    const checked = $('input[name="chk[]"]:checked').length;
+    $('#chk_all').prop('checked', total === checked);
+});
+
+
+function handleAdminAction(action , confirmMsg, mode ='delete', ids = null, callbackUrl = null) {
+    if (!ids) {
+        const checked = $('input[name="chk[]"]:checked');
+        if (checked.length === 0) {
+            alert('선택된 체크박스가 없습니다.');
+            return false;
+        }
+        ids = checked.map(function() {
+            return $(this).val();
+        }).get();
+    }
 
     dialog_confirm(confirmMsg, function (result) {
         if(result) {
@@ -207,8 +223,15 @@ function handleAdminAction(action , confirmMsg, mode ='delete') {
                 data: {ids: ids, action: action, mode: mode},
                 success: function (res) {
                     if (res.status === 'success') {
-                        alert(res.message);
-                        setTimeout(() => location.reload(), 1500);
+                        dialog_alert(res.message, '알림', {
+                            callback: function() {
+                                if(callbackUrl) {
+                                    location.href = callbackUrl;
+                                }  else {
+                                    location.reload();
+                                }
+                            }
+                        });
                     } else {
                         alert(res.message || '처리 중 오류가 발생했습니다.');
                     }

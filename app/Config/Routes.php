@@ -14,11 +14,16 @@ $routes->get("/main", 'MainController::main');
 $routes->get("editor/upload", 'EditorController::upload');
 $routes->post('editor/upload_process_json', 'EditorController::upload_process_json');
 
+$routes->get('admin', function() { return redirect()->to('/admin/login'); });
+$routes->get('admin/', function() { return redirect()->to('/admin/login'); });
 
-$routes->group('admin', function ($routes) {
+$routes->get('admin/login', 'Admin\AdminController::login');
+$routes->get('admin/logout', 'Admin\AdminController::logout');
+$routes->post('admin/login', 'Admin\AdminController::login');
+
+
+$routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'Admin\AdminController::index');
-    $routes->get('login', 'Admin\AdminController::login');
-    $routes->post('login', 'Admin\AdminController::login');
     $routes->get('dashboard', 'Admin\AdminController::dashboard');
     $routes->post('submit', 'Admin\AdminController::submit');
 
@@ -54,5 +59,8 @@ $routes->group('admin', function ($routes) {
         $routes->get('article_register/(:segment)/(:num)', 'Admin\BoardController::article_register/$1/$2');
         $routes->post('article_delete', 'Admin\BoardController::article_delete');
         $routes->post('article_submit', 'Admin\BoardController::article_submit');
+        $routes->get('replies_register/(:segment)/(:num)', 'Admin\BoardController::reply_register/$1/$2');
+        $routes->get('replies_register/(:segment)/(:num)/(:num)', 'Admin\BoardController::reply_register/$1/$2/$3');
+        $routes->post('replies_submit', 'Admin\BoardController::replies_submit');
     });
 });

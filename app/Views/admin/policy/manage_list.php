@@ -198,49 +198,6 @@
 </form>
 <script>
     $(document).ready(function () {
-        $('#chk_all').on('change', function () {
-            const checked = $(this).is(':checked');
-            $('input[name="chk[]"]').prop('checked', checked);
-        });
-
-        $(document).on('change', 'input[name="chk[]"]', function () {
-            const total = $('input[name="chk[]"]').length;
-            const checked = $('input[name="chk[]"]:checked').length;
-            $('#chk_all').prop('checked', total === checked);
-        });
-
-        //function handleAdminAction(action, confirmMsg, successMsg) {
-        //    const checked = $('input[name="chk[]"]:checked');
-        //    if (checked.length === 0) {
-        //        alert('선택된 관리자가 없습니다.');
-        //        return false;
-        //    }
-        //
-        //    const ids = checked.map(function() {
-        //        return $(this).val();
-        //    }).get();
-        //
-        //    dialog_confirm(confirmMsg, function (result) {
-        //        if(result) {
-        //            $.ajax({
-        //                method: "POST",
-        //                url: "<?php //= base_url('admin/policy/manage_action') ?>//",
-        //                data: {ids: ids, action: action},
-        //                success: function (res) {
-        //                    if (res.status === 'success') {
-        //                        alert(res.message);
-        //                        setTimeout(() => location.reload(), 1500);
-        //                    } else {
-        //                        alert(res.message || '처리 중 오류가 발생했습니다.');
-        //                    }
-        //                },
-        //                error: function () {
-        //                    alert('서버 통신 중 오류가 발생했습니다.');
-        //                }
-        //            });
-        //        }
-        //    });
-        //}
 
         $("#btnApply").on("click", function() {
             handleAdminAction(

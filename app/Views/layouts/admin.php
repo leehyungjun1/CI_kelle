@@ -52,7 +52,7 @@
     <script type="text/javascript" src="/script/admin_panel_api.js?ts=1757583214"></script>
     <script type="text/javascript" src="/script/gd_board_common.js"></script>
     <script type="text/javascript" src="/script/jquery/jquery.multi_select_box.js"></script>
-    <script type="text/javascript" src="/admin/script/admin-custom.js?ts=1750664389"></script>
+    <script type="text/javascript" src="/admin_assets/script/admin-custom.js?ts=1750664389"></script>
 </head>
 <body class="base index layout-fluid menu-no-border breadcrumb-no-header">
 
@@ -75,7 +75,7 @@
                                         </a>
                                         <ul class="dropdown-menu gnb-dropdown-menu" aria-labelledby="headerSubMenuManager">
                                             <li class="dropdown-item"><a href="https://gdadmin-unpobby20.godomall.com:443/policy/manage_register.php?sno=1">운영자정보</a></li>
-                                            <li class="dropdown-item"><a href="https://gdadmin-unpobby20.godomall.com:443/base/login_ps.php?mode=logout">로그아웃</a></li>
+                                            <li class="dropdown-item"><a href="<?=base_url('admin/logout') ?>">로그아웃</a></li>
                                         </ul>
                                     </div>
                                 </li>
@@ -91,13 +91,12 @@
                     </div>
 
                     <div class="collapse navbar-collapse">
-                        <ul class="nav navbar-nav reform"><li class=""><a href="/admin/policy/manage" id="menu_policy">기본설정</a> </li>
-                            <li class=""><a href="/goods/goods_list.php" id="menu_goods">상품</a></li>
-                            <li class=""><a href="/order/order_list_all.php" id="menu_order">주문/배송 </a></li>
-                            <li class=""><a href="/member/member_list.php" id="menu_member">회원 </a></li>
-                            <li class=""><a href="/board/board_list.php" id="menu_board">게시판 </a></li>
+                        <ul class="nav navbar-nav reform">
+                            <li class="active"><a href="<?= base_url('admin/policy/manage') ?>">기본설정</a></li>
+                            <li class=""><a href="<?=base_url('admin/member/member_list') ?>">회원</a></li>
+                            <li class=""><a href="<?=base_url('admin/board/board_list') ?>">게시판</a></li>
                         </ul>
-                    </div>
+                    </div><!-- /.navbar-collapse -->
                 </div>
             </nav>
         </div>

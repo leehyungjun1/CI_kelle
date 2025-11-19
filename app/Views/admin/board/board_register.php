@@ -35,15 +35,14 @@
                 </td>
                 <th>사용여부</th>
                 <td>
-                    <label class="radio-inline"><input type="radio" name="use_yn" value="" checked="checked">전체</label>
-                    <label class="radio-inline"><input type="radio" name="use_yn" value="Y">사용</label>
+                    <label class="radio-inline"><input type="radio" name="use_yn" value="Y" checked="checked">사용</label>
                     <label class="radio-inline"><input type="radio" name="use_yn" value="N">미사용</label>
                 </td>
             </tr>
             <tr>
                 <th class="require">게시판명</th>
                 <td colspan="3">
-                    <span><input type="text" name="name" id="memNm" value="<?=$board['name'] ?? '' ?>" class="form-control width-sm" data-pattern="gdMemberNmGlobal" maxlength="20"></span>
+                    <span><input type="text" name="name" id="memNm" value="<?=$board['name'] ?? '' ?>" class="form-control width-sm" maxlength="20"></span>
                 </td>
             </tr>
             <tr>

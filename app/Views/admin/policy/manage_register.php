@@ -44,7 +44,7 @@
             <tr>
                 <th class="require">이름</th>
                 <td>
-                    <span><input type="text" name="name" id="memNm" value="<?=$admin['name'] ?? '' ?>" class="form-control width-sm" data-pattern="gdMemberNmGlobal" maxlength="20"></span>
+                    <span><input type="text" name="name" id="memNm" value="<?=$admin['name'] ?? '' ?>" class="form-control width-sm" maxlength="20"></span>
                 </td>
                 <th>부서</th>
                 <td>

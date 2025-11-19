@@ -11,6 +11,9 @@ Options -Indexes
 	Options +FollowSymlinks
 	RewriteEngine On
 
+    RewriteCond %{REQUEST_URI} ^/admin/?$ [NC]
+    RewriteRule ^(.*)$ index.php/admin [L]
+
     RewriteCond %{REQUEST_URI} ^/uploads/ [NC]
 	RewriteRule .* - [L]
 

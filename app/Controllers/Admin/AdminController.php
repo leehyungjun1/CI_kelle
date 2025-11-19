@@ -6,7 +6,11 @@ use App\Models\JyAdmin;
 
 class AdminController extends BaseController {
     public function index() {
-        return view('admin/login');
+        if (!session()->get('is_admin_logged_in')) {
+            return redirect()->to('/admin/login');
+        }
+
+        return redirect()->to('/admin/dashboard');
     }
 
     public function login()
@@ -25,21 +29,24 @@ class AdminController extends BaseController {
              return redirect()->back()->with('error', '비밀번호가 올바르지 않습니다.');
         }
 
-         $session->set([
-            'admin_id' => $admin['admin_id'],
-            'admin_name' => $admin['name'],
-            'is_admin_logged_in' => true
+        session()->set('admin', [
+            'id'        => $admin['id'],
+            'admin_id'  => $admin['admin_id'],
+            'name'      => $admin['name'],
+            'role'      => 'admin',
+            'logged_in' => true
         ]);
-
          return redirect()->to('/admin/dashboard');
     }
 
-    public function dashboard() {
-        log_message('debug', '대시보드 세션 ID: ' . session_id());
-        log_message('debug', '세션 로그인 여부: ' . (session()->get('is_admin_logged_in') ? 'YES' : 'NO'));
-        log_message('debug', '세션 관리자명: ' . session()->get('admin_name'));
+    public function logout() {
+        session()->destroy();
+        return redirect()->to('/admin/login');
+    }
 
-        if (!session()->get('is_admin_logged_in')) {
+    public function dashboard() {
+
+        if (!session()->get('admin.logged_in')) {
             return redirect()->to('/admin/login')->with('error', '로그인이 필요합니다.');
         }
 

@@ -70,7 +70,7 @@
             <tr>
                 <th class="require">이름</th>
                 <td colspan="1">
-                    <span><input type="text" name="name" id="memNm" value="<?=$user['name'] ?? '' ?>" class="form-control width-sm" data-pattern="gdMemberNmGlobal" maxlength="20"></span>
+                    <span><input type="text" name="name" id="memNm" value="<?=$user['name'] ?? '' ?>" class="form-control width-sm" maxlength="20"></span>
                 </td>
                 <th class="require">비밀번호</th>
                 <td>
@@ -145,7 +145,7 @@
                 <th>상호</th>
                 <td>
                 <span title="회사명를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="company" class="form-control ignore" value="" maxlength="50" data-pattern="gdMemberNmGlobal">
+                    <input type="text" name="company" class="form-control ignore" value="" maxlength="50">
                 <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 50</span></span>
                     <span id="companyMsg" class="input_error_msg"></span>
                 </td>

@@ -104,7 +104,7 @@
                                         </a>
                                         <ul class="dropdown-menu gnb-dropdown-menu" aria-labelledby="headerSubMenuManager">
                                             <li class="dropdown-item"><a href="https://gdadmin-unpobby20.godomall.com:443/policy/manage_register.php?sno=1">운영자정보</a></li>
-                                            <li class="dropdown-item"><a href="https://gdadmin-unpobby20.godomall.com:443/base/login_ps.php?mode=logout">로그아웃</a></li>
+                                            <li class="dropdown-item"><a href="<?=base_url('admin/logout') ?>">로그아웃</a></li>
                                         </ul>
                                     </div>
                                 </li>

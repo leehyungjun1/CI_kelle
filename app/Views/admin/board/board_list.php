@@ -111,7 +111,7 @@
                         <input type="checkbox" name="chk[]" value="<?=esc($board['id'] ?? '') ?>">
                     </td>
                     <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo - $i ?></span></td>
-                    <td><span class="font-eng js-layer-crm hand"><?=esc($board['board_id'] ?? '') ?></span></td>
+                    <td><span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_list/'.$board['board_id'] ?? '')?>"><?=esc($board['board_id'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['name'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['new'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['total'] ?? 0)) ?></span></td>

@@ -26,6 +26,7 @@
                 <td>
                     <?php if (esc($article['id']) && esc($article['board_id'])): ?>
                         <strong><?= $article['board_id'] ?></strong>
+                        <input type="hidden" name="board_id" value="<?=esc($article['board_id']) ?>">
                     <?php else : ?>
                     <span>
                         <select name="board_id" id="board_id">
@@ -46,6 +47,17 @@
                 <th class="require">제목</th>
                 <td colspan="3">
                     <input type="text" name="title" id="title" class="form-control" value="<?=$article['title'] ?? '' ?>">
+                </td>
+            </tr>
+            <tr>
+                <th>작성자</th>
+                <td>
+                    <input type="text" name="writer" id="writer" class="form-control width-sm" value="<?=$article['writer'] ?? '' ?>">
+                </td>
+                <th>메인 노출</th>
+                <td>
+                    <label class="radio-inline"><input type="radio" name="is_main" value="Y" checked>노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_main" value="N">미노출</label>
                 </td>
             </tr>
             <tr>
