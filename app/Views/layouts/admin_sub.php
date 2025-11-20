@@ -77,7 +77,6 @@
     </script>
 </head>
 <body class="policy base-info layout-basic">
-
 <?php if (session()->has('error')): ?>
     <script>
         alert(<?= json_encode(session('error')) ?>);

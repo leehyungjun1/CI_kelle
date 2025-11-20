@@ -9,9 +9,9 @@
 <div class="table-title gd-help-manual">게시글 보기 </div>
 <?= $this->include('components/board/view') ?>
 <div class="text-center">
-    <a href="<?=base_url('admin/board/article_list/'.$board['board_id']) ?>" class="btn btn-white">목록</a>
-    <a href="<?=base_url('admin/board/article_register/'.$board['board_id'].'/'.$board['id']) ?>" class="btn btn-white">수정</a>
-    <a href="<?=base_url('admin/board/replies_register/'.$board['board_id'].'/'.$board['id']) ?>" class="btn btn-white">답변</a>
+    <a href="<?=base_url('admin/board/article_list/'.$board['board_code']) ?>" class="btn btn-white">목록</a>
+    <a href="<?=base_url('admin/board/article_register/'.$board['board_code'].'/'.$board['id']) ?>" class="btn btn-white">수정</a>
+    <a href="<?=base_url('admin/board/replies_register/'.$board['board_code'].'/'.$board['id']) ?>" class="btn btn-white">답변</a>
     <span class="btn btn-white js-btn-delete">삭제</span>
 </div>
 <script>

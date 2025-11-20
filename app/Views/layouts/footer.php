@@ -15,6 +15,11 @@
     </div>
 </footer>
 
+<?php if (session()->has('error')): ?>
+    <script>
+        alert("<?= esc(session('error')) ?>");
+    </script>
+<?php endif ?>
 
 </body>
 </html>

@@ -39,8 +39,8 @@
                 </td>
                 <th>노출 여부</th>
                 <td>
-                    <label class="radio-inline"><input type="radio" name="use_yn" value="Y" checked>노출</label>
-                    <label class="radio-inline"><input type="radio" name="use_yn" value="N">미노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_use" value="Y" checked>노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_use" value="N">미노출</label>
                 </td>
             </tr>
             <tr>
@@ -52,7 +52,8 @@
             <tr>
                 <th>작성자</th>
                 <td>
-                    <input type="text" name="writer" id="writer" class="form-control width-sm" value="<?=$article['writer'] ?? '' ?>">
+                    <label class="radio-inline"><input type="radio" name="writer_type" value="admin" checked>관리자</label>
+                    <label class="radio-inline"><input type="radio" name="writer_type" value="guest">비회원</label>
                 </td>
                 <th>메인 노출</th>
                 <td>
@@ -60,6 +61,16 @@
                     <label class="radio-inline"><input type="radio" name="is_main" value="N">미노출</label>
                 </td>
             </tr>
+            <tr>
+                <th>이름</th>
+                <td>
+                    <input type="text" name="writer" id="writer" class="form-control width-sm" value="<?=$article['writer'] ?? '' ?>">
+                </td>
+                <th></th>
+                <td>
+
+                </td>
+            </tr>            
             <tr>
                 <th>파일첨부</th>
                 <td class="form-inline" colspan="3">
@@ -78,7 +89,7 @@
                     <div>
                         <input type="checkbox" name="is_notice" id="is_notice" value="Y" <?= ($article['is_notice'] ?? '') === 'Y' ? 'checked' : '' ?>>
                         <label for="is_notice" class="mgr20">공지사항</label>
-                        <input type="checkbox" name="secret" id="secret" value="Y" <?= ($article['secret'] ?? '') === 'Y' ? 'checked' : '' ?>>
+                        <input type="checkbox" name="secret" id="is_secret" value="Y" <?= ($article['is_secret'] ?? '') === 'Y' ? 'checked' : '' ?>>
                         <label for="secret">비밀글</label>
                     </div>
                     <div class="mgt5">

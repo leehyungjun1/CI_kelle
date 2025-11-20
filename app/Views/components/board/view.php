@@ -17,7 +17,7 @@
     <tr>
         <th>작성자</th>
         <td class="width50p">
-            <?=($board['writer'] == 'admin')? esc($board['admin_id'] ?? ''). '('.esc($board['admin_name'] ?? '').')' : esc($board['user_id'] ?? '').'('. esc($board['user_name'] ?? '') .')' ?>
+            <?=esc($board['writer'] ?? '') ?>
         </td>
         <th class="width-md">아이피</th>
         <td colspan="3"><?=esc($board['ip'] ?? '') ?></td>
