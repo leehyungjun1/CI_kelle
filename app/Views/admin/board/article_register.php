@@ -4,6 +4,8 @@
 <form action="<?= site_url('admin/board/article_submit') ?>" method="post" id="frm">
     <?=csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($article['id'] ?? '') ?>">
+    <input type="hidden" name="board_code" value="<?= esc($article['board_code'] ?? '') ?>">
+
     <div class="page-header js-affix affix-top">
         <h3><?=esc($pageTitle) ?></h3>
         <div class="btn-group">
@@ -25,7 +27,7 @@
                 <th class="require">게시판</th>
                 <td>
                     <?php if (esc($article['id']) && esc($article['board_id'])): ?>
-                        <strong><?= $article['board_id'] ?></strong>
+                        <strong><?=esc($article['board_name']) ?>( <?=esc($article['board_code']) ?> )</strong>
                         <input type="hidden" name="board_id" value="<?=esc($article['board_id']) ?>">
                     <?php else : ?>
                     <span>
@@ -39,8 +41,8 @@
                 </td>
                 <th>노출 여부</th>
                 <td>
-                    <label class="radio-inline"><input type="radio" name="is_use" value="Y" checked>노출</label>
-                    <label class="radio-inline"><input type="radio" name="is_use" value="N">미노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_use" value="Y" <?php if($article['is_use'] === "Y") : ?>checked<?php endif; ?>>노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_use" value="N" <?php if($article['is_use'] === "N") : ?>checked<?php endif; ?>>미노출</label>
                 </td>
             </tr>
             <tr>
@@ -52,13 +54,13 @@
             <tr>
                 <th>작성자</th>
                 <td>
-                    <label class="radio-inline"><input type="radio" name="writer_type" value="admin" checked>관리자</label>
-                    <label class="radio-inline"><input type="radio" name="writer_type" value="guest">비회원</label>
+                    <label class="radio-inline"><input type="radio" name="writer_type" value="admin" <?php if($article['writer_type'] === "admin") : ?>checked<?php endif; ?>>관리자</label>
+                    <label class="radio-inline"><input type="radio" name="writer_type" value="guest" <?php if($article['writer_type'] === "guest") : ?>checked<?php endif; ?>>비회원</label>
                 </td>
                 <th>메인 노출</th>
                 <td>
-                    <label class="radio-inline"><input type="radio" name="is_main" value="Y" checked>노출</label>
-                    <label class="radio-inline"><input type="radio" name="is_main" value="N">미노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?php if($article['is_main'] === "Y") : ?>checked<?php endif; ?>>노출</label>
+                    <label class="radio-inline"><input type="radio" name="is_main" value="N" <?php if($article['is_main'] === "N") : ?>checked<?php endif; ?>>미노출</label>
                 </td>
             </tr>
             <tr>

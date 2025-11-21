@@ -13,11 +13,14 @@ class DynamicBoardModel extends Model
     protected $deletedField = 'deleted_at';
     protected $useSoftDeletes = true;
     protected $allowedFields = [
-        'parent_id',
-        'depth',
         'board_id',
+        'parent_id',
+        'group_id',
+        'depth',
+        'order_no',
         'title',
         'content',
+        'rating',
         'writer_type',
         'writer_id',
         'writer',
@@ -37,4 +40,5 @@ class DynamicBoardModel extends Model
         $this->table = $tableName;
         return $this;
     }
+
 }

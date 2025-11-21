@@ -22,7 +22,7 @@
                         </select>
                     </span>
                 <? elseif($mode === 'replies') : ?>
-                    <?=esc($board['board_name'] ?? '') ?> (<?=esc($board['board_id'] ?? '') ?>)
+                    <?=esc($board['board_name'] ?? '') ?> ( <?=esc($board['board_code'] ?? '') ?> )
                     <input type="hidden" name="replies_id" value="<?=esc($article['id']) ?>" >
                 <? endif; ?>
             <?php endif; ?>

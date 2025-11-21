@@ -6,7 +6,7 @@
     <tbody>
     <tr>
         <th>게시판</th>
-        <td colspan="3"><?=esc($board['board_name'] ?? '') ?></td>
+        <td colspan="3"><?=esc($board['board_name'] ?? '') ?> ( <?=esc($board['board_code'] ?? '') ?> )</td>
     </tr>
     <tr>
         <th>제목</th>

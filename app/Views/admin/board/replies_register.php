@@ -4,6 +4,7 @@
 <form action="<?= site_url('admin/board/replies_submit') ?>" method="post" id="frm" enctype="multipart/form-data">
     <?=csrf_field() ?>
     <input type="hidden" name="board_id" value="<?= esc($board['id'] ?? '') ?>">
+    <input type="hidden" name="board_code" value="<?= esc($board['board_code'] ?? '') ?>">
     <div class="page-header js-affix affix-top">
         <h3><?=esc($pageTitle) ?></h3>
         <div class="btn-group">
