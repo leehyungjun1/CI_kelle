@@ -10,7 +10,7 @@
         <th class="require">게시판</th>
         <td <? if($mode != 'article') : ?> colspan="3" <? endif; ?>>
             <?php if (esc($article['id']) && esc($article['board_id'])): ?>
-                <strong><?= $article['board_id'] ?></strong>
+                <strong><?= $article['board_code'] ?></strong>
                 <input type="hidden" name="board_id" value="<?=esc($article['board_id']) ?>">
             <?php else : ?>
                 <? if($mode === 'article') : ?>
@@ -39,6 +39,29 @@
         <th class="require">제목</th>
         <td colspan="3">
             <input type="text" name="title" id="title" class="form-control" value="<?=$article['title'] ?? '' ?>">
+        </td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td>
+            <label class="radio-inline"><input type="radio" name="writer_type" value="admin" <?php if($article['writer_type'] === "admin") : ?>checked<?php endif; ?>>관리자</label>
+            <label class="radio-inline"><input type="radio" name="writer_type" value="guest" <?php if($article['writer_type'] === "guest") : ?>checked<?php endif; ?>>비회원</label>
+        </td>
+        <th>메인 노출</th>
+        <td>
+            <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?php if($article['is_main'] === "Y") : ?>checked<?php endif; ?>>노출</label>
+            <label class="radio-inline"><input type="radio" name="is_main" value="N" <?php if($article['is_main'] === "N") : ?>checked<?php endif; ?>>미노출</label>
+        </td>
+    </tr>
+    <tr>
+        <th>이름</th>
+        <td>
+            <input type="text" name="writer" id="writer" class="form-control width-sm" value="<?=$article['writer'] ?? '' ?>">
+        </td>
+        <th>별점</th>
+        <td>
+            <div class="starRating"></div>
+            <input type="hidden" name="rating" id="rating">
         </td>
     </tr>
     <tr>

@@ -28,6 +28,7 @@ class DynamicBoardModel extends Model
         'is_secret',
         'is_use',
         'status',
+        'hit',
         'is_main',
         'ip',
         'created_at',

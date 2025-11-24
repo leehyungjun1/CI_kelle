@@ -1,7 +1,7 @@
 <?php echo $this->extend('layouts/admin_sub') ?>
 <?php echo $this->section('content') ?>
 
-<form action="<?= site_url('admin/board/article_submit') ?>" method="post" id="frm">
+<form action="<?= site_url('admin/board/article_submit') ?>" method="post" id="frm" enctype="multipart/form-data">
     <?=csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($article['id'] ?? '') ?>">
     <input type="hidden" name="board_code" value="<?= esc($article['board_code'] ?? '') ?>">
@@ -15,96 +15,9 @@
     </div>
     <div class="table-title gd-help-manual"> <?=esc($pageTitle) ?> </div>
     <div>
-        <table class="table table-cols">
-            <colgroup>
-                <col class="width10p">
-                <col>
-                <col class="width-sm">
-                <col class="width-3xl">
-            </colgroup>
-            <tbody>
-            <tr>
-                <th class="require">게시판</th>
-                <td>
-                    <?php if (esc($article['id']) && esc($article['board_id'])): ?>
-                        <strong><?=esc($article['board_name']) ?>( <?=esc($article['board_code']) ?> )</strong>
-                        <input type="hidden" name="board_id" value="<?=esc($article['board_id']) ?>">
-                    <?php else : ?>
-                    <span>
-                        <select name="board_id" id="board_id">
-                            <?php foreach ($boardLists as $board): ?>
-                                <option value="<?=esc($board['board_id']) ?>" <?php if($board_id == $board['board_id']) : ?>selected <?php endif;?>><?=esc($board['name'])?>(<?=esc($board['board_id'])?>)</option>
-                            <? endforeach; ?>
-                        </select>
-                    </span>
-                    <?php endif; ?>
-                </td>
-                <th>노출 여부</th>
-                <td>
-                    <label class="radio-inline"><input type="radio" name="is_use" value="Y" <?php if($article['is_use'] === "Y") : ?>checked<?php endif; ?>>노출</label>
-                    <label class="radio-inline"><input type="radio" name="is_use" value="N" <?php if($article['is_use'] === "N") : ?>checked<?php endif; ?>>미노출</label>
-                </td>
-            </tr>
-            <tr>
-                <th class="require">제목</th>
-                <td colspan="3">
-                    <input type="text" name="title" id="title" class="form-control" value="<?=$article['title'] ?? '' ?>">
-                </td>
-            </tr>
-            <tr>
-                <th>작성자</th>
-                <td>
-                    <label class="radio-inline"><input type="radio" name="writer_type" value="admin" <?php if($article['writer_type'] === "admin") : ?>checked<?php endif; ?>>관리자</label>
-                    <label class="radio-inline"><input type="radio" name="writer_type" value="guest" <?php if($article['writer_type'] === "guest") : ?>checked<?php endif; ?>>비회원</label>
-                </td>
-                <th>메인 노출</th>
-                <td>
-                    <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?php if($article['is_main'] === "Y") : ?>checked<?php endif; ?>>노출</label>
-                    <label class="radio-inline"><input type="radio" name="is_main" value="N" <?php if($article['is_main'] === "N") : ?>checked<?php endif; ?>>미노출</label>
-                </td>
-            </tr>
-            <tr>
-                <th>이름</th>
-                <td>
-                    <input type="text" name="writer" id="writer" class="form-control width-sm" value="<?=$article['writer'] ?? '' ?>">
-                </td>
-                <th></th>
-                <td>
-
-                </td>
-            </tr>            
-            <tr>
-                <th>파일첨부</th>
-                <td class="form-inline" colspan="3">
-                    <ul class="pdl0" id="uploadBox">
-                        <li class="form-inline mgb5">
-                            <input type="file" name="upfiles[]" id="filestyle-0">
-                            <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm">추가</a>
-                        </li>
-                    </ul>
-                    <input type="hidden" id="fileCnt" value="1" />
-                </td>
-            </tr>
-            <tr>
-                <th>내용</th>
-                <td class="form-inline" colspan="3">
-                    <div>
-                        <input type="checkbox" name="is_notice" id="is_notice" value="Y" <?= ($article['is_notice'] ?? '') === 'Y' ? 'checked' : '' ?>>
-                        <label for="is_notice" class="mgr20">공지사항</label>
-                        <input type="checkbox" name="secret" id="is_secret" value="Y" <?= ($article['is_secret'] ?? '') === 'Y' ? 'checked' : '' ?>>
-                        <label for="secret">비밀글</label>
-                    </div>
-                    <div class="mgt5">
-                        <textarea name="content" id="editor" rows="10" cols="100" style="width:100%; height:300px;">
-                            <?= esc($article['content'] ?? '') ?>
-                        </textarea>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <?= $this->include('components/board/register') ?>
         <div class="text-center">
-            <button class="btn btn-white" type="button" onclick="goList('<?= base_url('admin/board/article_list') ?>/<?= esc($article['board_id'] ?? '') ?>')">목록가기</button>
+            <button class="btn btn-white" type="button" onclick="goList('<?= base_url('admin/board/article_list') ?>/<?= esc($article['board_code'] ?? '') ?>')">목록가기</button>
         </div>
     </div>
 </form>
@@ -140,7 +53,13 @@
         goList("<?= base_url('admin/board/article_register') ?>/"+url);
     });
 
-
+    $('.starRating').raty({
+        score: <?= $article['rating'] ?? 0 ?>,
+        starType: 'i', // 또는 이미지 사용 가능
+        click: function (score) {
+            $('#rating').val(score); // 선택한 별점을 hidden input에 저장
+        }
+    });
 
 </script>
 

@@ -126,7 +126,7 @@
                         <span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_view/'.esc($board_id).'/'.esc($board['id']));?>"?><?= replyIndent($board['depth']) ?> <?=esc($board['title'] ?? '') ?></a></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($board['created_at']))) ?></span></td>
-                    <td><span class="js-layer-crm hand"><?=esc(number_format($board['total'] ?? 0)) ?></span></td>
+                    <td><span class="js-layer-crm hand"><?=esc(number_format($board['hit'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['reply'] ?? 0)) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['type_name'] ?? '') ?> </span></td>
                     <td>
@@ -182,7 +182,7 @@
 
 
     $(document).on("click", "#btnDelete", function() {
-        handleAdminAction("<?=base_url('admin/board/article_delete') ?>",
+        handleAdminAction("<?=base_url('admin/board/article_delete/'.$board_id) ?>",
             '선택된 게시물을 삭제하시겠습니까?',
         );
     });

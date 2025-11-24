@@ -6,7 +6,9 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 //$routes->get('/', 'Home::index');
-
+$routes->group('test', function ($routes) {
+    $routes->get('/', 'MainController::home');
+});
 
 
 $routes->get('/', 'MainController::main');
@@ -50,6 +52,8 @@ $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
         $routes->get('board_list', 'Admin\BoardController::board_list');
         $routes->get('board_register', 'Admin\BoardController::board_register');
         $routes->get('board_register/(:num)', 'Admin\BoardController::board_register/$1');
+        $routes->post('board_delete', 'Admin\BoardController::board_delete');
+        $routes->post('board_delete/(:num)', 'Admin\BoardController::board_delete/$1');
         $routes->post('submit', 'Admin\BoardController::submit');
         $routes->get('article_list', 'Admin\BoardController::article_list');
         $routes->get('article_list/(:segment)', 'Admin\BoardController::article_list/$1');
@@ -57,7 +61,8 @@ $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
         $routes->get('article_register', 'Admin\BoardController::article_register');
         $routes->get('article_register/(:segment)', 'Admin\BoardController::article_register/$1');
         $routes->get('article_register/(:segment)/(:num)', 'Admin\BoardController::article_register/$1/$2');
-        $routes->post('article_delete', 'Admin\BoardController::article_delete');
+        $routes->post('article_delete/(:segment)', 'Admin\BoardController::article_delete/$1');
+        $routes->post('article_delete/(:segment)/(:num)', 'Admin\BoardController::article_delete/$1/$2');
         $routes->post('article_submit', 'Admin\BoardController::article_submit');
         $routes->get('replies_register/(:segment)/(:num)', 'Admin\BoardController::reply_register/$1/$2');
         $routes->get('replies_register/(:segment)/(:num)/(:num)', 'Admin\BoardController::reply_register/$1/$2/$3');

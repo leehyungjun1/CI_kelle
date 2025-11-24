@@ -12,12 +12,20 @@ class MainController extends BaseController
         return view('main');
     }
 
-    public function main() {
+    public function main()
+    {
         return view('main_new');
     }
 
-    public function editor() {
+    public function editor()
+    {
         return view('editor');
     }
 
+    public function home()
+    {
+        return view('index');
+
+    }
 }
+

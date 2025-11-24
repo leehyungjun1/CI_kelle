@@ -16,7 +16,7 @@
 </div>
 <script>
     $(document).on("click", ".js-btn-delete", function() {
-        handleAdminAction('/admin/board/article_delete', '삭제하시겠습니까?', 'delete', [<?=esc($board['id'])?>], '/admin/board/article_list/<?=esc($board['board_id'])?>');
+        handleAdminAction('/admin/board/article_delete/<?=esc($board['board_code']);?>', '삭제하시겠습니까?', 'delete', [<?=esc($board['id'])?>], '/admin/board/article_list/<?=esc($board['board_code']);?>');
     });
 </script>
 <?php echo $this->endSection() ?>

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\JyBoardFile;
 use App\Models\JyBoardSetting;
 use CodeIgniter\Database\BaseConnection;
 use App\Models\DynamicBoardModel;
@@ -9,14 +10,17 @@ use App\Models\DynamicBoardModel;
 class DynamicBoardService
 {
     protected DynamicBoardModel $model;
+    protected string $table;
 
     public function __construct()
     {
         $this->model = new DynamicBoardModel();
+        $this->fileModel = new JyBoardFile();
     }
 
     private function setBoard(string $board_id)
     {
+        $this->table = "jy_board_{$board_id}";
         $this->model->setTableName("jy_board_{$board_id}");
     }
 
@@ -94,7 +98,7 @@ class DynamicBoardService
         $startDate  = $filters['startDate'] ?? null;
         $endDate    = $filters['endDate']   ?? null;
 
-        $totalCount = $this->model->countAll();
+        $totalCount = $this->model->countAllResults(false);
 
         // 일반 검색
         if (! empty($keyword) && ! empty($key)) {
@@ -136,12 +140,44 @@ class DynamicBoardService
     }
 
     public function articleRegister(string $board_id, int $article_id) {
+        $boardModel = new JyBoardSetting();
+        $setting_id = $boardModel->where('board_id', $board_id)->select('id')->first();
+        $this->increaseTotal($article_id);
+
         return $this->getArticle($board_id, $article_id);
     }
 
     public function articleView(string $board_id, int $article_id) {
+        $this->increaseHit($board_id, $article_id);
         return $this->getArticle($board_id, $article_id);
     }
+
+    public function increaseTotal(int $setting_id)
+    {
+        $db = \Config\Database::connect();
+
+        return $db->table('jy_board_settings')
+            ->set('total', 'COALESCE(total,0) + 1', false)
+            ->where('id', $setting_id)
+            ->update();
+    }
+
+    public function increaseHit(string $board_id, int $article_id)
+    {
+        $this->setBoard($board_id);
+        $db = \Config\Database::connect();
+        return $db->table($this->table)
+            ->set('hit', 'COALESCE(hit,0) + 1', false)
+            ->where('id', $article_id)
+            ->update();
+    }
+
+    public function articleDelete(string $board_id, array $article_id) {
+        $board_code = $board_id;
+        $this->setBoard($board_code);
+        $this->model->delete($article_id);
+    }
+
     public function articleSave(array $post)
     {
         $board_code = $post['board_code'];
@@ -155,10 +191,9 @@ class DynamicBoardService
 
         $data = [
             'board_id'      => $boardSetting['id'],
-            'parent_id'     => 0,
-            'depth'         => 0,
             'title'         => $post['title'],
             'content'       => $content,
+            'rating'        => $post['rating'] ?? 0,
             'writer_type'   => $post['writer_type'],
             'writer_id'     => '',
             'writer'        => $post['writer'] ?? null,
@@ -170,16 +205,6 @@ class DynamicBoardService
             'ip'            => $_SERVER['REMOTE_ADDR'],
         ];
 
-        if($post['mode'] == 'reply') {
-            $orginData = $this->model->find($post['board_id']);
-
-            $order_no = $this->findOrderNo($board_code, $post['board_id']);
-            $data['parent_id']  = $post['board_id'];
-            $data['group_id']   = $orginData['group_id'] ?: $orginData['id'];
-            $data['depth']      = $orginData['depth'] + 1;
-            $data['order_no']   = $order_no;
-        }
-
         if($post['writer_type'] === 'admin') {
             $admin = session()->get('admin');
             $data['writer_id']  = $admin['admin_id'];
@@ -189,14 +214,28 @@ class DynamicBoardService
         $id = $post['id'] ?? null;
         if ($id) {
             $this->model->update($id, $data);
-            return ['status' => 'success', 'message' => '수정 완료!', 'url' => '/admin/board/article_list/'.$board_code];
+            return ['status' => 'success', 'message' => '수정 완료!', 'id' => $id, 'url' => '/admin/board/article_list/'.$board_code];
+        } else {
+            if($post['mode'] == 'reply') {
+                $orginData = $this->model->find($post['board_id']);
+
+                $order_no = $this->findOrderNo($board_code, $post['board_id']);
+                $data['parent_id']  = $post['board_id'];
+                $data['group_id']   = $orginData['group_id'] ?: $orginData['id'];
+                $data['depth']      = $orginData['depth'] + 1;
+                $data['order_no']   = $order_no;
+            } else {
+                $data['parent_id']  = 0;
+                $data['depth']      = 0;
+            }
         }
+
         $this->model->insert($data);
         $newId = $this->model->getInsertID();
         if ($post['mode'] !== 'reply') {
             $this->model->update($newId, ['group_id' => $newId]);
         }
-        return ['status' => 'success', 'message' => '등록 완료!', 'url' => '/admin/board/article_list/'.$board_code];
+        return ['status' => 'success', 'message' => '등록 완료!', 'id' => $newId, 'url' => '/admin/board/article_list/'.$board_code];
     }
 
     public function findOrderNo(string $board_code, int $board_id) {
@@ -237,7 +276,6 @@ class DynamicBoardService
 
         $groupId = $parent['group_id'] ?: $parent['id'];
 
-        // 1️⃣ 부모와 같은 group ID 내에서, 부모 바로 아래 들어갈 위치 계산
         $maxOrder = $this->model
             ->where('group_id', $groupId)
             ->where('parent_id', $parent['id'])
@@ -246,14 +284,12 @@ class DynamicBoardService
 
         $insertOrder = ($maxOrder['order_no'] ?? 0) + 1;
 
-        // 2️⃣ 주문번호 밀어주기 (같거나 큰 order_no는 전부 +1)
         $this->model
             ->where('group_id', $groupId)
             ->where('order_no >=', $insertOrder)
             ->set('order_no', 'order_no + 1', false)
             ->update();
 
-        // 3️⃣ 새 댓글 데이터
         $data = [
             'board_id'  => $parent['board_id'],
             'group_id'  => $groupId,
@@ -273,10 +309,62 @@ class DynamicBoardService
         return ['status' => 'success', 'message' => '댓글 저장 완료'];
     }
 
-
-
-
-    public function repliesRegister(string $board_id, int $article_id , int $replies_id) {
-        $this->setBoard($board_code);
+    public function getFiles( string $board_code, int $article_id):array {
+        return $this->fileModel->where('board_id', $board_code)
+            ->where('article_id', $article_id)
+            ->where('deleted_at', null)
+            ->orderBy('sort', 'ASC')
+            ->findAll();
     }
+
+    public function saveFiles(string $board_code, int $article_id, array $files)
+    {
+        $uploadPath = WRITEPATH  . "uploads/Files/{$board_code}/{$article_id}/";
+
+        // 폴더 없으면 생성
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        foreach ($files as $file) {
+
+            if (!$file->isValid() || $file->hasMoved()) {
+                continue;
+            }
+
+            // 저장될 새로운 파일 이름
+            $newName = $file->getRandomName();
+
+            $originalName = $file->getClientName();
+            $mimeType     = $file->getMimeType();
+            $fileSize     = $file->getSize();
+            $isImage      = (strpos($mimeType, 'image/') === 0 ? 1 : 0);
+
+
+            // 서버에 파일 저장
+            $file->move($uploadPath, $newName);
+
+            // DB 저장 경로 (URL용)
+            $filePath = "uploads/Files/{$board_code}/{$article_id}/{$newName}";
+
+            // DB Insert
+            $this->fileModel->insert([
+                'board_id'   => $board_code,
+                'article_id' => $article_id,
+                'file_name'  => $originalName,
+                'file_path'  => $filePath,
+                'file_size'  => $fileSize,
+                'file_type'  => $mimeType,
+                'is_image'   => $isImage,
+                'sort'       => 0
+            ]);
+        }
+    }
+
+
+
+
+//    public function repliesRegister(string $board_id, int $article_id , int $replies_id) {
+//        $this->setBoard($board_code);
+//    }
 }
