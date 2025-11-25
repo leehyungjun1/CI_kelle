@@ -68,6 +68,16 @@
         <th>파일첨부</th>
         <td class="form-inline" colspan="3">
             <ul class="pdl0" id="uploadBox">
+                <?php foreach($files as $index => $file) : ?>
+                    <li class="form-inline mgb5">
+                        <input type="hidden" name="file_ids[]" value="<?= $file['id'] ?>">
+                        <input type="file" name="upfiles[<?= $file['id'] ?>]">
+                        <input type="checkbox" name="delFile[<?=$index;?>]" value="<?=$file['id'];?>">
+                        Delete Uploaded File
+                        <?=$file['file_name'];?>
+                    </li>
+                <?php endforeach; ?>
+
                 <li class="form-inline mgb5">
                     <input type="file" name="upfiles[]" id="filestyle-0">
                     <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm">추가</a>

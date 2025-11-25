@@ -16,6 +16,12 @@ $routes->get("/main", 'MainController::main');
 $routes->get("editor/upload", 'EditorController::upload');
 $routes->post('editor/upload_process_json', 'EditorController::upload_process_json');
 
+$routes->group('member', function($routes) {
+    $routes->get('join', 'Member\MemberController::join');
+    $routes->get('login', 'Member\MemberController::login');
+    $routes->post('login', 'Member\MemberController::login');
+});
+
 $routes->get('admin', function() { return redirect()->to('/admin/login'); });
 $routes->get('admin/', function() { return redirect()->to('/admin/login'); });
 

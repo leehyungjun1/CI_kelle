@@ -78,6 +78,7 @@ class MemberController extends BaseController
 
     public function member_register_save() {
         $data = $this->request->getPost();
+
         $email = make_email($data['email1'] ?? '', $data['email2'] ?? '');
 
         if ($email === null) {
@@ -87,7 +88,7 @@ class MemberController extends BaseController
             ]);
         }
 
-        $model = new UserModel();
+        $userModel = new JyUser();
         try {
             $saveData = [
                 'id'        => $data['id'] ?? '',
@@ -95,7 +96,8 @@ class MemberController extends BaseController
                 'name'      => $data['name'] ?? '',
                 'nickname'  => $data['nickname'] ?? '',
                 'password'  => $data['password'] ?? '',
-                'email'     => $email ?? '',
+                'email1'    => $data['email1'] ?? '',
+                'email2'    => $data['email2'] ?? '',
                 'mail_YN'   => $data['mail_YN'] ?? '',
                 'mobile'    => $data['mobile'] ?? '',
                 'sms_YN'    => $data['sms_YN'] ?? '',
@@ -104,8 +106,8 @@ class MemberController extends BaseController
                 'address2'  => $data['address2'] ?? '',
                 'phone'     => $data['phone'] ?? '',
             ];
-            
-            $model->save($saveData);
+
+            $userModel->save($saveData);
 
             return $this->response->setJSON([
                 'status' => 'success',

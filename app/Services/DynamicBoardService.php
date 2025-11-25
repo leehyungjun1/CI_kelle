@@ -317,7 +317,7 @@ class DynamicBoardService
             ->findAll();
     }
 
-    public function saveFiles(string $board_code, int $article_id, array $files)
+    public function saveFiles(string $board_code, int $article_id, array $files, array $file_ids)
     {
         $uploadPath = WRITEPATH  . "uploads/Files/{$board_code}/{$article_id}/";
 
@@ -325,46 +325,64 @@ class DynamicBoardService
         if (!is_dir($uploadPath)) {
             mkdir($uploadPath, 0777, true);
         }
-
-        foreach ($files as $file) {
-
-            if (!$file->isValid() || $file->hasMoved()) {
+        $key = 0;
+        foreach ($files as $index => $file) {
+            if (!$file->isValid() || $file->getError() === UPLOAD_ERR_NO_FILE) {
                 continue;
             }
 
-            // 저장될 새로운 파일 이름
-            $newName = $file->getRandomName();
-
+            // 새 파일 정보 준비
+            $newName      = $file->getRandomName();
             $originalName = $file->getClientName();
             $mimeType     = $file->getMimeType();
             $fileSize     = $file->getSize();
             $isImage      = (strpos($mimeType, 'image/') === 0 ? 1 : 0);
 
-
-            // 서버에 파일 저장
+            // 파일 이동
             $file->move($uploadPath, $newName);
 
-            // DB 저장 경로 (URL용)
             $filePath = "uploads/Files/{$board_code}/{$article_id}/{$newName}";
 
-            // DB Insert
-            $this->fileModel->insert([
-                'board_id'   => $board_code,
-                'article_id' => $article_id,
-                'file_name'  => $originalName,
-                'file_path'  => $filePath,
-                'file_size'  => $fileSize,
-                'file_type'  => $mimeType,
-                'is_image'   => $isImage,
-                'sort'       => 0
-            ]);
+            if (is_numeric($index) && in_array((int)$index, $file_ids)) {
+                // UPDATE
+                $this->fileModel->update($index, [
+                    'file_name'  => $originalName,
+                    'file_path'  => $filePath,
+                    'file_size'  => $fileSize,
+                    'file_type'  => $mimeType,
+                    'is_image'   => $isImage,
+                ]);
+            } else {
+                // INSERT
+                $this->fileModel->insert([
+                    'board_id'   => $board_code,
+                    'article_id' => $article_id,
+                    'file_name'  => $originalName,
+                    'file_path'  => $filePath,
+                    'file_size'  => $fileSize,
+                    'file_type'  => $mimeType,
+                    'is_image'   => $isImage,
+                    'sort'       => 0
+                ]);
+            }
         }
     }
 
+    public function deleteFiles(array $fileIds)
+    {
+        foreach ($fileIds as $id) {
 
+            // 파일 정보 가져오기
+            $file = $this->fileModel->find($id);
+            if (!$file) continue;
 
+            // 실제 파일 경로 (public 기준)
+            $filePath = WRITEPATH . $file['file_path'];
 
-//    public function repliesRegister(string $board_id, int $article_id , int $replies_id) {
-//        $this->setBoard($board_code);
-//    }
+            // 실제 파일 삭제
+            if (is_file($filePath)) {
+                unlink($filePath);
+            }
+        }
+    }
 }

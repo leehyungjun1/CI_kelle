@@ -83,7 +83,7 @@
             <tr>
                 <th>이메일</th>
                 <td>
-                    <div class="form-inline mgb5">
+                    <div class="form-inline email-form-inline mgb5">
                         <?= email_input('email1', 'email2', old('email1', $user['email1'] ?? ''), old('email2', $user['email2'] ?? '')) ?>
                         <button type="button" id="overlap_email" class="btn btn-gray btn-sm">중복확인</button>
                     </div>

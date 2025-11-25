@@ -73,6 +73,13 @@ class JyUser extends Model
             $data['data']['address2'] = base64_encode($this->encrypter->encrypt($data['data']['address2']));
         }
 
+        if (!empty($data['data']['password'])) {
+            // 이미 해시가 아니면 해시 처리
+            if (!password_get_info($data['data']['password'])['algo']) {
+                $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+            }
+        }
+
         return $data;
     }
 
