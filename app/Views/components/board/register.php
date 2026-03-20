@@ -44,13 +44,13 @@
     <tr>
         <th>작성자</th>
         <td>
-            <label class="radio-inline"><input type="radio" name="writer_type" value="admin" <?php if($article['writer_type'] === "admin") : ?>checked<?php endif; ?>>관리자</label>
-            <label class="radio-inline"><input type="radio" name="writer_type" value="guest" <?php if($article['writer_type'] === "guest") : ?>checked<?php endif; ?>>비회원</label>
+            <label class="radio-inline"><input type="radio" name="writer_type" value="admin" <?php if(($article['writer_type'] ?? 'admin') === "admin") : ?>checked<?php endif; ?>>관리자</label>
+            <label class="radio-inline"><input type="radio" name="writer_type" value="guest" <?php if(($article['writer_type'] ?? '') === "guest") : ?>checked<?php endif; ?>>비회원</label>
         </td>
         <th>메인 노출</th>
         <td>
-            <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?php if($article['is_main'] === "Y") : ?>checked<?php endif; ?>>노출</label>
-            <label class="radio-inline"><input type="radio" name="is_main" value="N" <?php if($article['is_main'] === "N") : ?>checked<?php endif; ?>>미노출</label>
+            <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?php if(($article['is_main'] ?? 'Y') === "Y") : ?>checked<?php endif; ?>>노출</label>
+            <label class="radio-inline"><input type="radio" name="is_main" value="N" <?php if(($article['is_main'] ?? '') === "N") : ?>checked<?php endif; ?>>미노출</label>
         </td>
     </tr>
     <tr>

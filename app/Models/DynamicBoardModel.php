@@ -26,6 +26,7 @@ class DynamicBoardModel extends Model
         'writer',
         'is_notice',
         'is_secret',
+        'is_category',
         'is_use',
         'status',
         'hit',

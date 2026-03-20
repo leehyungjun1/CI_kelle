@@ -9,7 +9,10 @@ class MainController extends BaseController
 {
     public function index()
     {
-        return view('main');
+        return view('layout/main', [
+            'active'  => 'home',
+            'content' => view('pages/home'),
+        ]);
     }
 
     public function main()
@@ -24,8 +27,9 @@ class MainController extends BaseController
 
     public function home()
     {
-        return view('index');
-
+        return $this->render('pages/home', [
+            'active' => 'home',
+        ]);
     }
 }
 

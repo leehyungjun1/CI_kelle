@@ -67,6 +67,8 @@ abstract class BaseController extends Controller
     protected function render(string $view, array $pageData = [])
     {
         $data = array_merge($this->data, $pageData);
+        $data['pagePath'] = $view;
         return view($view, $data);
     }
+
 }

@@ -10,6 +10,8 @@ $routes->group('test', function ($routes) {
     $routes->get('/', 'MainController::home');
 });
 
+$routes->get('introduce', 'MainController::main');
+
 
 $routes->get('/', 'MainController::main');
 $routes->get("/main", 'MainController::main');

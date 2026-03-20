@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class JyBoardHeader extends Model
 {
-    protected $table            = 'jyboardheaders';
+    protected $table            = 'jy_board_headers';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['board_setting_id','header_name','header_key','badge_color','order_no','is_use'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
