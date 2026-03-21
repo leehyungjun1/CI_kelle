@@ -1,4 +1,29 @@
 $(document).ready(function() {
+    // 사이드 메뉴 토글
+    $(document).on('click', '.js-adminmenu-toggle', function () {
+        if (!$('#content-wrap > .js-adminmenu-toggle').length) {
+            $('#content-wrap').prepend($(this).clone().addClass('active'));
+        } else {
+            $('#content-wrap > .js-adminmenu-toggle').toggleClass('active');
+        }
+        $('body').toggleClass('menu-no-border');
+        $(window).trigger('resize');
+    });
+
+    // 메뉴 그룹 접기/펼치기
+    $(document).on('click', '.js-listgroup-toggle', function () {
+        $(this).toggleClass('active');
+        var $headings = $('#menu .panel-heading').not('.active');
+        if ($(this).hasClass('active')) {
+            $headings.removeClass('menu-icon-minus').addClass('menu-icon-plus');
+            $headings.next('.list-group').hide();
+        } else {
+            $headings.removeClass('menu-icon-plus').addClass('menu-icon-minus');
+            $headings.next('.list-group').show();
+        }
+    });
+
+
     $(document).on("click", ".btn-register", function(e) {
         e.preventDefault();
         if (typeof oEditors !== "undefined" && oEditors.getById["editor"]) {

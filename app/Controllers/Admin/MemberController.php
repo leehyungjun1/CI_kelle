@@ -11,69 +11,70 @@ class MemberController extends BaseController
 {
     public function member_list()
     {
-        helper('form_component');
-        $model = new JyUser();
+        $model      = new JyUser();
         $gradeModel = new JyUserGrade();
-        $grades = $gradeModel->findAll();
+        $get        = $this->request->getGet();
 
-        $get = $this->request->getGet();
-
-        $key = trim($get['key'] ?? '');
+        // 검색 조건
+        $key        = trim($get['key']        ?? '');
         $searchKind = trim($get['searchKind'] ?? '');
-        $keyword = trim($get['keyword'] ?? '');
+        $keyword    = trim($get['keyword']    ?? '');
+        $allowedKeys = ['name', 'email', 'userid', 'nickname', 'mobile', 'phone'];
 
-        $allowedKeys = ['name', 'email', 'userid','nickname','mobile','phone'];
         $totalCount = $model->countAllResults(false);
 
-        if(!empty($get['key']) && !empty($get['searchKind']) && !empty($get['keyword']) && in_array($key, $allowedKeys)){
-            if($searchKind == 'equalSearch'){
+        if (!empty($key) && !empty($searchKind) && !empty($keyword) && in_array($key, $allowedKeys)) {
+            if ($searchKind === 'equalSearch') {
                 $model->where($key, $keyword);
-            } else if($searchKind == 'fullLikeSearch'){
-                $model->like($key, '%'.$keyword.'%');
+            } elseif ($searchKind === 'fullLikeSearch') {
+                $model->like($key, '%' . $keyword . '%');
             }
         }
 
         $searchCount = $model->countAllResults(false);
 
+        // 정렬
         $sort = trim($get['sort'] ?? '');
-        if(!empty($sort)){
-            $parts = explode(" ", $sort);
+        if (!empty($sort)) {
+            $parts  = explode(' ', $sort);
             $column = $parts[0] ?? 'created_at';
-            $order = $parts[1] ?? 'desc';
+            $order  = $parts[1] ?? 'desc';
             $model->orderBy($column, $order);
         } else {
-            $model->orderBy("created_at", "desc");
+            $model->orderBy('created_at', 'desc');
         }
 
-
-        $data['members'] = $model->paginate(50); // 한 페이지 50개
-        $data['pager']   = $model->pager;
-        $data['get']     = $get;
-        $data['grades']  = $grades;
-
-        $data['totalCount'] = $totalCount;
-        $data['searchCount'] = $searchCount;
-
-        return view('admin/member/member_list', $data);
+        return $this->render('admin/member/member_list', [
+            'gnbActive'   => 'member',
+            'sideActive'  => 'member_list',
+            'sideMenu'    => 'admin/menu/member_menu',
+            'breadcrumb'  => ['회원', '회원 관리', '회원 리스트'],
+            'members'     => $model->paginate(50),
+            'pager'       => $model->pager,
+            'grades'      => $gradeModel->findAll(),
+            'totalCount'  => $totalCount,
+            'searchCount' => $searchCount,
+            'get'         => $get,
+        ]);
     }
 
     public function member_register($id = null)
     {
-        $model = new JyUser();
+        $model          = new JyUser();
         $userGradeModel = new JyUserGrade();
-        $userGrades = $userGradeModel->findAll();
 
-        $mode = 'create';
-        $user = [];
+        $mode = $id ? 'edit' : 'create';
+        $user = $id ? $model->find($id) : null;
 
-        if($id) {
-            $user = $model->find($id);
-            $mode = 'edit';
-        } else {
-            $user = null;
-        }
-
-        return view('admin/member/member_register', ['user' => $user, 'mode' => $mode, 'userGrades' => $userGrades]);
+        return $this->render('admin/member/member_register', [
+            'gnbActive'  => 'member',
+            'sideActive' => 'member_register',
+            'sideMenu'   => 'admin/menu/member_menu',
+            'breadcrumb' => ['회원', '회원 관리', $mode === 'edit' ? '회원 수정' : '회원 등록'],
+            'mode'       => $mode,
+            'user'       => $user,
+            'userGrades' => $userGradeModel->findAll(),
+        ]);
     }
 
     public function member_register_save() {

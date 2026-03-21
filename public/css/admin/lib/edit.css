@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════
+   edit.css - 등록/수정 페이지 전용 스타일
+   ═══════════════════════════════════════ */
+
+/* ── 페이지 헤더 ── */
+.page-header {
+    width: 100%;
+    border-bottom: 2px solid #888;
+    display: block;
+    overflow: hidden;
+    padding: 0 0 7.5px;
+    margin-bottom: 20px;
+}
+.page-header h3 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #222;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.page-header .btn-group {
+    float: right !important;
+    margin-top: -40px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+.page-header .btn-group input,
+.page-header .btn-group button {
+    height: 38px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: bold;
+    float: none !important;
+    margin: 0 !important;
+}
+
+/* 저장 버튼 */
+.btn-red {
+    background: #fa2828;
+    color: #fff;
+    border: 1px solid #fa2828;
+    font-weight: bold;
+}
+.btn-red:hover,
+.btn-red:focus { background: #ca1717; border-color: #ca1717; color: #fff; }
+
+/* 목록 버튼 */
+.btn-icon-list {
+    background: #fff url('/img/icon_list.png') no-repeat 15px 55%;
+    padding: 0 15px 0 33px !important;
+    color: #444;
+    border: 1px solid #ccc;
+}
+.btn-icon-list:hover { border-color: #666; }
+
+/* ── 테이블 타이틀 ── */
+.table-title {
+    margin: 0 0 7px;
+    color: #222;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+/* ── 폼 테이블 (table-cols) ── */
+.table-cols {
+    border-top: 1px solid #888;
+    margin-bottom: 30px;
+    width: 100%;
+}
+.table-cols > tbody > tr > th {
+    background: #f6f6f6;
+    color: #333;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 13px 15px;
+    border-bottom: 1px solid #e6e6e6;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: left;
+    width: 130px;
+}
+.table-cols > tbody > tr > td {
+    padding: 8px 15px;
+    border-bottom: 1px solid #e6e6e6;
+    vertical-align: middle;
+    font-size: 12px;
+    background: #fff;
+}
+
+/* 필수항목 빨간 점 + 빨간 글씨 */
+.table-cols > tbody > tr > th.require {
+    background: #f6f6f6 url('/img/bl_required.png') no-repeat 7px 50%;
+    color: #fa2828;
+    padding-left: 20px;
+}
+
+/* ── form-control ── */
+.table-cols .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+    border: 1px solid #d5d5d5;
+    height: 23px;
+    padding: 0 8px;
+    border-radius: 0;
+    font-size: 12px;
+}
+.table-cols select.form-control { height: 28px; padding: 0 6px; }
+.table-cols textarea.form-control { height: auto; width: 90%; padding: 6px 8px; }
+
+/* 에러 표시 인풋 */
+.table-cols input.error,
+.table-cols select.error { border-color: #fa2828; }
+
+/* ── 라디오 / 체크박스 ── */
+.table-cols .radio-inline,
+.table-cols .checkbox-inline {
+    padding-left: 0;
+    margin-right: 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+/* ── 중복확인 등 소형 버튼 ── */
+.btn-gray {
+    background: #bcbcbc;
+    color: #fff;
+    border: 1px solid #aaa;
+    font-size: 12px;
+    font-weight: normal;
+}
+.btn-gray:hover { background: #999; color: #fff; }
+
+/* ── 안내문구 ── */
+.notice-info {
+    color: #999;
+    font-size: 11px;
+    padding-left: 15px;
+    background: url('/img/icon_notice_gray.png') no-repeat left center;
+    margin-top: 4px;
+    display: block;
+    line-height: 1.6;
+}
+.notice-danger {
+    color: #fa2828;
+    font-size: 11px;
+    padding-left: 15px;
+    background: url('/img/icon_notice_red.png') no-repeat left 4px;
+    margin-top: 4px;
+    display: block;
+    line-height: 1.6;
+}
+
+/* ── 이메일 인풋 ── */
+.email-form-inline { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.email-form-inline input.form-control { width: 120px; }
+.email-form-inline select.form-control { width: 130px; }
+
+/* ── 파일 업로드 ── */
+.bootstrap-filestyle .btn { font-size: 12px; }
+
+/* ── 폼 인라인 여백 ── */
+.input_wrap .form-inline { margin-bottom: 5px; }
+.mgb5 { margin-bottom: 5px; }
+.mgt10 { margin-top: 10px; }
+
+/* ── 라디오 / 체크박스 위치 재정의 ── */
+.table-cols input[type="radio"],
+.table-cols input[type="checkbox"] {
+    position: static !important;
+    margin: 0 5px 0 0 !important;
+    vertical-align: middle;
+}
+
+.radio-inline input[type="radio"],
+.checkbox-inline input[type="checkbox"] {
+    position: static !important;
+    margin: 0 5px 0 0 !important;
+    vertical-align: middle;
+}

@@ -1,0 +1,96 @@
+/* ═══════════════════════════════════════
+   list.css - 리스트 페이지 전용 스타일
+   ═══════════════════════════════════════ */
+
+/* ── 테이블 타이틀 ── */
+.table-title {
+    margin: 0 0 7px;
+    color: #222;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: -1px;
+}
+
+/* ── 검색 박스 ── */
+.search-detail-box { background: #fff; margin-bottom: 10px; }
+.search-detail-box .table { border-top: 1px solid #888; margin-bottom: 0; }
+.search-detail-box .table th {
+    background: #f6f6f6;
+    font-size: 12px; font-weight: normal; color: #333;
+    padding: 8px 15px;
+    border: 1px solid #e6e6e6; border-top: 0;
+    vertical-align: middle; white-space: nowrap;
+    width: 150px;
+}
+.search-detail-box .table td {
+    padding: 6px 15px;
+    border: 1px solid #e6e6e6; border-top: 0;
+    background: #fff; vertical-align: middle;
+}
+.search-detail-box .form-control { display: inline-block; width: auto; vertical-align: middle; }
+.search-detail-box select.form-control { min-width: 100px; }
+.search-detail-box input.form-control  { min-width: 200px; }
+
+/* ── 검색 버튼 ── */
+.table-btn { text-align: center; padding: 10px 0; margin-bottom: 30px; }
+
+/* ── 목록 헤더 ── */
+.table-header {
+    overflow: hidden;
+    background: #f8f8f8;
+    border-top: 1px solid #888;
+    border-bottom: 1px solid #ddd;
+    padding: 8px 10px;
+    font-size: 12px;
+}
+.table-header .pull-left { float: left !important; padding: 6px 0; color: #666; }
+.table-header .pull-left strong { color: #fa2828; }
+.table-header .pull-right {
+    float: right !important;
+    display: flex; flex-direction: row; align-items: center; gap: 5px;
+}
+.table-header .pull-right select.form-control {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 100px;
+}
+
+/* ── 목록 테이블 ── */
+.table-rows {
+    font-size: 12px;
+    border-top: 1px solid #aeaeae;
+    border-bottom: 1px solid #e6e6e6;
+    margin-bottom: 0;
+}
+.table-rows thead tr th {
+    background: #bcbcbc !important;
+    color: #fff; text-align: center;
+    padding: 8px 6px;
+    border-right: 1px solid #aeaeae;
+    border-top: 1px solid #aeaeae;
+    border-bottom: 1px solid #aeaeae;
+    font-size: 12px; font-weight: 500;
+    white-space: nowrap; vertical-align: middle;
+}
+.table-rows thead tr th:last-child { border-right: 0; }
+.table-rows tbody tr td {
+    text-align: center; padding: 7px 6px;
+    vertical-align: middle;
+    border-top: 1px solid #e6e6e6;
+    border-right: 1px solid #e6e6e6;
+    color: #444; font-size: 12px; height: 34px;
+}
+.table-rows tbody tr td:last-child { border-right: 0; }
+.table-rows tbody tr:hover td { background: #f6f6f6; }
+
+/* ── 테이블 하단 액션 ── */
+.table-action {
+    overflow: hidden;
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    background: #f6f6f6;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #e6e6e6;
+}
+.table-action .pull-left { float: left !important; color: #333; padding-left: 10px; }
+.table-action .pull-right { float: right !important; padding-right: 10px; }

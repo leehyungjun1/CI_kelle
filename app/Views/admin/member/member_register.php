@@ -1,5 +1,8 @@
-<?php echo $this->extend('layouts/admin_sub') ?>
-<?php echo $this->section('content') ?>
+<?= $this->extend('admin/layouts/main') ?>
+
+<?= $this->section('title') ?>회원 등록<?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
 
 <form id="frm" action="<?= url_to('member_save') ?>" method="post" enctype="multipart/form-data" novalidate="novalidate">
     <?=csrf_field() ?>
