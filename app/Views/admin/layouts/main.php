@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="<?= base_url('css/gd_share/jquery-ui.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/gd_share/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/admin/lib/common.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('css/form.css') ?>">
 
     <?php
     $listCssFile = FCPATH . 'css/admin/lib/list.css';
@@ -83,6 +84,7 @@
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-filestyle@1/src/bootstrap-filestyle.min.js"></script>
 <script src="<?= base_url('script/jy_share/lib.js') ?>"></script>
 <script src="<?= base_url('script/jy_share/common.js') ?>"></script>
 

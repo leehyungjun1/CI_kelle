@@ -6,10 +6,11 @@
 
 <form id="frm" action="<?= url_to('member_save') ?>" method="post" enctype="multipart/form-data" novalidate="novalidate">
     <?=csrf_field() ?>
-    <div class="page-header js-affix affix-top" style="width: 1634px;">
-        <h3>회원 등록 </h3>
+    <div class="page-header">
+        <h3><?= $mode === 'edit' ? '회원 수정' : '회원 등록' ?></h3>
         <div class="btn-group">
-            <input type="button" value="목록" class="btn btn-white btn-icon-list" onclick=goList('<?= base_url("admin/member/member_list") ?>')>
+            <input type="button" value="목록" class="btn btn-white btn-icon-list"
+                   onclick="goList('<?= base_url('admin/member/member_list') ?>')">
             <input type="button" value="저장" class="btn btn-red btn-register">
         </div>
     </div>
@@ -225,49 +226,7 @@
             </tbody></table>
     </div>
     <iframe id="downloadFrame" style="display:none;"></iframe>
-    <script>
-        $('input[name="member_type"]').on('change', function () {
-            if ($(this).val() === 'business') {
-                $(".div-business").removeClass("display-none");
-            } else {
-                $(".div-business").addClass("display-none");
-            }
-        });
-
-        $(document).on('change', '.js-certification-checkbox', function(e) {
-            var checkbox = this;
-            if (checkbox.checked) {
-                dialog_confirm('등록된 사업자등록증을 삭제하시겠습니까? 회원정보 최종 저장 시 삭제되며, 복구가 불가합니다.', function(result) {
-                    if (!result) {
-                        checkbox.checked = false;
-                    }
-                }, '경고');
-            }
-        });
-
-        $('#companyCertification').change(function (e) {
-            const $fileInput = $('input[name="companyCertification"]');
-            const file = $fileInput[0].files[0];
-            const fileMaxSize = certificationMaxFileSize || 2; // MB
-            const allowedExt = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
-
-            // 확장자 검사
-            const ext = file.name.split('.').pop().toLowerCase();
-            if (!allowedExt.includes(ext)) {
-                e.target.value = '';
-                dialog_alert('등록이 불가한 파일 형식입니다. 이미지(jpg, jpeg, png, gif, bmp, webp, svg) 및 pdf 파일만 업로드 가능합니다.');
-                return;
-            }
-
-            // 파일 크기 검사
-            const fileSizeMB = file.size / (1024 * 1024);
-            if (fileSizeMB > fileMaxSize) {
-                e.target.value = '';
-                dialog_alert('파일은 최대 ' + fileMaxSize.toString() + 'MB 이하로만 등록 가능합니다.');
-            }
-        });
-    </script>
-    <div class="table-title gd-help-manual">부가정보 <a href="http://manual.godomall5.godomall.com/data/manual_view.php?category=member__member___member_register#부가정보" target="_blank" class="link-help">페이지 도움말</a></div>
+    <div class="table-title gd-help-manual">부가정보 </div>
     <div class="input_wrap form-inline">
         <table class="table table-cols">
             <colgroup>
@@ -397,9 +356,7 @@
     </div>
 
 
-    <div class="table-title gd-help-manual">
-        개인정보 수집·이용 선택동의 내역
-        <a href="http://manual.godomall5.godomall.com/data/manual_view.php?category=member__member___member_register#개인정보수집·이용선택동의내역" target="_blank" class="link-help">페이지 도움말</a></div>
+    <div class="table-title gd-help-manual"> 개인정보 수집·이용 선택동의 내역 </div>
     <div class="form-inline">
         <table class="table table-cols">
             <colgroup>

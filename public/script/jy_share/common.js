@@ -105,10 +105,26 @@ $(document).ready(function() {
         this.value = formatted;
     });
 
-    // 입력 중에는 숫자만
+    // 전화번호 입력 부분
     $('input.js-tel').on('input', function() {
-        this.value = this.value.replace(/\D/g, '');
+        let val = this.value.replace(/\D/g, ''); // 숫자만
+        let formatted = '';
+
+        if (val.length <= 3) {
+            formatted = val;
+        } else if (val.length <= 6) {
+            formatted = val.slice(0, 3) + '-' + val.slice(3);
+        } else if (val.length <= 10) {
+            formatted = val.slice(0, 3) + '-' + val.slice(3, 6) + '-' + val.slice(6);
+        } else {
+            formatted = val.slice(0, 3) + '-' + val.slice(3, 7) + '-' + val.slice(7, 11);
+        }
+
+        this.value = formatted;
     });
+
+// blur 이벤트는 제거해도 됨 (input에서 이미 처리)
+    $('input.js-tel').off('focus blur');
 
     //이메일 주소 셀렉트시 변경되게.
     $('.email_select').on('change', function() {

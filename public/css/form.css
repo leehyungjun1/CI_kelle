@@ -1,0 +1,136 @@
+/* ═══════════════════════════════════════
+   form.css - 폼 요소 공통 스타일
+   ═══════════════════════════════════════ */
+
+/* ── radio, checkbox 포커스 ── */
+input[type="radio"]:focus,
+input[type="checkbox"]:focus {
+    outline: 0;
+}
+
+/* ── disabled 그레이스케일 ── */
+input[type="radio"]:disabled,
+input[type="checkbox"]:disabled {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+/* ── radio, checkbox 기본 ── */
+input[type="radio"],
+input[type="checkbox"] {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* ── radio 이미지 ── */
+input[type="radio"] {
+    background: url('/img/radio_off.png') no-repeat 0 0;
+}
+input[type="radio"]:checked {
+    background: url('/img/radio_on.png') no-repeat 0 0;
+}
+
+/* ── checkbox 이미지 ── */
+input[type="checkbox"] {
+    background: url('/img/checkbox_off.png') no-repeat 0 0;
+}
+input[type="checkbox"]:disabled {
+    background: url('/img/checkbox_disabled_off.png') no-repeat 0 0;
+}
+input[type="checkbox"]:checked {
+    background: url('/img/checkbox_on.png') no-repeat 0 0;
+}
+input[type="checkbox"]:checked:disabled {
+    background: url('/img/checkbox_disabled_on.png') no-repeat 0 0;
+}
+
+/* ── checkbox-lg ── */
+label.checkbox-lg {
+    line-height: 1.8em;
+    padding-left: 25px;
+}
+label.checkbox-lg input[type="checkbox"],
+input[type="checkbox"].input-lg {
+    width: 18px;
+    height: 18px;
+    background: url('/img/checkbox_login_off.png') no-repeat 0 0;
+    margin-left: -25px;
+}
+label.checkbox-lg input[type="checkbox"]:checked,
+input[type="checkbox"]:checked.input-lg {
+    background: url('/img/checkbox_login_on.png') no-repeat 0 0;
+}
+
+/* ── Bootstrap 충돌 해결 ── */
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+    position: static !important;
+    margin-left: 0 !important;
+    margin-right: 4px;
+    vertical-align: middle;
+}
+.radio-inline,
+.checkbox-inline {
+    padding-left: 0 !important;
+}
+
+/* ── select ── */
+select:hover {
+    border-color: #666;
+}
+select.multiple-select {
+    padding: 0;
+}
+select.multiple-select option:checked {
+    color: #fff;
+    background: #488f8f;
+}
+
+/* ── 텍스트 선택 색상 ── */
+::selection {
+    background: rgba(249, 19, 27, 0.85);
+    color: #fff;
+}
+::-moz-selection {
+    background: rgba(249, 19, 27, 0.85);
+    color: #fff;
+}
+
+/* ── 파일 업로드 ── */
+.group-span-filestyle label {
+    margin-right: 5px !important;
+}
+
+/* ── 이메일 인풋 ── */
+.email-wrap {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: nowrap;
+}
+.email-wrap .form-control {
+    width: 120px;
+    height: 28px;
+}
+.email-wrap .email-domain {
+    width: 130px;
+}
+.email-wrap .email-select {
+    width: 100px;
+    height: 28px;
+}
+.email-wrap .email-at {
+    color: #666;
+    font-size: 13px;
+}

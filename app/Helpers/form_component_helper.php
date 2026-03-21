@@ -1,30 +1,21 @@
 <?php
 if (!function_exists('email_input')) {
-    function email_input(string $idName, string $domainName, ?string $idValue = '')
-    {
-
-        $domainValue = '';
-
-        if ($idValue && str_contains($idValue, '@')) {
-            [$idValue, $domainValue] = explode('@', $idValue, 2);
-        }
-
-        $options = ['hanmail.net','daum.net','nate.com','hotmail.com','gamil.com','icloud.com'];
-
-        $optionHtml = '<option value="">직접입력</option>';
-        foreach ($options as $option) {
-            $selected = ($domainValue === $option) ? ' selected="selected"' : '';
-            $optionHtml .= '<option value="'.$option.'"'.$selected.'>'.$option.'</option>';
-        }
-
+    function email_input($name1, $name2, $val1 = '', $val2 = '') {
         return '
-        <div class="email-group">
-            <input type="text" name="'.$idName.'" value="'.esc($idValue).'" placeholder="이메일 아이디" class="form-control width-sm" />
-            @
-            <input type="text" name="'.$domainName.'" value="'.esc($domainValue).'" placeholder="도메인" class="form-control email_domain width-sm" />
-            <div class="display-inline-block">
-                <select class="email_select">'.$optionHtml.'</select>
-            </div>
+        <div class="email-wrap">
+            <input type="text" name="' . $name1 . '" value="' . esc($val1) . '" 
+                   class="form-control" placeholder="이메일 아이디">
+            <span class="email-at">@</span>
+            <input type="text" name="' . $name2 . '" value="' . esc($val2) . '" 
+                   class="form-control email-domain" placeholder="도메인">
+            <select class="form-control email-select">
+                <option value="">직접입력</option>
+                <option value="naver.com">naver.com</option>
+                <option value="gmail.com">gmail.com</option>
+                <option value="daum.net">daum.net</option>
+                <option value="kakao.com">kakao.com</option>
+                <option value="nate.com">nate.com</option>
+            </select>
         </div>';
     }
 }

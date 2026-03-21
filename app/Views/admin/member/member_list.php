@@ -7,9 +7,8 @@
     <!-- 페이지 헤더 -->
     <div class="page-header">
         <h3>회원 리스트</h3>
-        <button type="button" class="btn btn-red-line"
-                onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
-            + 회원 등록
+        <button type="button" class="btn btn-red-line" onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
+            회원 등록
         </button>
     </div>
 
@@ -148,11 +147,11 @@
 
         <!-- 하단 버튼 -->
         <div class="table-action">
-            <div>
+            <div class="pull-left">
                 <button type="button" class="btn btn-white" id="btnApply">선택 가입승인</button>
                 <button type="button" class="btn btn-white" id="btnDelete">선택 탈퇴처리</button>
             </div>
-            <div>
+            <div class="pull-right">
                 <button type="button" class="btn btn-white">엑셀다운로드</button>
             </div>
         </div>
