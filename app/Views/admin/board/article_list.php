@@ -85,11 +85,8 @@
 <form id="frmList" action="" method="get" target="ifrmProcess">
     <div class="table-header form-inline">
         <div class="pull-left">
-            검색
-            <strong><?=number_format($boards['totalSearch']) ?></strong>
-            명 / 전체
-            <strong><?=number_format($boards['totalCount']) ?></strong>
-            명
+            검색 <strong><?=number_format($boards['totalSearch']) ?></strong> 건 /
+            전체 <strong><?=number_format($boards['totalCount']) ?></strong> 건
         </div>
     </div>
 

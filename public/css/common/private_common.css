@@ -1,0 +1,122 @@
+/* 넓이 */
+/* 넓이 */
+.width102p { width: 102% !important; }
+.width100p { width: 100% !important; }
+.width98p { width: 98% !important; }
+.width90p { width: 90% !important; }
+.width80p { width: 80% !important; }
+.width75p { width: 75% !important; }
+.width74p { width: 74% !important; }
+.width70p { width: 70% !important; }
+.width62p { width: 62% !important; }
+.width60p { width: 60% !important; }
+.width57p { width: 57% !important; }
+.width55p { width: 55% !important; }
+.width50p { width: 50% !important; }
+.width49p { width: 49% !important; }
+.width40p { width: 40% !important; }
+.width30p { width: 30% !important; }
+.width27p { width: 27% !important; }
+.width20p { width: 20% !important; }
+.width18p { width: 18% !important; }
+.width15p { width: 15% !important; }
+.width12p { width: 12% !important; }
+.width11p { width: 11% !important; }
+.width10p { width: 10% !important; }
+.width9p { width: 9% !important; }
+.width8p { width: 8% !important; }
+.width7p { width: 7% !important; }
+.width6p { width: 6% !important; }
+.width5p { width: 5% !important; }
+.width3p { width: 3% !important; }
+.width2p { width: 2% !important; }
+
+.width-4xs { width: 30px !important; }
+.width-3xs { width: 60px !important; }
+.width-2xs { width: 70px !important; }
+.width-xs { width: 100px !important; }
+.width-sm { width: 130px !important; }
+.width-md { width: 150px !important; }
+.width-lg { width: 200px !important; }
+.width-xl { width: 250px !important; }
+.width-2xl { width: 400px !important; }
+.width-3xl { width: 600px !important; }
+
+.width300 { width: 300px !important; }}
+
+/* ── datepicker 스타일 ── */
+.ui-datepicker {
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    padding: 0;
+}
+
+/* 헤더 */
+.ui-datepicker .ui-datepicker-header {
+    background: #fa2828;
+    border: none;
+    border-radius: 0;
+    padding: 8px 0;
+}
+.ui-datepicker .ui-datepicker-title {
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+/* 이전/다음 버튼 */
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    top: 6px;
+    cursor: pointer;
+    background: none !important;
+    border: none !important;
+}
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span { display: none; }
+.ui-datepicker .ui-datepicker-prev::after { content: '◀'; color: #fff; font-size: 11px; }
+.ui-datepicker .ui-datepicker-next::after { content: '▶'; color: #fff; font-size: 11px; }
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover { background: rgba(0,0,0,0.1) !important; }
+
+/* 요일 헤더 */
+.ui-datepicker th {
+    color: #666;
+    font-size: 11px;
+    padding: 5px;
+}
+.ui-datepicker th:first-child { color: #fa2828; } /* 일요일 */
+.ui-datepicker th:last-child  { color: #4466cc; } /* 토요일 */
+
+/* 날짜 */
+.ui-datepicker td { padding: 1px; }
+.ui-datepicker td a,
+.ui-datepicker td span {
+    text-align: center;
+    padding: 4px;
+    font-size: 12px;
+    border-radius: 2px;
+}
+.ui-datepicker td:first-child a { color: #fa2828; } /* 일요일 */
+.ui-datepicker td:last-child a  { color: #4466cc; } /* 토요일 */
+
+/* 오늘 날짜 */
+.ui-datepicker td.ui-datepicker-today a {
+    background: #fff0f0;
+    border: 1px solid #fa2828;
+    color: #fa2828;
+}
+
+/* 선택된 날짜 */
+.ui-datepicker td.ui-datepicker-current-day a,
+.ui-datepicker td a:hover {
+    background: #fa2828 !important;
+    color: #fff !important;
+    border: none;
+}
+
+/* 달력 배경 */
+.ui-datepicker tbody tr td a { color: #333; }
+.ui-widget-content { border: 1px solid #ddd; }
+

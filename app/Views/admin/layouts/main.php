@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="<?= base_url('css/gd_share/bootstrap-datetimepicker.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/gd_share/bootstrap-dialog.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/gd_share/jquery-ui.css') ?>">
+    <link rel="stylesheet" href="<?= base_url('css/common/private_common.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/gd_share/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/admin/lib/common.css') ?>">
     <link rel="stylesheet" href="<?= base_url('css/form.css') ?>">

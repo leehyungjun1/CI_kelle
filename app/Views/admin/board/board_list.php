@@ -3,7 +3,9 @@
 <?php echo $this->section('content') ?>
 <div class="page-header js-affix affix-top">
     <h3>게시판 리스트 </h3>
-    <input type="button" value="게시판 만들기" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/board_register") ?>")'>
+    <div class="btn-group">
+        <input type="button" class="btn btn-white btn-icon btn-icon-plus" value="게시판 만들기" onClick='goList("<?= base_url("admin/board/board_register") ?>")'>
+    </div>
 </div>
 <form id="frmSearchBase" method="get" class="content-form js-search-form js-form-enter-submit">
     <input type="hidden" name="sort" value="" id="searchsort">
