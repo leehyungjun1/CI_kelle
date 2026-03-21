@@ -71,4 +71,44 @@ abstract class BaseController extends Controller
         return view($view, $data);
     }
 
+    /**
+     * 범용 페이징
+     *
+     * 사용 예:
+     *   $paging = $this->makePaging($model, $get);
+     *
+     *   return $this->render('admin/member/member_list', [
+     *       'members'  => $paging['items'],
+     *       ...$paging['meta'],   // pager, totalCount, searchCount, startNum, pageNum, currentPage
+     *   ]);
+     *
+     * @param  Model  $model          이미 검색/정렬 조건이 적용된 모델 인스턴스
+     * @param  array  $get            request()->getGet() 값
+     * @param  int    $defaultPerPage 기본 페이지당 건수 (기본 10)
+     * @return array  ['items' => [...], 'meta' => [...]]
+     */
+    protected function makePaging($model, array $get, int $defaultPerPage = 10): array
+    {
+        $pageNum     = max(1, (int)($get['pageNum'] ?? $defaultPerPage));
+        $currentPage = max(1, (int)($get['page']    ?? 1));
+
+        // 전체 건수 (검색 조건 적용 전)
+        // → 컨트롤러에서 검색 조건 적용 전에 별도로 넘기거나
+        //   모델에서 reset 없이 countAllResults 사용
+        $searchCount = $model->countAllResults(false);
+        $startNum    = max(0, $searchCount - (($currentPage - 1) * $pageNum));
+        $items       = $model->paginate($pageNum);
+
+        return [
+            'items' => $items,
+            'meta'  => [
+                'pager'       => $model->pager,
+                'searchCount' => $searchCount,
+                'startNum'    => $startNum,
+                'pageNum'     => $pageNum,
+                'currentPage' => $currentPage,
+            ],
+        ];
+    }
+
 }

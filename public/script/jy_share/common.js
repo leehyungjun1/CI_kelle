@@ -47,12 +47,29 @@ $(document).ready(function() {
                         }
                     });
                 } else {
-                    // 배열 형태 메시지를 보기 좋게 변환
-                    let errorMsg = '';
-                    for (let key in res.message) {
-                        errorMsg += res.message[key] + "\n";
+                    // 기존 에러 메시지 초기화
+                    $('.field-error').remove();
+                    $('.is-error').removeClass('is-error');
+
+                    if (res.type === 'field') {
+                        // 필드 아래 표시
+                        $.each(res.message, function(field, msg) {
+                            var $input = $('[name="' + field + '"]');
+                            if ($input.length) {
+                                $input.addClass('is-error');
+                                // input의 가장 가까운 td 안에 추가
+                                $input.closest('td').append('<p class="field-error">' + msg + '</p>');
+                            } else {
+                                $("#frm").prepend('<p class="field-error">' + msg + '</p>');
+                            }
+                        });
+                    } else {
+                        // 모달로 표시
+                        let msg = typeof res.message === 'object'
+                            ? Object.values(res.message).join('\n')
+                            : res.message;
+                        dialog_alert(msg, '알림');
                     }
-                    alert(errorMsg);
                 }
             },
             error: function(xhr, status, error) {

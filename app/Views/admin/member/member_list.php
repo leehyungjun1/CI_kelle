@@ -118,7 +118,7 @@
                 <?php foreach ($members as $idx => $member): ?>
                     <tr class="center">
                         <td><input type="checkbox" name="chk[]" value="<?= $member['id'] ?>"></td>
-                        <td><?= $idx + 1 ?></td>
+                        <td><?= $startNum-- ?></td>
                         <td><?= esc($member['userid']) ?> / <?= esc($member['nickname'] ?? '') ?></td>
                         <td><?= esc($member['name'] ?? '') ?></td>
                         <td><?= esc($member['group_name'] ?? '') ?></td>
@@ -162,4 +162,8 @@
         </div>
     </form>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('js') ?>
+    <script src="<?= base_url('script/jy_share/list.js') ?>"></script>
 <?= $this->endSection() ?>
