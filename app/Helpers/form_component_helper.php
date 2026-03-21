@@ -124,3 +124,17 @@ HTML;
         }
     }
 }
+
+if (!function_exists('busino_input')) {
+    function busino_input($oldBusiNo = '') {
+        return '
+        <div class="busino-wrap form-inline">
+            <input type="text" name="fullBusiNo" id="busiNo" maxlength="12"
+                   value="' . esc($oldBusiNo) . '"
+                   class="form-control js-busino ignore" placeholder="000-00-00000"
+                   data-overlap-businofl="y" data-charlen="10" data-oldbusino="' . esc($oldBusiNo) . '">
+            <button type="button" id="overlap_busiNo" class="btn btn-gray btn-sm">중복확인</button>
+            <button type="button" id="find_busiNo" class="btn btn-gray btn-sm">사업자번호 조회</button>
+        </div>';
+    }
+}

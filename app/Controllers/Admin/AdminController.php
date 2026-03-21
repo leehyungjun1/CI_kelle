@@ -16,6 +16,11 @@ class AdminController extends BaseController {
     public function login()
     {
         if ($this->request->getMethod() === 'GET') {
+            // 이미 로그인되어 있으면 대시보드로
+            $admin = session()->get('admin');
+            if ($admin && !empty($admin['logged_in'])) {
+                return redirect()->to(base_url('admin/dashboard'));
+            }
             return view('admin/login');
         }
 

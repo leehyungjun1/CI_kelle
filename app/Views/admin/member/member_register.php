@@ -105,7 +105,7 @@
                 <td>
                     <div class="form-inline mgb5">
                         <span title="휴대폰번호를 입력해주세요!" style="position: relative;">
-                        <input type="text" name="mobile" value="<?=$user['mobile'] ?? ''?>" maxlength="12" class="form-control js-number-only width-md">
+                        <input type="text" name="mobile" value="<?=$user['mobile'] ?? ''?>" maxlength="13" class="form-control js-tel width-md">
                     </span>
                     </div>
                     <div class="form-inline">
@@ -129,102 +129,79 @@
                 <td colspan="3">
                     <div class="form-inline">
                         <span title="전화번호를 입력해주세요!" style="position: relative;">
-                        <input type="text" name="phone" value="<?=$user['phone'] ?? ''?>" maxlength="12" class="form-control js-number-only width-md">
+                        <input type="text" name="phone" value="<?=$user['phone'] ?? ''?>" maxlength="13" class="form-control js-tel width-md">
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="table-title div-business gd-help-manual display-none">사업자정보</div>
-    <div class="input_wrap form-inline div-business display-none">
-        <table class="table table-cols">
-            <colgroup>
-                <col class="width-sm">
-                <col class="width-3xl">
-                <col class="width-sm">
-                <col class="">
-            </colgroup>
-            <tbody><tr>
-                <th>상호</th>
-                <td>
-                <span title="회사명를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="company" class="form-control ignore" value="" maxlength="50">
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 50</span></span>
-                    <span id="companyMsg" class="input_error_msg"></span>
-                </td>
-                <th>사업자번호</th>
-                <td>
-                <span title="사업자번호를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="busiNo[]" size="3" maxlength="3" class="form-control js-number ignore" value="">
-                    -
-                    <input type="text" name="busiNo[]" size="2" maxlength="2" class="form-control js-number ignore" value="">
-                    -
-                    <input type="text" name="busiNo[]" size="5" maxlength="5" class="form-control js-number ignore" value="">
-                    <input type="hidden" id="busiNo" name="fullBusiNo" class="error ignore" value="" data-overlap-businofl="y" data-charlen="10" data-oldbusino="">
-                                        <button type="button" id="overlap_busiNo" class="btn btn-gray btn-sm">중복확인</button>
-                                        <button type="button" id="find_busiNo" class="btn btn-gray btn-sm">사업자번호 조회</button>
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 3</span><span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 2</span><span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 5</span></span>
-                </td>
-            </tr>
-            <tr>
-                <th>대표자명</th>
-                <td class="input_area" colspan="3">
-                <span title="대표자를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="ceo" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="20">
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 20</span></span>
-                </td>
+    <div class="div-business" style="display:none;">
+        <div class="table-title gd-help-manual">사업자정보</div>
+        <div class="input_wrap form-inline">
+            <table class="table table-cols">
+        <colgroup>
+            <col class="width-sm">
+            <col class="width-3xl">
+            <col class="width-sm">
+            <col class="">
+        </colgroup>
+        <tbody><tr>
+            <th>상호</th>
+            <td>
+            <span title="회사명를 입력해주세요!" style="position: relative;">
+                <input type="text" name="company" class="form-control ignore" value="" maxlength="50">
+            <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 50</span></span>
+                <span id="companyMsg" class="input_error_msg"></span>
+            </td>
+            <th>사업자번호</th>
+            <td><?= busino_input($user['fullBusiNo'] ?? '') ?></td>
+        </tr>
+        <tr>
+            <th>대표자명</th>
+            <td class="input_area" colspan="3">
+            <span title="대표자를 입력해주세요!" style="position: relative;">
+                <input type="text" name="ceo" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="20">
+            <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 20</span></span>
+            </td>
 
-            </tr>
-            <tr>
-                <th>업태</th>
-                <td>
-                <span title="업태를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="service" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="30">
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 30</span></span>
-                </td>
-                <th>종목</th>
-                <td>
-                <span title="종목을 입력해주세요!" style="position: relative;">
-                    <input type="text" name="item" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="30">
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 30</span></span>
-                </td>
-            </tr>
-            <tr>
-                <th>사업장 주소</th>
-                <td class="input_area" colspan="3">
-                    <div class="form-inline mgb5">
-                    <span title="우편번호를 입력해주세요!" style="position: relative;">
-                        <input type="text" size="7" maxlength="5" name="comZonecode" class="form-control ignore" value="">
-                        <input type="hidden" name="comZipcode" value="" class="ignore">
-                        <span id="comZipcodeText" class="number display-none">()
-                        </span>
-                    <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 5</span></span>
-                        <input type="button" onclick="postcode_search('comZonecode', 'comAddress', 'comZipcode');" value="우편번호찾기" class="btn btn-sm btn-gray ignore">
-                    </div>
-                    <div>
-                    <span title="주소를 입력해주세요!">
-                        <input type="text" name="comAddress" class="form-control width-2xl ignore" value="">
-                    </span>
-                        <span title="상세주소를 입력해주세요!">
-                        <input type="text" name="comAddressSub" class="form-control width-2xl ignore" value="">
-                    </span>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th>사업자등록증</th>
-                <td class="input_area" colspan="3">
-                    <div class="form-inline">
-                        <input type="file" id="companyCertification" name="companyCertification" class="form-control ignore" accept="image/*, application/pdf" tabindex="-1" style="position: absolute; clip: rect(0px, 0px, 0px, 0px);"><div class="bootstrap-filestyle input-group"><span class="group-span-filestyle input-group-btn" tabindex="0"><label for="companyCertification" class="btn btn-gray btn-sm"><span class="buttonText">찾아보기</span></label></span><input type="text" class="form-control input-sm" placeholder="" disabled=""> </div>
-                    </div>
-                    <div class="notice-info mgt10">
-                        파일 업로드 최대 사이즈는 2MB 입니다.<br>
-                    </div>
-                </td>
-            </tr>
-            </tbody></table>
+        </tr>
+        <tr>
+            <th>업태</th>
+            <td>
+            <span title="업태를 입력해주세요!" style="position: relative;">
+                <input type="text" name="service" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="30">
+            <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 30</span></span>
+            </td>
+            <th>종목</th>
+            <td>
+            <span title="종목을 입력해주세요!" style="position: relative;">
+                <input type="text" name="item" class="form-control ignore" value="" data-pattern="gdEngKor" maxlength="30">
+            <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -5px; left: 5px;"><em>0</em> / 30</span></span>
+            </td>
+        </tr>
+        <tr>
+            <th>사업장 주소</th>
+            <td colspan="3">
+                <?= address_input('comZonecode', 'comAddress', 'comAddressSub') ?>
+            </td>
+        </tr>
+        <tr>
+            <th>사업자등록증</th>
+            <td class="input_area" colspan="3">
+                <div class="form-inline">
+                    <input type="file" id="companyCertification" name="companyCertification"
+                           accept="image/*, application/pdf">
+                </div>
+                <div class="notice-info mgt10">
+                    파일 업로드 최대 사이즈는 2MB 입니다.<br>
+                </div>
+            </td>
+        </tr>
+        </tbody></table>
+        </div>
     </div>
+
     <iframe id="downloadFrame" style="display:none;"></iframe>
     <div class="table-title gd-help-manual">부가정보 </div>
     <div class="input_wrap form-inline">
@@ -239,8 +216,8 @@
                 <th>팩스번호</th>
                 <td>
                 <span title="팩스번호를 입력해주세요!" style="position: relative;">
-                    <input type="text" name="fax" value="" maxlength="12" class="form-control js-number-only width-md">
-                <span class="bootstrap-maxlength" style="display: none; position: absolute; white-space: nowrap; z-index: 999; top: -12.4781px; left: 155px;"><em>0</em> / 12</span></span>
+                    <input type="text" name="fax" value="" maxlength="13" class="form-control js-tel width-md">
+                </span>
                 </td>
                 <th>직업</th>
                 <td class="input_area" colspan="3">
@@ -260,9 +237,14 @@
                 </td>
                 <th>생일</th>
                 <td>
-                    <select class="form-control " id="calendarFl" name="calendarFl"><option value="">선택</option><option value="s">양력</option><option value="l">음력</option></select>                <span title="생일을 입력해주세요!">
-                    <input type="text" class="js-datepicker form-control" name="birthDt" value="">
-                </span>
+                    <div class="form-inline">
+                        <select class="form-control" id="calendarFl" name="calendarFl">
+                            <option value="">선택</option>
+                            <option value="s">양력</option>
+                            <option value="l">음력</option>
+                        </select>
+                        <span class="js-datepicker"><input type="text" class="form-control" name="birthDt" value=""></span>
+                    </div>
                 </td>
             </tr>
             <tr>
@@ -384,3 +366,20 @@
 
 <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <?php echo $this->endSection() ?>
+
+<?= $this->section('js') ?>
+<script>
+    $(document).ready(function() {
+        if ($('input[name="member_type"]:checked').val() !== 'business') {
+            $(".div-business").hide();
+        }
+        $(document).on('click', 'input[name="member_type"]', function () {
+            if ($(this).val() === 'business') {
+                $(".div-business").show();
+            } else {
+                $(".div-business").hide();
+            }
+        });
+    });
+</script>
+<?= $this->endSection() ?>

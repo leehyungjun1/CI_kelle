@@ -269,3 +269,5 @@ body.menu-no-border #content-wrap #content { padding-top: 35px; }
 .pagination > .active > a:hover {
     background: #666; border-color: #666; color: #fff; font-weight: bold;
 }
+
+.display-none { display: none !important; }

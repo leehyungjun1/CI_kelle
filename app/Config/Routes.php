@@ -27,9 +27,10 @@ $routes->group('member', function($routes) {
 $routes->get('admin', function() { return redirect()->to('/admin/login'); });
 $routes->get('admin/', function() { return redirect()->to('/admin/login'); });
 
-$routes->get('admin/login', 'Admin\AdminController::login');
-$routes->get('admin/logout', 'Admin\AdminController::logout');
-$routes->post('admin/login', 'Admin\AdminController::login');
+// 필터 제외
+$routes->get('admin/login', 'Admin\AdminController::login', ['filter' => null]);
+$routes->post('admin/login', 'Admin\AdminController::login', ['filter' => null]);
+$routes->get('admin/logout', 'Admin\AdminController::logout', ['filter' => null]);
 
 
 $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {

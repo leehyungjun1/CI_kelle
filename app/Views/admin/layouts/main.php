@@ -85,6 +85,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-filestyle@1/src/bootstrap-filestyle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-min.js"></script>
 <script src="<?= base_url('script/jy_share/lib.js') ?>"></script>
 <script src="<?= base_url('script/jy_share/common.js') ?>"></script>
 

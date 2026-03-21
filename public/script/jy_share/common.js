@@ -138,14 +138,28 @@ $(document).ready(function() {
         }
     });
 
+    // ── 사업자번호 자동 포맷 (000-00-00000) ──
+    $(document).on('input', 'input.js-busino', function() {
+        let val = this.value.replace(/\D/g, '');
+        let formatted = '';
+
+        if (val.length <= 3) {
+            formatted = val;
+        } else if (val.length <= 5) {
+            formatted = val.slice(0, 3) + '-' + val.slice(3);
+        } else {
+            formatted = val.slice(0, 3) + '-' + val.slice(3, 5) + '-' + val.slice(5, 10);
+        }
+
+        this.value = formatted;
+    });
+
     $("#sort").on('change', function() {
         $("#searchsort").val($(this).val());
         $(".js-search-button").click();
     });
 
-    $('.js-datepicker input').datepicker({
-        dateFormat: 'yy-mm-dd' // '2025-09-27' 형식
-    });
+    $('input.js-datepicker, .js-datepicker input').datepicker({ dateFormat: 'yy-mm-dd' });
 
     // 달력 아이콘 클릭 시 input focus
     $('.js-datepicker .btn-icon-calendar').on('click', function(){
@@ -318,9 +332,17 @@ $(document).on("click", ".addUploadBtn", function() {
     `);
 
     $("#uploadBox").append(newItem);
-
     init_file_style();
+});
 
+$(document).on('change', '.email-select', function() {
+    let selected = $(this).val();
+    let $emailDomain = $(this).closest('.email-wrap').find('.email-domain');
+    if (selected !== '') {
+        $emailDomain.val(selected).prop('readonly', true);
+    } else {
+        $emailDomain.val('').prop('readonly', false);
+    }
 });
 
 $(document).on("click", ".minusUploadBtn", function() {

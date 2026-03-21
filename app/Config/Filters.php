@@ -36,6 +36,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'adminAuth'     => AdminLoginFilter::class,
+        'AdminLoginFilter' => \App\Filters\AdminLoginFilter::class,
     ];
 
     /**
@@ -108,5 +109,9 @@ class Filters extends BaseFilters
      *
      * @var array<string, array<string, list<string>>>
      */
-    public array $filters = [];
+    public array $filters = [
+        'AdminLoginFilter' => [
+            'before' => ['admin/*'],
+        ],
+    ];
 }

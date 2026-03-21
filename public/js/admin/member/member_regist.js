@@ -1,4 +1,10 @@
 $(document).ready(function() {
+    // ── 페이지 로드 시 초기 상태 설정 ──
+    if ($('input[name="member_type"]:checked').val() !== 'business') {
+        $(".div-business").addClass("display-none");
+    }
+
+    // ── 개인/사업자 회원 구분 토글 ──
     $('input[name="member_type"]').on('change', function () {
         if ($(this).val() === 'business') {
             $(".div-business").removeClass("display-none");

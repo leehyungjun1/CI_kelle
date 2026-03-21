@@ -134,3 +134,11 @@ select.multiple-select option:checked {
     color: #666;
     font-size: 13px;
 }
+
+/* ── 주소 인풋 ── */
+.table-cols input[name="address1"],
+.table-cols input[name="address2"],
+.table-cols input[name="comAddress"],
+.table-cols input[name="comAddressSub"] {
+    width: 400px !important;
+}
