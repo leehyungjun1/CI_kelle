@@ -113,3 +113,70 @@
 .input_wrap .form-inline { margin-bottom: 5px; }
 .mgb5 { margin-bottom: 5px; }
 .mgt10 { margin-top: 10px; }
+
+/* ── 파일 업로드 박스 ── */
+.upload-box {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.upload-box li {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 28px;
+}
+/* 찾아보기 버튼 */
+.upload-box .group-span-filestyle label,
+.upload-box .btn-gray {
+    height: 28px !important;
+    line-height: 26px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+    margin: 0 !important;
+    white-space: nowrap;
+}
+/* 파일명 텍스트 인풋 */
+.upload-box .bootstrap-filestyle input[type="text"],
+.upload-box .input-sm {
+    height: 28px !important;
+    line-height: 26px !important;
+    font-size: 12px !important;
+    width: 200px !important;
+    padding: 0 8px !important;
+    border-radius: 0 !important;
+}
+/* 추가/삭제 버튼 */
+.upload-box .btn-sm {
+    height: 28px !important;
+    line-height: 26px !important;
+    padding: 0 10px !important;
+    font-size: 12px !important;
+    margin: 0 !important;
+}
+/* 파일첨부 추가 버튼 아이콘 간격 */
+.upload-box .btn-icon-plus {
+    background-position: 6px 55% !important;
+    padding-left: 22px !important;
+}
+/* 파일명 텍스트 */
+.upload-box .text-muted {
+    color: #999;
+    font-size: 12px;
+    line-height: 28px;
+}
+/* 삭제 체크박스 */
+.upload-box .checkbox-inline {
+    height: 28px;
+    line-height: 28px;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
+}
+
+/* ── 제목 인풋 전체 너비 ── */
+.table-cols input.width-5xl {
+    width: 100% !important;
+    max-width: 800px;
+}
