@@ -7,9 +7,9 @@
     <!-- 페이지 헤더 -->
     <div class="page-header">
         <h3>회원 리스트</h3>
-        <button type="button" class="btn btn-red-line" onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
-            회원 등록
-        </button>
+        <div class="btn-group">
+        <input type="button" class="btn btn-white btn-icon btn-icon-plus" value="회원 등록" onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
+        </div>
     </div>
 
     <!-- 검색 폼 -->

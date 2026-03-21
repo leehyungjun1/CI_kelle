@@ -1,7 +1,7 @@
-<?php echo $this->extend('layouts/admin_sub') ?>
+<?= $this->extend('admin/layouts/main') ?>
 
 <?php echo $this->section('content') ?>
-<div class="page-header js-affix affix-top" style="width: 1634px;">
+<div class="page-header js-affix affix-top">
     <h3>게시판 리스트 </h3>
     <input type="button" value="게시판 만들기" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/board_register") ?>")'>
 </div>
@@ -21,9 +21,9 @@
             <tr>
                 <th>검색어</th>
                 <td colspan="3">
-                    <select class=" form-control" id="key" name="key">
-                        <option value="userid" <?=(($_GET['key'] ?? '') === 'userid') ? 'selected' : '' ?>>아이디</option>
-                        <option value="name" <?=(($_GET['key'] ?? '') === 'name') ? 'selected' : '' ?>>이름</option>
+                    <select name="key" class="form-control">
+                        <option value="board_id" <?= ($get['key'] ?? '') === 'board_id' ? 'selected' : '' ?>>아이디</option>
+                        <option value="name"     <?= ($get['key'] ?? '') === 'name'     ? 'selected' : '' ?>>이름</option>
                     </select>
                     <select class=" form-control " id="searchKind" name="searchKind">
                         <option value="equalSearch" <?=(($_GET['searchKind'] ?? '') === 'equalSearch')? 'selected' : '' ?>>검색어 전체일치</option>
@@ -66,11 +66,15 @@
 <form id="frmList" action="" method="get" target="ifrmProcess">
     <div class="table-header form-inline">
         <div class="pull-left">
-            검색
-            <strong><?=number_format($searchCount) ?></strong>
-            명 / 전체
-            <strong><?=number_format($totalCount) ?></strong>
-            명
+            검색 <strong><?=number_format($searchCount) ?></strong> 건 / 
+            전체 <strong><?=number_format($totalCount) ?></strong>  건
+        </div>
+        <div class="pull-right">
+            <select name="pageNum" class="form-control">
+                <?php foreach ([10, 20, 30, 50, 100] as $num): ?>
+                    <option value="<?= $num ?>"><?= $num ?>개 보기</option>
+                <?php endforeach; ?>
+            </select>
         </div>
     </div>
 
@@ -103,7 +107,7 @@
         <tbody>
         <?php if(!empty($boards)) : ?>
             <?php
-            $startNo = $searchCount - (($page - 1) * $perPage);
+            $startNo = $searchCount - (($currentPage - 1) * $pageNum);
             ?>
             <?php foreach($boards as $i => $board) : ?>
                 <tr class="center" data-member-no="<?=esc($board['id'] ?? '') ?>">
@@ -133,19 +137,17 @@
         </div>
     </div>
 
-    <div class="center"><nav><ul class="pagination pagination-sm"></ul></nav></div>
+    <!-- 페이징 -->
+    <div class="center" style="margin-top:15px;">
+        <?= $pager->links() ?>
+    </div>
 </form>
 
-<script>
-    $(document).on("click", "#btnDelete", function() {
-        handleAdminAction("<?=base_url('admin/board/board_delete') ?>",
-            '선택된 게시물을 삭제하시겠습니까?',
-        );
-    });
-</script>
+<?= $this->endSection() ?>
 
-
-<?php echo $this->endSection() ?>
+<?= $this->section('js') ?>
+<script src="<?= base_url('script/jy_share/list.js') ?>"></script>
+<?= $this->endSection() ?>
 
 
 

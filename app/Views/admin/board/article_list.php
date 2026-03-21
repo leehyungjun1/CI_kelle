@@ -1,6 +1,5 @@
-<?php echo $this->extend('layouts/admin_sub') ?>
-
-<?php echo $this->section('content') ?>
+<?= $this->extend('admin/layouts/main') ?>
+<?= $this->section('content') ?>
 <div class="page-header js-affix affix-top">
     <h3>게시글 관리 </h3>
     <input type="button" value="등록" class="btn btn-red-line" onClick='goList("<?= base_url("admin/board/article_register/{$board_id}") ?>")'>
@@ -174,6 +173,9 @@
     }
 </style>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('js') ?>
 <script>
     $(document).on("change", "#board_id", function() {
         url = $(this).find("option:selected").val();
@@ -187,8 +189,9 @@
         );
     });
 </script>
+<?= $this->endSection() ?>
 
-<?php echo $this->endSection() ?>
+
 
 
 

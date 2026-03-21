@@ -9,7 +9,7 @@
     <div class="page-header">
         <h3><?= $mode === 'edit' ? '회원 수정' : '회원 등록' ?></h3>
         <div class="btn-group">
-            <input type="button" value="목록" class="btn btn-white btn-icon-list"
+            <input type="button" value="목록" class="btn btn-white btn-icon btn-icon-list"
                    onclick="goList('<?= base_url('admin/member/member_list') ?>')">
             <input type="button" value="저장" class="btn btn-red btn-register">
         </div>
