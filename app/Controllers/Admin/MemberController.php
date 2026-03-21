@@ -173,8 +173,9 @@ class MemberController extends BaseController
             $userModel->save($saveData);
 
             return $this->response->setJSON([
-                'status' => 'success',
-                'message' => '저장되었습니다.'
+                'status'  => 'success',
+                'message' => '저장되었습니다.',
+                'url'     => base_url('admin/member/member_list'),
             ]);
 
         } catch (\Exception $e) {
