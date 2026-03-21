@@ -117,8 +117,7 @@
                         <input type="checkbox" name="chk[]" value="<?=esc($board['id'] ?? '') ?>">
                     </td>
                     <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo-- ?></span></td>
-                    <td align="left">
-
+                    <td class="td-left">
                         <span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_view/'.esc($board_id).'/'.esc($board['id']));?>"?><?= replyIndent($board['depth']) ?> <?=esc($board['title'] ?? '') ?></a></span></td>
                     <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($board['created_at']))) ?></span></td>

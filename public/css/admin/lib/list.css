@@ -82,7 +82,9 @@
 }
 .table-rows tbody tr td:last-child { border-right: 0; }
 .table-rows tbody tr:hover td { background: #f6f6f6; }
+.table-rows tbody tr td.td-left { text-align: left !important; padding-left: 10px; }
 
+.td-left { text}
 /* ── 테이블 하단 액션 ── */
 .table-action {
     overflow: hidden;
