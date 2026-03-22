@@ -191,6 +191,7 @@ class DynamicBoardService
 
         $data = [
             'board_id'      => $boardSetting['id'],
+            'header_id'     => $post['header_id'] ?? null,
             'title'         => $post['title'],
             'content'       => $content,
             'rating'        => $post['rating'] ?? 0,

@@ -38,10 +38,27 @@
     </tr>
     <tr>
         <th class="require">제목</th>
-        <td colspan="3">
-            <input type="text" name="title" id="title" class="form-control width-5xl"
+        <td <?php if (empty($headers)): ?> colspan="3" <? endif; ?>>
+            <input type="text" name="title" id="title" class="form-control width-3xl"
                    value="<?= esc($article['title'] ?? '') ?>">
         </td>
+        <?php if (!empty($headers)): ?>
+        <th>말머리</th>
+        <td>
+            <select name="header_id" class="form-control" style="width:auto;">
+                <option value="">선택안함</option>
+                <?php foreach ($headers as $header): ?>
+                    <option value="<?= esc($header['id']) ?>"
+                            data-bg="<?= esc($header['badge_color']) ?>"
+                            data-color="<?= esc($header['text_color']) ?>"
+                        <?= (string)($article['header_id'] ?? '') === (string)$header['id'] ? 'selected' : '' ?>>
+                        <?= esc($header['header_name']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <span id="headerPreview" class="mgl5"></span>
+        </td>
+        <?php endif; ?>
     </tr>
     <tr>
         <th>작성자</th>

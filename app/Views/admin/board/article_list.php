@@ -30,7 +30,20 @@
                     </td>
                     <th>말머리</th>
                     <td>
-
+                        <?php if (!empty($headers)): ?>
+                            <select name="header_id" class="form-control">
+                                <option value="">전체</option>
+                                <?php foreach ($headers as $header): ?>
+                                    <option value="<?= esc($header['id']) ?>"
+                                        <?= ($filters['header_id'] ?? '') == $header['id'] ? 'selected' : '' ?>
+                                            style="background:<?= esc($header['badge_color']) ?>; color:<?= esc($header['text_color']) ?>">
+                                        <?= esc($header['header_name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php else: ?>
+                            <span class="text-muted">말머리 없음</span>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <tr>
@@ -118,7 +131,27 @@
                     </td>
                     <td class="font-num"><span class="number js-layer-crm hand"><?= $startNo-- ?></span></td>
                     <td class="td-left">
-                        <span class="font-eng js-layer-crm hand"><a href="<?=base_url('admin/board/article_view/'.esc($board_id).'/'.esc($board['id']));?>"?><?= replyIndent($board['depth']) ?> <?=esc($board['title'] ?? '') ?></a></span></td>
+                        <span class="font-eng js-layer-crm hand">
+                            <a href="<?= base_url('admin/board/article_view/'.esc($board_id).'/'.esc($board['id'])) ?>">
+                                <?php
+                                // 말머리 출력
+                                if (!empty($board['header_id']) && !empty($headersMap[$board['header_id']])):
+                                    $header = $headersMap[$board['header_id']];
+                                    ?>
+                                    <span style="background:<?= esc($header['badge_color']) ?>;
+                                            color:<?= esc($header['text_color']) ?>;
+                                            padding:1px 6px;
+                                            border-radius:3px;
+                                            font-size:11px;
+                                            margin-right:5px;">
+                                        <?= esc($header['header_name']) ?>
+                                    </span>
+                                <?php endif; ?>
+                                <?= replyIndent($board['depth']) ?>
+                                <?= esc($board['title'] ?? '') ?>
+                            </a>
+                        </span>
+                    </td>
                     <td><span class="js-layer-crm hand"><?=esc($board['writer'] ?? '') ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(date('Y-m-d', strtotime($board['created_at']))) ?></span></td>
                     <td><span class="js-layer-crm hand"><?=esc(number_format($board['hit'] ?? 0)) ?></span></td>

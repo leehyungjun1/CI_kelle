@@ -89,8 +89,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap3-dialog/dist/js/bootstrap-dialog.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-filestyle@1/src/bootstrap-filestyle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/2.7.0/jquery.raty.min.js"></script>
 
 <script src="<?= base_url('script/jy_share/lib.js') ?>"></script>

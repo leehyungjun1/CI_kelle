@@ -12,7 +12,7 @@ class JyBoardHeader extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['board_setting_id','header_name','header_key','badge_color','order_no','is_use'];
+    protected $allowedFields    = ['board_setting_id','header_name','header_key','badge_color','text_color','order_no','is_use'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -21,7 +21,7 @@ class JyBoardHeader extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';

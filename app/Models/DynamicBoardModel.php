@@ -18,6 +18,7 @@ class DynamicBoardModel extends Model
         'group_id',
         'depth',
         'order_no',
+        'header_id',
         'title',
         'content',
         'rating',
