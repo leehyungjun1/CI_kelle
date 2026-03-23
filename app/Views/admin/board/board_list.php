@@ -1,6 +1,6 @@
 <?= $this->extend('admin/layouts/main') ?>
 
-<?php echo $this->section('content') ?>
+<?= $this->section('content') ?>
 <div class="page-header js-affix affix-top">
     <h3>게시판 리스트 </h3>
     <div class="btn-group">
@@ -64,7 +64,7 @@
         <input type="submit" value="검색" class="btn btn-lg btn-black js-search-button">
     </div>
 </form>
-
+<div id="pageData" data-delete-url="<?= base_url('admin/board/board_delete') ?>" style="display:none;"></div>
 <form id="frmList" action="" method="get" target="ifrmProcess">
     <div class="table-header form-inline">
         <div class="pull-left">

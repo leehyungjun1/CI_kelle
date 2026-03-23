@@ -26,9 +26,17 @@ $(document).ready(function() {
 
     $(document).on("click", ".btn-register", function(e) {
         e.preventDefault();
-        if (typeof oEditors !== "undefined" && oEditors.getById["editor"]) {
-            oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []);
+        // ── 에디터 내용 반영 ──
+        try {
+            if (typeof oEditors !== "undefined"
+                && typeof oEditors.getById !== "undefined"
+                && oEditors.getById["editor"]) {
+                oEditors.getById["editor"].exec("UPDATE_CONTENTS_FIELD", []);
+            }
+        } catch(err) {
+            console.log('editor error:', err);
         }
+
         var $form = $("#frm");
         var formData = new FormData($form[0]);
         var actionUrl = $form.attr("action");

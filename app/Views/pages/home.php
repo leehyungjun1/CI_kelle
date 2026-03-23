@@ -106,21 +106,31 @@
             <a href="#" class="m-sec-more">더보기 →</a>
         </div>
         <ul class="m-notice-list">
-            <li class="m-notice-item">
-                <span class="m-nbadge nb-hot">중요</span>
-                <span class="m-notice-text">학점은행제 관련 사설 학습플래너 이용 주의</span>
-                <span class="m-notice-arrow">›</span>
-            </li>
-            <li class="m-notice-item">
-                <span class="m-nbadge nb-new">공고</span>
-                <span class="m-notice-text">2026년 학점은행제 학습자 등록 및 각종 신청 접...</span>
-                <span class="m-notice-arrow">›</span>
-            </li>
-            <li class="m-notice-item">
-                <span class="m-nbadge nb-new">공고</span>
-                <span class="m-notice-text">2026년도 제 24회 사회복지사 1급 국가 시험 시...</span>
-                <span class="m-notice-arrow">›</span>
-            </li>
+            <?php if (!empty($notices)): ?>
+                <?php foreach ($notices as $notice): ?>
+                    <li class="m-notice-item">
+                        <?php
+                        $headerId = $notice['header_id'] ?? null;
+                        $header   = $noticeHeadersMap[$headerId] ?? null;
+                        ?>
+                        <?php if ($header): ?>
+                            <span class="m-nbadge" style="
+                                    background: <?= esc($header['badge_color']) ?>;
+                                    color: <?= esc($header['text_color']) ?>;
+                                    border: 1px solid <?= esc($header['badge_color']) ?>;
+                                    "><?= esc($header['header_name']) ?></span>
+                        <?php else: ?>
+                            <span class="m-nbadge nb-new">공고</span>
+                        <?php endif; ?>
+                        <span class="m-notice-text"><?= esc($notice['title']) ?></span>
+                        <span class="m-notice-arrow">›</span>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li class="m-notice-item">
+                    <span class="m-notice-text">등록된 알림사항이 없습니다.</span>
+                </li>
+            <?php endif; ?>
         </ul>
     </div>
     <div class="m-divider"></div>
@@ -136,37 +146,51 @@
         </div>
         <div class="review-slider-wrap">
             <div class="review-slider" id="reviewSlider">
-                <div class="review-slide">
-                    <div class="review-img-wrap">
-                        <img src="<?= base_url('images/review/review1.jpg') ?>" alt="후기1" />
-                        <span class="review-tag">사회복지사</span>
+                <?php if (!empty($reviews)): ?>
+                    <?php foreach ($reviews as $i => $review): ?>
+                        <div class="review-slide <?= $i === 0 ? 'active' : '' ?>">
+                            <div class="review-img-wrap">
+                                <img src="<?= !empty($review['thumb'])
+                                    ? base_url($review['thumb'])
+                                    : base_url('images/review/default.jpg') ?>" alt="후기">
+                                <?php
+                                $headerId = $review['header_id'] ?? null;
+                                $header   = $reviewHeadersMap[$headerId] ?? null;
+                                ?>
+                                <?php if ($header): ?>
+                                    <span class="review-tag" style="
+                                            background: <?= esc($header['badge_color']) ?>;
+                                            color: <?= esc($header['text_color'] ?? '#ffffff') ?>;
+                                            "><?= esc($header['header_name']) ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="review-stars">
+                                <?php
+                                $rating = (int)($review['rating'] ?? 0);
+                                echo str_repeat('❤️', min($rating, 5));
+                                ?>
+                                <span><?= $rating ?>.0</span>
+                            </div>
+                            <div class="review-name">🎓 <?= esc($review['writer'] ?? '학습자') ?>님</div>
+                            <div class="review-text"><?= esc($review['content'] ?? '') ?></div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="review-slide active">
+                        <div class="review-text" style="text-align:center; padding:40px 0;">
+                            등록된 후기가 없습니다.
+                        </div>
                     </div>
-                    <div class="review-stars">❤️❤️❤️❤️❤️ <span>4.5</span></div>
-                    <div class="review-name">🎓 조용현 학습자님</div>
-                    <div class="review-text">우선 끝까지 침착하게 친절히 응대해주셔서 저도 잘 모르는 분야인 학은제를 잘 끝냈다고 생각해요...</div>
-                </div>
-                <div class="review-slide">
-                    <div class="review-img-wrap">
-                        <img src="<?= base_url('images/review/review2.jpg') ?>" alt="후기2" />
-                        <span class="review-tag">학점은행제</span>
-                    </div>
-                    <div class="review-stars">❤️❤️❤️❤️❤️ <span>4.5</span></div>
-                    <div class="review-name">🎓 김현진 학습자님</div>
-                    <div class="review-text">팀장님 덕분에 자주~~~ 혼자서 했으면 정말 힘들었을 것 같아요. 감사합니다...</div>
-                </div>
-                <div class="review-slide">
-                    <div class="review-img-wrap">
-                        <img src="<?= base_url('images/review/review3.jpg') ?>" alt="후기3" />
-                        <span class="review-tag">보육교사</span>
-                    </div>
-                    <div class="review-stars">❤️❤️❤️❤️❤️ <span>5.0</span></div>
-                    <div class="review-name">🎓 박지현 학습자님</div>
-                    <div class="review-text">체계적인 커리큘럼 덕분에 단기간에 목표를 달성할 수 있었어요. 정말 감사합니다...</div>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
         <div class="review-dots" id="reviewDots">
-            <span class="active"></span><span></span><span></span>
+            <?php
+            $reviewCount = !empty($reviews) ? count($reviews) : 1;
+            for ($i = 0; $i < $reviewCount; $i++):
+                ?>
+                <span class="<?= $i === 0 ? 'active' : '' ?>"></span>
+            <?php endfor; ?>
         </div>
     </div>
     <div class="m-divider"></div>

@@ -31,8 +31,8 @@
         <?php if ($mode === 'article'): ?>
             <th>노출 여부</th>
             <td>
-                <label class="radio-inline"><input type="radio" name="use_yn" value="Y" <?= ($article['is_use'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출</label>
-                <label class="radio-inline"><input type="radio" name="use_yn" value="N" <?= ($article['is_use'] ?? '') === 'N' ? 'checked' : '' ?>>미노출</label>
+                <label class="radio-inline"><input type="radio" name="is_use" value="Y" <?= ($article['is_use'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출</label>
+                <label class="radio-inline"><input type="radio" name="is_use" value="N" <?= ($article['is_use'] ?? '') === 'N' ? 'checked' : '' ?>>미노출</label>
             </td>
         <?php endif; ?>
     </tr>
@@ -92,6 +92,7 @@
         </td>
         <th>별점</th>
         <td>
+            <div id="articleData" data-rating="<?= (int)($article['rating'] ?? 0) ?>" style="display:none;"></div>
             <div class="starRating"></div>
             <input type="hidden" name="rating" id="rating" value="<?= (int)($article['rating'] ?? 0) ?>">
         </td>

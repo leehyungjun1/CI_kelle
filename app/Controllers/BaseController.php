@@ -111,4 +111,24 @@ abstract class BaseController extends Controller
         ];
     }
 
+    protected function getBoardHeadersMap(string $boardId): array
+    {
+        $headerModel       = new \App\Models\JyBoardHeader();
+        $boardSettingModel = new \App\Models\JyBoardSetting();
+
+        $setting = $boardSettingModel->where('board_id', $boardId)->first();
+        if (empty($setting)) return [];
+
+        $headers = $headerModel
+            ->where('board_setting_id', $setting['id'])
+            ->where('is_use', 'Y')
+            ->findAll();
+
+        $map = [];
+        foreach ($headers as $header) {
+            $map[$header['id']] = $header;
+        }
+        return $map;
+    }
+
 }

@@ -195,7 +195,7 @@ class DynamicBoardService
             'title'         => $post['title'],
             'content'       => $content,
             'rating'        => $post['rating'] ?? 0,
-            'writer_type'   => $post['writer_type'],
+            'writer_type'   => $post['writer_type'] ?? 'admin',
             'writer_id'     => '',
             'writer'        => $post['writer'] ?? null,
             'is_notice'     => $post['is_notice'] ?? 'N',
