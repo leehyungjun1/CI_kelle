@@ -379,3 +379,32 @@ body.menu-no-border #content-wrap #content { padding-top: 35px; }
 .pagination > .active > a:hover {
     background: #666; border-color: #666; color: #fff; font-weight: bold;
 }
+
+/* ── 어드민 모바일 대응 ── */
+@media (max-width: 768px) {
+    #container-wrap { overflow-x: hidden; }
+
+    /* 메뉴 숨기기 */
+    #menu { display: none; }
+
+    /* 콘텐츠 전체 너비 */
+    #content-wrap { flex-direction: column; }
+    #content { width: 100% !important; padding: 10px; }
+
+    /* 테이블 가로 스크롤 */
+    .table-cols, .table-rows {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* page-header */
+    .page-header { flex-wrap: wrap; gap: 8px; }
+
+    /* colgroup width 무시 */
+    .table-cols col, .table-rows col { width: auto !important; }
+
+    /* 폼 인라인 세로 정렬 */
+    .form-inline { flex-wrap: wrap; }
+    .form-inline .form-control { width: 100% !important; }
+}
