@@ -201,7 +201,10 @@ class DynamicBoardService
             'is_notice'     => $post['is_notice'] ?? 'N',
             'is_secret'     => $post['is_secret'] ?? 'N',
             'is_use'        => $post['is_use'] ?? 'N',
-            'status'        => $post['status'] ?? 'N',
+            'keywords'       => $post['keywords'] ?? null,
+            'status'        => is_array($post['status'] ?? [])
+                ? implode(',', $post['status'] ?? [])
+                : ($post['status'] ?? null),
             'is_main'       => $post['is_main'] ?? 'N',
             'ip'            => $_SERVER['REMOTE_ADDR'],
         ];

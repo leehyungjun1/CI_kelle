@@ -357,7 +357,13 @@ $(document).on("click", ".addUploadBtn", function() {
     `);
 
     $("#uploadBox").append(newItem);
-    init_file_style();
+
+    const $newFile = newItem.find(':file');
+    // 파일 선택 시 파일명 표시
+    newItem.find('input[type="file"]').on('change', function() {
+        const fileName = this.files[0] ? this.files[0].name : '선택된 파일 없음';
+        $(this).closest('li').find('.upload-filename').text(fileName);
+    });
 });
 
 $(document).on('change', '.email-select', function() {

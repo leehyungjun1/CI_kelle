@@ -85,6 +85,37 @@
         </td>
     </tr>
     <tr>
+        <th>키워드</th>
+        <td>
+            <input type="text" name="keywords" class="form-control width-3xl"
+                   value="<?= esc($article['keywords'] ?? '') ?>"
+                   placeholder="쉼표(,)로 구분 예) 학점은행제, 사회복지사">
+        </td>
+        <th>상태</th>
+        <td>
+            <?php
+            $currentStatus = array_filter(
+                explode(',', $article['status'] ?? '')
+            );
+            ?>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="status[]" value="popular"
+                    <?= in_array('popular', $currentStatus) ? 'checked' : '' ?>>
+                인기
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="status[]" value="recommend"
+                    <?= in_array('recommend', $currentStatus) ? 'checked' : '' ?>>
+                추천
+            </label>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="status[]" value="new"
+                    <?= in_array('new', $currentStatus) ? 'checked' : '' ?>>
+                신규
+            </label>
+        </td>
+    </tr>
+    <tr>
         <th>이름</th>
         <td>
             <input type="text" name="writer" id="writer" class="form-control width-sm"
@@ -102,19 +133,30 @@
         <td colspan="3">
             <ul id="uploadBox" class="upload-box">
                 <?php foreach ($files as $index => $file): ?>
-                    <li class="form-inline mgb5">
+                    <li class="upload-item form-inline mgb5">
                         <input type="hidden" name="file_ids[]" value="<?= esc($file['id']) ?>">
-                        <input type="file" name="upfiles[<?= esc($file['id']) ?>]">
-                        <label class="checkbox-inline">
+                        <label class="btn btn-gray btn-sm upload-label">
+                            찾아보기
+                            <input type="file" name="upfiles[<?= esc($file['id']) ?>]" style="display:none;">
+                        </label>
+                        <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">
+                    <?= esc($file['file_name']) ?>
+                </span>
+                        <label class="checkbox-inline" style="margin-left:5px;">
                             <input type="checkbox" name="delFile[<?= $index ?>]" value="<?= esc($file['id']) ?>">
                             삭제
                         </label>
-                        <span class="text-muted"><?= esc($file['file_name']) ?></span>
                     </li>
                 <?php endforeach; ?>
-                <li class="form-inline mgb5">
-                    <input type="file" name="upfiles[]" id="filestyle-0">
-                    <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm">추가</a>
+                <li class="upload-item form-inline mgb5">
+                    <label class="btn btn-gray btn-sm upload-label">
+                        찾아보기
+                        <input type="file" name="upfiles[]" style="display:none;">
+                    </label>
+                    <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">
+                선택된 파일 없음
+            </span>
+                    <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm" style="margin-left:5px;">추가</a>
                 </li>
             </ul>
             <input type="hidden" id="fileCnt" value="1">

@@ -150,8 +150,8 @@
                     <?php foreach ($reviews as $i => $review): ?>
                         <div class="review-slide <?= $i === 0 ? 'active' : '' ?>">
                             <div class="review-img-wrap">
-                                <img src="<?= !empty($review['thumb'])
-                                    ? base_url($review['thumb'])
+                                <img src="<?= !empty($review['file_path'])
+                                    ? base_url($review['file_path'])
                                     : base_url('images/review/default.jpg') ?>" alt="후기">
                                 <?php
                                 $headerId = $review['header_id'] ?? null;
@@ -169,10 +169,10 @@
                                 $rating = (int)($review['rating'] ?? 0);
                                 echo str_repeat('❤️', min($rating, 5));
                                 ?>
-                                <span><?= $rating ?>.0</span>
+                                <span><?= $rating ?></span>
                             </div>
-                            <div class="review-name">🎓 <?= esc($review['writer'] ?? '학습자') ?>님</div>
-                            <div class="review-text"><?= esc($review['content'] ?? '') ?></div>
+                            <div class="review-name"><?= esc($review['writer'] ?? '학습자') ?>님</div>
+                            <div class="review-text"><?= purify($review['content'] ?? '') ?></div>
                         </div>
                     <?php endforeach; ?>
                 <?php else: ?>

@@ -537,10 +537,18 @@ class BoardController extends BaseController
                 'default' => 'N',
                 'comment'    => '보여지기 여부'
             ],
+            'keywords' => [
+                'type'    => 'VARCHAR',
+                'constraint' => 200,
+                'null'    => true,
+                'default' => null,
+                'comment' => '키워드'
+            ],
             'status' => [
-                'type' => 'ENUM',
-                'constraint' => ['Y','N'],
-                'default' => 'N',
+                'type'       => 'SET',
+                'constraint' => ['popular', 'recommend', 'new'],
+                'null'       => true,
+                'default'    => null,
                 'comment'    => '상태'
             ],
             'hit'   => [

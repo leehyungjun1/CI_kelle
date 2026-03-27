@@ -13,35 +13,20 @@ class DynamicBoardModel extends Model
     protected $deletedField = 'deleted_at';
     protected $useSoftDeletes = true;
     protected $allowedFields = [
-        'board_id',
-        'parent_id',
-        'group_id',
-        'depth',
-        'order_no',
-        'header_id',
-        'title',
-        'content',
-        'rating',
-        'writer_type',
-        'writer_id',
-        'writer',
-        'is_notice',
-        'is_secret',
-        'is_category',
-        'is_use',
-        'status',
-        'hit',
-        'is_main',
-        'ip',
-        'created_at',
-        'updated_at',
-        'deleted_at'
-    ];
+        'board_id', 'parent_id','group_id', 'depth', 'order_no', 'header_id', 'title',
+        'content', 'rating', 'writer_type', 'writer_id', 'writer', 'is_notice', 'is_secret',
+        'is_category', 'is_use', 'keywords', 'status', 'hit',
+        'is_main', 'ip', 'created_at', 'updated_at', 'deleted_at'  ];
 
     public function setTableName(string $tableName)
     {
         $this->table = $tableName;
         return $this;
+    }
+
+    public static function table(string $tableName): static
+    {
+        return (new static())->setTableName($tableName);
     }
 
 }
