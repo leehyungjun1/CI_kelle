@@ -1,6 +1,6 @@
-<?php echo $this->extend('layouts/admin') ?>
+<?= $this->extend('layout/admin') ?>
 
-<?php echo $this->section('content') ?>
+<?= $this->section('content') ?>
     <!-- 쇼핑몰 서비스 정보 내용 시작 -->
     <div class="row main-layout main-header reform mgt-33">
         <div class="wrap">

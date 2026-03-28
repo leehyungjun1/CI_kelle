@@ -1,18 +1,23 @@
-<?php echo $this->extend('layouts/admin_sub') ?>
-<?php echo $this->section('content') ?>
+<?= $this->extend('admin/layouts/main') ?>
 
-<form action="<?= site_url('admin/policy/submit') ?>" method="post" id="frm">
-    <?=csrf_field() ?>
-    <input type="hidden" name="id" value="<?= esc($admin['id']) ?>">
-    <div class="page-header js-affix affix-top">
-        <h3>관리자 등록 </h3>
-        <div class="btn-group">
-            <input type="button" value="목록" class="btn btn-white btn-icon-list" onclick=goList('<?= base_url("admin/policy/manage") ?>')>
-            <input type="button" value="저장" class="btn btn-red btn-register">
+<?= $this->section('title') ?><?= esc($pageTitle) ?><?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
+
+    <form action="<?= site_url('admin/policy/submit') ?>" method="post" id="frm">
+        <?= csrf_field() ?>
+        <input type="hidden" name="id" value="<?= esc($admin['id']) ?>">
+
+        <div class="page-header">
+            <h3><?= esc($pageTitle) ?></h3>
+            <div class="btn-group">
+                <input type="button" value="목록" class="btn btn-white btn-icon-list"
+                       onclick="goList('<?= base_url('admin/policy/manage') ?>')">
+                <input type="button" value="저장" class="btn btn-red btn-register">
+            </div>
         </div>
-    </div>
-    <div class="table-title gd-help-manual"> 기본정보 </div>
-    <div class="form-inline">
+
+        <div class="table-title">기본정보</div>
         <table class="table table-cols">
             <colgroup>
                 <col class="width-sm">
@@ -24,78 +29,84 @@
             <tr>
                 <th class="require">아이디</th>
                 <td>
-                    <span>
-                        <? if($admin['admin_id']) : ?>
-                            <strong><?=$admin['admin_id'] ?? '';?></strong>
-                        <? else : ?>
-                            <input type="text" name="admin_id" id="admin_id" value="<?=$admin['admin_id'] ?? '';?>" class="form-control error">
-                            <button type="button" id="overlap_memId" class="btn btn-gray btn-sm">중복확인</button>
-                        <? endif; ?>
-                    </span>
+                    <?php if (!empty($admin['admin_id'])): ?>
+                        <strong><?= esc($admin['admin_id']) ?></strong>
+                    <?php else: ?>
+                        <input type="text" name="admin_id" id="admin_id"
+                               value="<?= esc($admin['admin_id'] ?? '') ?>"
+                               class="form-control width-sm">
+                        <button type="button" id="overlap_memId" class="btn btn-gray btn-sm">중복확인</button>
+                    <?php endif; ?>
                 </td>
                 <th class="require">비밀번호</th>
                 <td>
-                    <span title="비밀번호를 입력해주세요!" style="position: relative;">
-                        <input type="password" name="password" value="" class="form-control width-sm js-maxlength" placeholder="비밀번호입력" maxlength="16">&nbsp;
-                        <input type="password" name="password_confirmation" value="" class="form-control width-sm js-maxlength" placeholder="비밀번호확인" maxlength="16" style="margin-left: 40px">
-                    </span>
+                    <div class="form-inline">
+                        <input type="password" name="password" value=""
+                               class="form-control width-sm" placeholder="비밀번호입력" maxlength="16">
+                        <input type="password" name="password_confirmation" value=""
+                               class="form-control width-sm" placeholder="비밀번호확인" maxlength="16"
+                               style="margin-left:10px;">
+                    </div>
                 </td>
             </tr>
             <tr>
                 <th class="require">이름</th>
                 <td>
-                    <span><input type="text" name="name" id="memNm" value="<?=$admin['name'] ?? '' ?>" class="form-control width-sm" maxlength="20"></span>
+                    <input type="text" name="name"
+                           value="<?= esc($admin['name'] ?? '') ?>"
+                           class="form-control width-sm" maxlength="20">
                 </td>
                 <th>부서</th>
                 <td>
-                    <div class="form-inline mgb5">
-                        <select name="department_code">
-                            <option value="">----</option>
-                            <?php foreach ($codes['102001'] as $code): ?>
-                                <option value="<?= esc($code['code']) ?>" <?php if(esc($code['code']) == $admin['department_code']) : ?> selected <?php endif; ?>><?= esc($code['code_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <select name="department_code" class="form-control">
+                        <option value="">----</option>
+                        <?php foreach ($codes['102001'] as $code): ?>
+                            <option value="<?= esc($code['code']) ?>"
+                                <?= ($code['code'] == ($admin['department_code'] ?? '')) ? 'selected' : '' ?>>
+                                <?= esc($code['code_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </td>
-
             </tr>
             <tr>
-                <th>직원</th>
+                <th>직급</th>
                 <td>
-                    <div class="form-inline mgb5">
-                        <select name="position_code">
-                            <option value="">----</option>
-                            <?php foreach ($codes['102002'] as $code): ?>
-                                <option value="<?= esc($code['code']) ?>" <?php if(esc($code['code']) == $admin['position_code']) : ?> selected <?php endif; ?>><?= esc($code['code_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <select name="position_code" class="form-control">
+                        <option value="">----</option>
+                        <?php foreach ($codes['102002'] as $code): ?>
+                            <option value="<?= esc($code['code']) ?>"
+                                <?= ($code['code'] == ($admin['position_code'] ?? '')) ? 'selected' : '' ?>>
+                                <?= esc($code['code_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </td>
                 <th>직책</th>
                 <td>
-                    <div class="form-inline mgb5">
-                        <select name="duty_code">
-                            <option value="">----</option>
-                            <?php foreach ($codes['102003'] as $code): ?>
-                                <option value="<?= esc($code['code']) ?>" <?php if(esc($code['code']) == $admin['duty_code']) : ?> selected <?php endif; ?>><?= esc($code['code_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                    <select name="duty_code" class="form-control">
+                        <option value="">----</option>
+                        <?php foreach ($codes['102003'] as $code): ?>
+                            <option value="<?= esc($code['code']) ?>"
+                                <?= ($code['code'] == ($admin['duty_code'] ?? '')) ? 'selected' : '' ?>>
+                                <?= esc($code['code_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </td>
             </tr>
             <tr>
                 <th>전화번호</th>
                 <td>
-                    <div class="form-inline">
-                        <span title="전화번호를 입력해주세요!" style="position: relative;">
-                        <input type="text" name="phone" value="<?=esc($admin['phone'] ?? '')?>" maxlength="12" class="form-control js-number-only width-md">
-                    </div>
+                    <input type="text" name="phone"
+                           value="<?= esc($admin['phone'] ?? '') ?>"
+                           maxlength="13" class="form-control js-tel width-sm">
                 </td>
                 <th>관리자 레벨</th>
                 <td></td>
             </tr>
             </tbody>
         </table>
-    </div>
-</form>
-<?php echo $this->endSection() ?>
+    </form>
+
+<?= $this->endSection() ?>
