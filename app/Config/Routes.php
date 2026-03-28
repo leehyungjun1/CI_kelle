@@ -50,6 +50,16 @@ $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
         $routes->post('manage_action', 'Admin\PolicyController::manage_action');
     });
 
+    // ── 배너 관리 ──
+    $routes->group('banner', function($routes) {
+        $routes->get('banner_list',                 'Admin\BannerController::banner_list');
+        $routes->get('banner_register',             'Admin\BannerController::banner_register');
+        $routes->get('banner_register/(:num)',       'Admin\BannerController::banner_register/$1');
+        $routes->post('banner_submit',              'Admin\BannerController::banner_submit');
+        $routes->post('banner_delete',              'Admin\BannerController::banner_delete');
+        $routes->post('banner_order',               'Admin\BannerController::banner_order');
+    });
+
     $routes->group('member', function($routes) {
         $routes->get('member_list', 'Admin\MemberController::member_list');
         $routes->get('member_register', 'Admin\MemberController::member_register');

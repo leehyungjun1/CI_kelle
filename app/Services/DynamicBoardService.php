@@ -125,6 +125,38 @@ class DynamicBoardService
             ->orderBy('order_no', 'ASC')
             ->orderBy('id', 'ASC')
             ->paginate($perPage, 'default', $page);
+
+        // ── 파일 맵핑 ──
+        if (!empty($boardData)) {
+            $fileModel  = new \App\Models\JyBoardFile();
+            $articleIds = array_column($boardData, 'id');
+
+            $files = $fileModel
+                ->whereIn('article_id', $articleIds)
+                ->where('board_id', $board_id)
+                ->findAll();
+
+            // article_id 기준으로 그룹핑
+            $filesMap = [];
+            foreach ($files as $file) {
+                $filesMap[$file['article_id']][] = $file;
+            }
+
+            // 각 게시글에 파일 추가
+            foreach ($boardData as &$board) {
+                $board['files'] = $filesMap[$board['id']] ?? [];
+                // 첫 번째 이미지를 썸네일로
+                $board['file_path'] = null;
+                foreach ($board['files'] as $file) {
+                    if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file['file_name'])) {
+                        $board['file_path'] = $file['file_path'];
+                        break;
+                    }
+                }
+            }
+            unset($board);
+        }
+
         $pager = $this->model->pager;
 
         return [

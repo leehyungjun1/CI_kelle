@@ -26,5 +26,8 @@
         <li class="list-group-item <?= ($sideActive ?? '') === 'manage' ? 'active' : '' ?>">
             <a href="<?= base_url('admin/policy/manage') ?>">운영자 관리</a>
         </li>
+        <li class="list-group-item <?= ($sideActive ?? '') === 'banner_list' ? 'active' : '' ?>">
+            <a href="<?= base_url('admin/banner/banner_list') ?>">배너 관리</a>
+        </li>
     </ul>
 </div>

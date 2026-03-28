@@ -4,8 +4,8 @@
             <div class="gallery-card"
                  onclick="goList('<?= base_url('admin/board/article_view/'.esc($board_id).'/'.esc($board['id'])) ?>')">
                 <div class="gallery-thumb">
-                    <?php if (!empty($board['thumb'])): ?>
-                        <img src="<?= base_url($board['thumb']) ?>" alt="<?= esc($board['title']) ?>">
+                    <?php if (!empty($board['file_path'])): ?>
+                        <img src="<?= base_url($board['file_path']) ?>" alt="<?= esc($board['title']) ?>">
                     <?php else: ?>
                         <div class="gallery-no-img">
                             <i class="fa fa-image"></i>
