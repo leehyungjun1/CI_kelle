@@ -1,22 +1,48 @@
-<?php echo $this->extend('layouts/admin_sub') ?>
-<?php echo $this->section('content') ?>
-<div class="page-header js-affix affix-top">
-    <h3>게시글 보기</h3>
-</div>
-<style>
-    p{margin:0px !important;}
-</style>
-<div class="table-title gd-help-manual">게시글 보기 </div>
+<?= $this->extend('admin/layouts/main') ?>
+
+<?= $this->section('title') ?>게시글 보기<?= $this->endSection() ?>
+
+<?= $this->section('css') ?>
+    <link rel="stylesheet" href="<?= base_url('css/admin/lib/edit.css') ?>">
+<?= $this->endSection() ?>
+
+<?= $this->section('content') ?>
+
+    <div class="page-header">
+        <h3>게시글 보기</h3>
+        <div class="btn-group">
+            <input type="button" value="목록" class="btn btn-white btn-icon-list"
+                   onclick="goList('<?= base_url('admin/board/article_list/'.esc($board['board_code'])) ?>')">
+            <input type="button" value="수정" class="btn btn-white"
+                   onclick="goList('<?= base_url('admin/board/article_register/'.esc($board['board_code']).'/'.esc($board['id'])) ?>')">
+            <?php if ($board['parent_id'] == 0): ?>
+                <input type="button" value="답변" class="btn btn-white"
+                       onclick="goList('<?= base_url('admin/board/replies_register/'.esc($board['board_code']).'/'.esc($board['id'])) ?>')">
+            <?php endif; ?>
+            <input type="button" value="삭제" class="btn btn-white js-btn-delete">
+        </div>
+    </div>
+
+    <div class="table-title">게시글 보기</div>
 <?= $this->include('components/board/view') ?>
-<div class="text-center">
-    <a href="<?=base_url('admin/board/article_list/'.$board['board_code']) ?>" class="btn btn-white">목록</a>
-    <a href="<?=base_url('admin/board/article_register/'.$board['board_code'].'/'.$board['id']) ?>" class="btn btn-white">수정</a>
-    <a href="<?=base_url('admin/board/replies_register/'.$board['board_code'].'/'.$board['id']) ?>" class="btn btn-white">답변</a>
-    <span class="btn btn-white js-btn-delete">삭제</span>
-</div>
-<script>
-    $(document).on("click", ".js-btn-delete", function() {
-        handleAdminAction('/admin/board/article_delete/<?=esc($board['board_code']);?>', '삭제하시겠습니까?', 'delete', [<?=esc($board['id'])?>], '/admin/board/article_list/<?=esc($board['board_code']);?>');
-    });
-</script>
-<?php echo $this->endSection() ?>
+
+    <div class="text-center mgt10">
+        <a href="<?= base_url('admin/board/article_list/'.esc($board['board_code'])) ?>"
+           class="btn btn-white">목록가기</a>
+    </div>
+
+<?= $this->endSection() ?>
+
+<?= $this->section('js') ?>
+    <script>
+        $(document).on('click', '.js-btn-delete', function() {
+            handleAdminAction(
+                '<?= base_url('admin/board/article_delete/'.esc($board['board_code'])) ?>',
+                '삭제하시겠습니까?',
+                'delete',
+                [<?= esc($board['id']) ?>],
+                '<?= base_url('admin/board/article_list/'.esc($board['board_code'])) ?>'
+            );
+        });
+    </script>
+<?= $this->endSection() ?>

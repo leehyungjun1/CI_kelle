@@ -142,7 +142,7 @@
                         <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">
                     <?= esc($file['file_name']) ?>
                 </span>
-                        <label class="checkbox-inline" style="margin-left:5px;">
+                        <label class="checkbox-inline btn btn-white btn-icon-minus btn-sm" style="margin-left:5px;">
                             <input type="checkbox" name="delFile[<?= $index ?>]" value="<?= esc($file['id']) ?>">
                             삭제
                         </label>

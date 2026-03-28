@@ -23,8 +23,8 @@
         ?>
         <link rel="stylesheet" href="<?= base_url('css/admin/lib/list.css') ?>">
     <?php endif; ?>
+
     <?php
-    // 등록/수정 페이지면 edit.css 자동 로드
     $editCssFile = FCPATH . 'css/admin/lib/edit.css';
     if (!empty($pagePath) && file_exists($editCssFile) && str_contains($pagePath, '_register')):
         ?>
@@ -32,6 +32,7 @@
     <?php endif; ?>
 
     <?= $this->renderSection('css') ?>
+
     <?php
     $pageCssFile = FCPATH . 'css' . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $pagePath ?? '') . '.css';
     if (!empty($pagePath) && file_exists($pageCssFile)):
@@ -43,11 +44,14 @@
 
 <div id="container-wrap">
 
-    <!-- ── 상단 헤더 ── -->
+    <!-- 상단 헤더 -->
     <?= $this->include('admin/layouts/header') ?>
 
-    <!-- ── 메인 영역 (사이드메뉴 + 콘텐츠) ── -->
+    <!-- 메인 영역 -->
     <div id="content-wrap">
+
+        <!-- 메뉴 오버레이 (모바일) -->
+        <div class="menu-overlay" id="menuOverlay"></div>
 
         <!-- 좌측 사이드 메뉴 -->
         <div id="menu">
@@ -58,14 +62,20 @@
 
         <!-- 우측 콘텐츠 -->
         <div id="content">
-            <!-- 브레드크럼 -->
-            <?php if (!empty($breadcrumb)): ?>
-                <ol class="breadcrumb clearfix">
-                    <?php foreach ($breadcrumb as $item): ?>
-                        <li><?= esc($item) ?></li>
-                    <?php endforeach; ?>
-                </ol>
-            <?php endif; ?>
+
+            <!-- 브레드크럼 + 햄버거 -->
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                <button class="btn-hamburger" id="btnHamburger" type="button">
+                    <span></span>
+                </button>
+                <?php if (!empty($breadcrumb)): ?>
+                    <ol class="breadcrumb clearfix" style="margin:0; flex:1;">
+                        <?php foreach ($breadcrumb as $item): ?>
+                            <li><?= esc($item) ?></li>
+                        <?php endforeach; ?>
+                    </ol>
+                <?php endif; ?>
+            </div>
 
             <!-- 페이지 콘텐츠 -->
             <?= $this->renderSection('content') ?>
@@ -73,7 +83,7 @@
 
     </div>
 
-    <!-- ── 푸터 ── -->
+    <!-- 푸터 -->
     <div id="footer">
         <div class="footer"></div>
     </div>
@@ -82,7 +92,6 @@
 
 <iframe name="ifrmProcess" src="/blank.php" width="0" height="0" class="display-none"></iframe>
 
-<!-- jQuery & Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
@@ -90,9 +99,30 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-filestyle@1/src/bootstrap-filestyle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/underscore@1.13.6/underscore-min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raty/2.7.0/jquery.raty.min.js"></script>
-
 <script src="<?= base_url('script/jy_share/lib.js') ?>"></script>
 <script src="<?= base_url('script/jy_share/common.js') ?>"></script>
+
+<script>
+    $(document).ready(function() {
+        // 햄버거 버튼
+        $('#btnHamburger').on('click', function() {
+            $('#menu').toggleClass('menu-open');
+            $('#menuOverlay').toggleClass('active');
+        });
+        // 오버레이 클릭 시 닫기
+        $('#menuOverlay').on('click', function() {
+            $('#menu').removeClass('menu-open');
+            $('#menuOverlay').removeClass('active');
+        });
+        // 메뉴 링크 클릭 시 모바일 자동 닫기
+        $('#menu a').on('click', function() {
+            if ($(window).width() <= 1024) {
+                $('#menu').removeClass('menu-open');
+                $('#menuOverlay').removeClass('active');
+            }
+        });
+    });
+</script>
 
 <?= $this->renderSection('js') ?>
 <?php

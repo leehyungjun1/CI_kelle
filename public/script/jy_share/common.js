@@ -251,8 +251,10 @@ $(document).ready(function() {
 })
 
 function init_file_style() {
-    var files = $(":file").not('.no-filestyle');
-    if (files.length > 0) {
+    var files = $(":file")
+        .not('.no-filestyle')
+        .not('.upload-label input');
+    if (files.length > 0 && typeof files.filestyle === 'function') {
         files.filestyle({
             icon: false,
             buttonText: '찾아보기',
@@ -274,6 +276,11 @@ function init_file_style_destroy() {
 $(document).on("change", "#chk_all", function () {
     const checked = $(this).is(':checked');
     $('input[name="chk[]"]').prop('checked', checked);
+});
+
+$(document).on('change', '.upload-label input[type="file"]', function() {
+    const fileName = this.files[0] ? this.files[0].name : '선택된 파일 없음';
+    $(this).closest('li').find('.upload-filename').text(fileName);
 });
 
 $(document).on('change', 'input[name="chk[]"]', function () {
@@ -348,22 +355,18 @@ $(document).on("click", ".addUploadBtn", function() {
         return false;
     }
 
-    // 새 input 생성
     const newItem = $(`
-        <li class="form-inline mgb5">
-            <input type="file" name="upfiles[]" id="filestyle-${count}">
-            <a class="btn btn-white btn-icon-minus minusUploadBtn btn-sm">삭제</a>
-        </li>
-    `);
+    <li class="upload-item form-inline mgb5">
+        <label class="btn btn-gray btn-sm upload-label">
+            찾아보기
+            <input type="file" name="upfiles[]" style="display:none;" class="no-filestyle">
+        </label>
+        <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">선택된 파일 없음</span>
+        <a class="btn btn-white btn-icon-minus btn-sm minusUploadBtn" style="margin-left:5px;">삭제</a>
+    </li>
+`);
 
     $("#uploadBox").append(newItem);
-
-    const $newFile = newItem.find(':file');
-    // 파일 선택 시 파일명 표시
-    newItem.find('input[type="file"]').on('change', function() {
-        const fileName = this.files[0] ? this.files[0].name : '선택된 파일 없음';
-        $(this).closest('li').find('.upload-filename').text(fileName);
-    });
 });
 
 $(document).on('change', '.email-select', function() {

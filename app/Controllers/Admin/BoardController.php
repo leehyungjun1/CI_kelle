@@ -227,19 +227,29 @@ class BoardController extends BaseController
         ]);
     }
 
-    public function article_view($board_id = null, $article_id = null) {
-        if(empty($board_id)) {
+    public function article_view($board_id = null, $article_id = null)
+    {
+        if (empty($board_id)) {
             return redirect()->back()->with('error', '잘못된 접근입니다.');
         }
 
-        $board      = $this->service->articleView($board_id, $article_id);
-        $files      = $this->service->getFiles($board_id, $article_id);
+        $board = $this->service->articleView($board_id, $article_id);
+        $files = $this->service->getFiles($board_id, $article_id);
+
         if (!is_array($board) || empty($board)) {
             return redirect()->to('/admin/board/article_list/'.$board_id)
                 ->with('error', '해당 게시물이 존재하지 않습니다.');
         }
 
-        return view('admin/board/article_view', ['board' => $board, 'files' => $files ]);
+        return $this->render('admin/board/article_view', [
+            'gnbActive'  => 'board',
+            'sideActive' => 'article_list',
+            'sideMenu'   => 'admin/menu/board_menu',
+            'breadcrumb' => ['게시판', '게시글 관리', '게시글 보기'],
+            'board'      => $board,
+            'files'      => $files,
+            'board_id'   => $board_id,
+        ]);
     }
 
     public function article_delete($board_id = null, $article_id = null) {

@@ -83,37 +83,44 @@ HTML;
         }
     }
 
-    if(!function_exists('dateRangePicker')) {
+    if (!function_exists('dateRangePicker')) {
         function dateRangePicker(array $params = []) {
-            $start = $params['start'] ?? '';
-            $end = $params['end'] ?? '';
-            $name = $params['name'] ?? '';
-            $periods = $params['periods'] ?? '';
+            $start   = $params['start']   ?? '';
+            $end     = $params['end']     ?? '';
+            $name    = $params['name']    ?? '';
+            $periods = $params['periods'] ?? [];
 
             ob_start();
             ?>
             <div class="date-range-picker">
-                <div class="input-group js-datepicker">
-                    <input type="text" class="form-control" placeholder="시작일" name="<?= esc($name) ?>" value="<?= esc($start) ?>">
-                    <span class="input-group-addon">
-                        <span class="btn-icon-calendar">
-                        </span>
-                    </span>
+                <!-- 시작일 -->
+                <div class="datepicker-wrap js-datepicker">
+                    <input type="text" class="form-control datepicker-input"
+                           placeholder="시작일" name="<?= esc($name) ?>"
+                           value="<?= esc($start) ?>">
+                    <span class="datepicker-icon">
+                    <i class="fa fa-calendar"></i>
+                </span>
                 </div>
-                ~
-                <div class="input-group js-datepicker">
-                    <input type="text" class="form-control" placeholder="종료일" name="<?= esc($name) ?>" value="<?= esc($end) ?>">
-                    <span class="input-group-addon">
-                        <span class="btn-icon-calendar">
-                        </span>
-                    </span>
+                <span class="datepicker-tilde">~</span>
+                <!-- 종료일 -->
+                <div class="datepicker-wrap js-datepicker">
+                    <input type="text" class="form-control datepicker-input"
+                           placeholder="종료일" name="<?= esc($name) ?>"
+                           value="<?= esc($end) ?>">
+                    <span class="datepicker-icon">
+                    <i class="fa fa-calendar"></i>
+                </span>
                 </div>
 
-                <?php if (!empty($periods)) : ?>
-                    <div class="btn-group js-dateperiod" data-toggle="buttons" data-target-name="<?= esc($name) ?>">
-                        <?php foreach ($periods as $period) : ?>
-                            <label class="btn btn-white btn-sm hand <?= ($period['active'] ?? false) ? 'active' : '' ?>">
-                                <input type="radio" name="searchPeriod" value="<?= esc($period['value']) ?>"> <?= esc($period['label']) ?>
+                <?php if (!empty($periods)): ?>
+                    <div class="btn-group js-dateperiod" data-toggle="buttons"
+                         data-target-name="<?= esc($name) ?>">
+                        <?php foreach ($periods as $period): ?>
+                            <label class="btn btn-white btn-sm <?= ($period['active'] ?? false) ? 'active' : '' ?>">
+                                <input type="radio" name="searchPeriod"
+                                       value="<?= esc($period['value']) ?>">
+                                <?= esc($period['label']) ?>
                             </label>
                         <?php endforeach; ?>
                     </div>
