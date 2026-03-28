@@ -34,14 +34,18 @@ class MainController extends BaseController
 
     public function home()
     {
-        $boardSettingModel = new \App\Models\JyBoardSetting();
-        $headerModel       = new \App\Models\JyBoardHeader();
+        $boardSettingModel  = new \App\Models\JyBoardSetting();
+        $headerModel        = new \App\Models\JyBoardHeader();
+        $bannerModel        = new \App\Models\JyBanner();
 
         // ── 알림 말머리 맵핑 ──
         $noticeHeadersMap = $this->getBoardHeadersMap('notice');
 
         // ── 학습자 후기 말머리 맵핑 ──
         $reviewHeadersMap = $this->getBoardHeadersMap('review');
+
+        // ── 메인 슬라이드 배너 (group_id = 1) ──
+        $banners = $bannerModel->getActiveByGroup(1);
 
         // ── 알림 게시판 ──
         $notices = DynamicBoardModel::table('jy_board_notice')
@@ -64,7 +68,8 @@ class MainController extends BaseController
             ->limit(5)
             ->findAll();
 
-        return $this->render('pages/home', [  // ← view() → $this->render()
+        return $this->render('pages/home', [
+            'banners'          => $banners,
             'notices'          => $notices,
             'noticeHeadersMap' => $noticeHeadersMap,
             'reviews'          => $reviews,

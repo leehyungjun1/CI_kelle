@@ -7,7 +7,7 @@
     <div class="page-header">
         <h3>배너 관리</h3>
         <div class="btn-group">
-            <input type="button" value="+ 배너 등록" class="btn btn-red-line"
+            <input type="button" value="+ 배너 등록" class="btn btn-white"
                    onclick="goList('<?= base_url('admin/banner/banner_register') ?>')">
         </div>
     </div>

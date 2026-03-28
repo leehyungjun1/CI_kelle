@@ -10,27 +10,42 @@
 
     <!-- 히어로 배너 -->
     <div class="m-hero" id="heroSlider">
-        <div class="hero-slide active" style="background:linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.05) 40%,rgba(0,0,0,0.35) 100%),url('https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=80') center/cover no-repeat;">
-            <div class="m-hero-content">
-                <div class="m-hero-title">신뢰할 수 있는<br>평생교육 파트너</div>
-                <div class="m-hero-desc">평생교육을 바로 알고, 학습자를 위해 진심으로 일하는 전문가<br>우리는 한국평생교육관리센터 입니다.</div>
+        <?php if (!empty($banners)): ?>
+            <?php foreach ($banners as $i => $banner): ?>
+                <div class="hero-slide <?= $i === 0 ? 'active' : '' ?>"
+                     style="background: linear-gradient(to bottom,
+                             rgba(0,0,0,0.1) 0%,
+                             rgba(0,0,0,0.05) 40%,
+                             rgba(0,0,0,0.35) 100%),
+                             url('<?= base_url($banner['image_path']) ?>') center/cover no-repeat;">
+                    <div class="m-hero-content">
+                        <div class="m-hero-title"><?= nl2br($banner['title']) ?></div>
+                        <?php if (!empty($banner['description'])): ?>
+                            <div class="m-hero-desc"><?= nl2br(esc($banner['description'])) ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <!-- 배너 없을 때 기본 슬라이드 -->
+            <div class="hero-slide active"
+                 style="background: linear-gradient(to bottom,rgba(0,0,0,0.1) 0%,rgba(0,0,0,0.35) 100%), #1A56C4;">
+                <div class="m-hero-content">
+                    <div class="m-hero-title">한국평생교육센터</div>
+                    <div class="m-hero-desc">신뢰할 수 있는 평생교육 파트너</div>
+                </div>
             </div>
-        </div>
-        <div class="hero-slide" style="background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.05) 40%,rgba(0,0,0,0.4) 100%),url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=600&q=80') center/cover no-repeat;">
-            <div class="m-hero-content">
-                <div class="m-hero-title">학점은행제<br>전문 상담센터</div>
-                <div class="m-hero-desc">목표 달성을 위한 체계적인 커리큘럼<br>전문 플래너와 함께 시작하세요.</div>
-            </div>
-        </div>
-        <div class="hero-slide" style="background:linear-gradient(to bottom,rgba(0,0,0,0.15) 0%,rgba(0,0,0,0.05) 40%,rgba(0,0,0,0.4) 100%),url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=600&q=80') center/cover no-repeat;">
-            <div class="m-hero-content">
-                <div class="m-hero-title">누적 학습자<br>102,395명</div>
-                <div class="m-hero-desc">98% 목적 달성률, 26,321건 누적 상담<br>검증된 교육 파트너를 만나보세요.</div>
-            </div>
-        </div>
+        <?php endif; ?>
     </div>
+
+    <!-- 히어로 dots -->
     <div class="m-hero-dots" id="heroDots">
-        <span class="active"></span><span></span><span></span>
+        <?php
+        $dotCount = !empty($banners) ? count($banners) : 1;
+        for ($i = 0; $i < $dotCount; $i++):
+            ?>
+            <span class="<?= $i === 0 ? 'active' : '' ?>"></span>
+        <?php endfor; ?>
     </div>
 
     <!-- 퀵바 -->

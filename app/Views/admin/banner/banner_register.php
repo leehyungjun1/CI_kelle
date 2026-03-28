@@ -117,7 +117,6 @@
                                                 border:1px solid #ddd; border-radius:4px;">
                                         </div>
                                     <?php endif; ?>
-                                    <div class="notice-info mgt5">권장 크기: 1200 x 500px, JPG/PNG/WEBP</div>
                                 </td>
                             </tr>
                             </tbody>
@@ -210,7 +209,6 @@
                                      style="max-width:200px; max-height:100px; object-fit:cover;
                                     border:1px solid #ddd; border-radius:4px;">
                             </div>
-                            <div class="notice-info mgt5">권장 크기: 1200 x 500px, JPG/PNG/WEBP</div>
                         </td>
                     </tr>
                     </tbody>

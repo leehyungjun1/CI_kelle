@@ -7,7 +7,7 @@
     <div class="page-header">
         <h3>운영자 관리</h3>
         <div class="btn-group">
-            <input type="button" value="+ 운영자 등록" class="btn btn-red-line"
+            <input type="button" value="+ 운영자 등록" class="btn btn-white"
                    onclick="goList('<?= base_url('admin/policy/manage_register') ?>')">
         </div>
     </div>

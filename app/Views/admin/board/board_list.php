@@ -4,7 +4,7 @@
 <div class="page-header js-affix affix-top">
     <h3>게시판 리스트 </h3>
     <div class="btn-group">
-        <input type="button" class="btn btn-white btn-icon btn-icon-plus" value="게시판 만들기" onClick='goList("<?= base_url("admin/board/board_register") ?>")'>
+        <input type="button" class="btn btn-white" value="+ 게시판 만들기" onClick='goList("<?= base_url("admin/board/board_register") ?>")'>
     </div>
 </div>
 <form id="frmSearchBase" method="get" class="content-form js-search-form js-form-enter-submit">

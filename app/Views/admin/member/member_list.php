@@ -8,7 +8,7 @@
     <div class="page-header">
         <h3>회원 리스트</h3>
         <div class="btn-group">
-        <input type="button" class="btn btn-white btn-icon btn-icon-plus" value="회원 등록" onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
+        <input type="button" class="btn btn-white" value="+ 회원 등록" onclick="location.href='<?= base_url('admin/member/member_register') ?>'">
         </div>
     </div>
 
