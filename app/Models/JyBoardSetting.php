@@ -12,7 +12,7 @@ class JyBoardSetting extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['board_id','name','new','total','type','is_category', 'use_yn'];
+    protected $allowedFields    = ['board_id','name','new','total','type','is_category', 'use_yn', 'extra_fields',];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

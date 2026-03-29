@@ -51,16 +51,18 @@ class BoardController extends BaseController
 
     public function board_register($id = null)
     {
-        $boardModel = new JyBoardSetting();
+        $boardModel  = new JyBoardSetting();
         $headerModel = new JyBoardHeader();
 
         $mode  = $id ? 'edit' : 'create';
         $board = $id ? $boardModel->find($id) : [
-            'id'       => '',
-            'board_id' => '',
-            'name'     => '',
-            'use_yn'   => 'Y',
-            'type'     => 'D',
+            'id'          => '',
+            'board_id'    => '',
+            'name'        => '',
+            'use_yn'      => 'Y',
+            'type'        => 'D',
+            'is_category' => 'N',
+            'extra_fields' => '{}',
         ];
 
         if ($id && !$board) {
@@ -68,9 +70,8 @@ class BoardController extends BaseController
                 ->with('error', '해당 게시판을 찾을 수 없습니다.');
         }
 
-        $headers = $id ? $headerModel->where('board_setting_id', $id)
-            ->orderBy('order_no', 'asc')
-            ->findAll()
+        $headers = $id
+            ? $headerModel->where('board_setting_id', $id)->orderBy('order_no', 'asc')->findAll()
             : [];
 
         return $this->render('admin/board/board_register', [
@@ -107,14 +108,23 @@ class BoardController extends BaseController
 
     public function submit()
     {
-        $boardModel  = new JyBoardSetting();
-        $id          = $this->request->getPost('id');
+        $boardModel = new JyBoardSetting();
+        $id         = $this->request->getPost('id');
+
+        // ── extra_fields 처리 ──
+        $extraFieldsPost = $this->request->getPost('extra_fields') ?? [];
+        $extraFields = json_encode([
+            'manager'    => !empty($extraFieldsPost['manager']),
+            'keyword'    => !empty($extraFieldsPost['keyword']),
+            'event_date' => !empty($extraFieldsPost['event_date']),
+        ]);
 
         $data = [
-            'name'        => $this->request->getPost('name'),
-            'type'        => $this->request->getPost('type'),
-            'use_yn'      => $this->request->getPost('use_yn'),
-            'is_category' => $this->request->getPost('is_category') ?? 'N',
+            'name'         => $this->request->getPost('name'),
+            'type'         => $this->request->getPost('type'),
+            'use_yn'       => $this->request->getPost('use_yn'),
+            'is_category'  => $this->request->getPost('is_category') ?? 'N',
+            'extra_fields' => $extraFields,
         ];
 
         try {
@@ -131,8 +141,7 @@ class BoardController extends BaseController
             } else {
                 $data['board_id'] = $this->request->getPost('board_id');
 
-                $exists = $boardModel->where('board_id', $data['board_id'])->first();
-                if ($exists) {
+                if ($boardModel->where('board_id', $data['board_id'])->first()) {
                     return $this->response->setJSON([
                         'status'  => 'error',
                         'message' => '이미 존재하는 게시판 아이디입니다.'
@@ -140,12 +149,11 @@ class BoardController extends BaseController
                 }
 
                 $boardModel->insert($data);
-                $id = $boardModel->getInsertID(); // ← 새로 생성된 ID 가져오기
+                $id = $boardModel->getInsertID();
                 $this->createBoardTable($data['board_id']);
                 $message = '새 게시판이 등록되었습니다.';
             }
 
-            // 말머리 저장 - ID 확정 후 호출
             $this->saveCategoryHeader($id);
 
             return $this->response->setJSON([
@@ -597,7 +605,7 @@ class BoardController extends BaseController
         $names      = $this->request->getPost('header_name') ?? [];
         $bgColors   = $this->request->getPost('badge_color') ?? [];
         $textColors = $this->request->getPost('text_color')  ?? [];
-        $isUses     = $this->request->getPost('is_use')      ?? [];
+        $isUses     = $this->request->getPost('header_is_use') ?? [];
         $ids        = $this->request->getPost('category_id') ?? [];
 
         // is_category 미사용이면 기존 헤더 전부 삭제
@@ -622,7 +630,7 @@ class BoardController extends BaseController
                 'badge_color'      => $bgColors[$i]   ?? '#ff0000',
                 'text_color'       => $textColors[$i] ?? '#ffffff',
                 'order_no'         => $i,
-                'is_use'           => isset($isUses[$i]) ? 'Y' : 'N',
+                'is_use'           => $isUses[$i] ?? 'Y',
             ];
 
             if ($headerId) {

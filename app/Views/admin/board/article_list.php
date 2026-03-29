@@ -4,7 +4,7 @@
     <div class="page-header">
         <h3>게시글 관리</h3>
         <div class="btn-group">
-            <input type="button" value="+ 등록" class="btn btn-red-line"
+            <input type="button" value="+ 등록" class="btn btn-white"
                    onclick="goList('<?= base_url('admin/board/article_register/'.$board_id) ?>')">
         </div>
     </div>

@@ -1,3 +1,12 @@
+<?php
+// extra_fields 파싱
+$extraFields  = json_decode($boardSetting['extra_fields'] ?? '{}', true) ?? [];
+$hasManager   = !empty($extraFields['manager']);
+$hasRating    = !empty($extraFields['rating']);
+$hasKeyword   = !empty($extraFields['keyword']);
+$hasEventDate = !empty($extraFields['event_date']);
+$hasIsMain    = !empty($extraFields['is_main']);
+?>
 <table class="table table-cols">
     <colgroup>
         <col class="width-sm">
@@ -31,35 +40,39 @@
         <?php if ($mode === 'article'): ?>
             <th>노출 여부</th>
             <td>
-                <label class="radio-inline"><input type="radio" name="is_use" value="Y" <?= ($article['is_use'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출</label>
-                <label class="radio-inline"><input type="radio" name="is_use" value="N" <?= ($article['is_use'] ?? '') === 'N' ? 'checked' : '' ?>>미노출</label>
+                <label class="radio-inline"><input type="radio" name="use_yn" value="Y" <?= ($article['is_use'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출</label>
+                <label class="radio-inline"><input type="radio" name="use_yn" value="N" <?= ($article['is_use'] ?? '') === 'N' ? 'checked' : '' ?>>미노출</label>
             </td>
         <?php endif; ?>
     </tr>
+
+    <!-- 말머리 -->
+    <?php if (!empty($headers)): ?>
+        <tr>
+            <th>말머리</th>
+            <td colspan="3">
+                <select name="header_id" class="form-control">
+                    <option value="">말머리 선택</option>
+                    <?php foreach ($headers as $header): ?>
+                        <option value="<?= esc($header['id']) ?>"
+                            <?= ($article['header_id'] ?? '') == $header['id'] ? 'selected' : '' ?>
+                                style="background:<?= esc($header['badge_color']) ?>; color:<?= esc($header['text_color']) ?>">
+                            <?= esc($header['header_name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </td>
+        </tr>
+    <?php endif; ?>
+
     <tr>
         <th class="require">제목</th>
-        <td <?php if (empty($headers)): ?> colspan="3" <? endif; ?>>
-            <input type="text" name="title" id="title" class="form-control width-3xl"
+        <td colspan="3">
+            <input type="text" name="title" id="title" class="form-control width-5xl"
                    value="<?= esc($article['title'] ?? '') ?>">
         </td>
-        <?php if (!empty($headers)): ?>
-        <th>말머리</th>
-        <td>
-            <select name="header_id" class="form-control" style="width:auto;">
-                <option value="">선택안함</option>
-                <?php foreach ($headers as $header): ?>
-                    <option value="<?= esc($header['id']) ?>"
-                            data-bg="<?= esc($header['badge_color']) ?>"
-                            data-color="<?= esc($header['text_color']) ?>"
-                        <?= (string)($article['header_id'] ?? '') === (string)$header['id'] ? 'selected' : '' ?>>
-                        <?= esc($header['header_name']) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <span id="headerPreview" class="mgl5"></span>
-        </td>
-        <?php endif; ?>
     </tr>
+
     <tr>
         <th>작성자</th>
         <td>
@@ -72,62 +85,70 @@
                     <?= ($article['writer_type'] ?? '') === 'guest' ? 'checked' : '' ?>>비회원
             </label>
         </td>
-        <th>메인 노출</th>
-        <td>
-            <label class="radio-inline">
-                <input type="radio" name="is_main" value="Y"
-                    <?= ($article['is_main'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="is_main" value="N"
-                    <?= ($article['is_main'] ?? '') === 'N' ? 'checked' : '' ?>>미노출
-            </label>
-        </td>
+        <?php if ($hasIsMain): ?>
+            <th>메인 노출</th>
+            <td>
+                <label class="radio-inline"><input type="radio" name="is_main" value="Y" <?= ($article['is_main'] ?? 'Y') === 'Y' ? 'checked' : '' ?>>노출</label>
+                <label class="radio-inline"><input type="radio" name="is_main" value="N" <?= ($article['is_main'] ?? '') === 'N' ? 'checked' : '' ?>>미노출</label>
+            </td>
+        <?php else: ?>
+            <td colspan="2"></td>
+        <?php endif; ?>
     </tr>
-    <tr>
-        <th>키워드</th>
-        <td>
-            <input type="text" name="keywords" class="form-control width-3xl"
-                   value="<?= esc($article['keywords'] ?? '') ?>"
-                   placeholder="쉼표(,)로 구분 예) 학점은행제, 사회복지사">
-        </td>
-        <th>상태</th>
-        <td>
-            <?php
-            $currentStatus = array_filter(
-                explode(',', $article['status'] ?? '')
-            );
-            ?>
-            <label class="checkbox-inline">
-                <input type="checkbox" name="status[]" value="popular"
-                    <?= in_array('popular', $currentStatus) ? 'checked' : '' ?>>
-                인기
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" name="status[]" value="recommend"
-                    <?= in_array('recommend', $currentStatus) ? 'checked' : '' ?>>
-                추천
-            </label>
-            <label class="checkbox-inline">
-                <input type="checkbox" name="status[]" value="new"
-                    <?= in_array('new', $currentStatus) ? 'checked' : '' ?>>
-                신규
-            </label>
-        </td>
-    </tr>
+
     <tr>
         <th>이름</th>
         <td>
             <input type="text" name="writer" id="writer" class="form-control width-sm"
                    value="<?= esc($article['writer'] ?? '') ?>">
         </td>
-        <th>별점</th>
-        <td>
-            <div id="articleData" data-rating="<?= (int)($article['rating'] ?? 0) ?>" style="display:none;"></div>
-            <div class="starRating"></div>
-            <input type="hidden" name="rating" id="rating" value="<?= (int)($article['rating'] ?? 0) ?>">
-        </td>
+        <?php if ($hasRating): ?>
+            <th>별점</th>
+            <td>
+                <div class="starRating"></div>
+                <input type="hidden" name="rating" id="rating" value="<?= (int)($article['rating'] ?? 0) ?>">
+            </td>
+        <?php else: ?>
+            <td colspan="2"></td>
+        <?php endif; ?>
     </tr>
+
+    <?php if ($hasManager): ?>
+        <tr>
+            <th>담당자</th>
+            <td colspan="3">
+                <input type="text" name="manager" class="form-control width-sm"
+                       value="<?= esc($article['manager'] ?? '') ?>"
+                       placeholder="담당자명">
+            </td>
+        </tr>
+    <?php endif; ?>
+
+    <?php if ($hasKeyword): ?>
+        <tr>
+            <th>키워드 태그</th>
+            <td colspan="3">
+                <input type="text" name="keywords" class="form-control width-3xl"
+                       value="<?= esc($article['keywords'] ?? '') ?>"
+                       placeholder="쉼표로 구분 (예: 사회복지사,학점은행제)">
+                <div class="notice-info mgt5">쉼표(,)로 구분하여 입력하세요.</div>
+            </td>
+        </tr>
+    <?php endif; ?>
+
+    <?php if ($hasEventDate): ?>
+        <tr>
+            <th>이벤트 기간</th>
+            <td colspan="3">
+                <?= dateRangePicker([
+                    'name'  => 'event_date[]',
+                    'start' => $article['event_start'] ?? date('Y-m-d'),
+                    'end'   => $article['event_end']   ?? date('Y-m-d', strtotime('+7 days')),
+                ]) ?>
+            </td>
+        </tr>
+    <?php endif; ?>
+
     <tr>
         <th>파일첨부</th>
         <td colspan="3">
@@ -140,8 +161,8 @@
                             <input type="file" name="upfiles[<?= esc($file['id']) ?>]" style="display:none;">
                         </label>
                         <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">
-                    <?= esc($file['file_name']) ?>
-                </span>
+                            <?= esc($file['file_name']) ?>
+                        </span>
                         <label class="checkbox-inline btn btn-white btn-icon-minus btn-sm" style="margin-left:5px;">
                             <input type="checkbox" name="delFile[<?= $index ?>]" value="<?= esc($file['id']) ?>">
                             삭제
@@ -153,15 +174,14 @@
                         찾아보기
                         <input type="file" name="upfiles[]" style="display:none;">
                     </label>
-                    <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">
-                선택된 파일 없음
-            </span>
+                    <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">선택된 파일 없음</span>
                     <a class="btn btn-white btn-icon-plus addUploadBtn btn-sm" style="margin-left:5px;">추가</a>
                 </li>
             </ul>
             <input type="hidden" id="fileCnt" value="1">
         </td>
     </tr>
+
     <tr>
         <th>내용</th>
         <td colspan="3">

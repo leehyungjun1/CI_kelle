@@ -32,6 +32,11 @@ $routes->get('admin/login', 'Admin\AdminController::login', ['filter' => null]);
 $routes->post('admin/login', 'Admin\AdminController::login', ['filter' => null]);
 $routes->get('admin/logout', 'Admin\AdminController::logout', ['filter' => null]);
 
+$routes->get('review',              'ReviewController::index');
+$routes->get('review/load_more',    'ReviewController::loadMore');
+$routes->get('review/write',        'ReviewController::write');   // 추후 구현
+$routes->get('review/(:num)',       'ReviewController::detail/$1'); // 추후 구현
+
 
 $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
     $routes->get('/', 'Admin\AdminController::index');
