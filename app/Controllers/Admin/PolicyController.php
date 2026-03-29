@@ -234,6 +234,7 @@ class PolicyController extends BaseController
             'title'             => $this->request->getPost('title'),
             'relations'         => $this->request->getPost('relations'),
             'is_best'           => $this->request->getPost('is_best'),
+            'employee_kind'     => $this->request->getPost('employee_kind'),
         ];
 
         // ── 프로필 사진 업로드 ──

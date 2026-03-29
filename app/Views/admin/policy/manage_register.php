@@ -105,6 +105,23 @@
                     <label class="radio-inline"><input type="radio" name="is_best" value="N" <?=(isset($admin['is_best']) && $admin['is_best'] == "N") ? "checked" : '' ?>>아니오</label>
                 </td>
             </tr>
+
+            <tr>
+                <th>승인여부</th>
+                <td>
+                    <label class="radio-inline"><input type="radio" name="regist_YN" value="Y" <?=(!isset($admin['regist_YN']) || $admin['regist_YN'] == "Y") ? "checked" : '' ?>>승인 </label>
+                    <label class="radio-inline"><input type="radio" name="regist_YN" value="N" <?=(isset($admin['regist_YN']) && $admin['regist_YN'] == "N") ? "checked" : '' ?>>미승인</label>
+                </td>
+                <th>직원 형태</th>
+                <td>
+                    <select name="employee_kind" class="form-control">
+                        <option value="">----</option>
+                        <option value="Y" <?= ($admin['employee_kind'] == "Y" ) ? 'selected' : '' ?>>정직원</option>
+                        <option value="R" <?= ($admin['employee_kind'] == "R" ) ? 'selected' : '' ?>>퇴사</option>
+                    </select>
+                </td>
+            </tr>
+            
             </tbody>
         </table>
 
