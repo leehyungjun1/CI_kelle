@@ -11,7 +11,7 @@
         <nav class="m-nav">
             <a href="<?= base_url('/') ?>"          class="<?= $active === 'home'     ? 'active' : '' ?>">홈</a>
             <a href="<?= base_url('credit') ?>"     class="<?= $active === 'credit'   ? 'active' : '' ?>">센터소개</a>
-            <a href="<?= base_url('course') ?>"     class="<?= $active === 'course'   ? 'active' : '' ?>">교육과정</a>
+            <a href="<?= base_url('curriculum') ?>" class="<?= $active === 'curriculum'   ? 'active' : '' ?>">교육과정</a>
             <a href="<?= base_url('planner') ?>"    class="<?= $active === 'planner'  ? 'active' : '' ?>">담당자</a>
             <a href="<?= base_url('review') ?>"     class="<?= $active === 'review'   ? 'active' : '' ?>">후기</a>
         </nav>

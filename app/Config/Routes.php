@@ -35,7 +35,11 @@ $routes->get('admin/logout', 'Admin\AdminController::logout', ['filter' => null]
 $routes->get('review',              'ReviewController::index');
 $routes->get('review/load_more',    'ReviewController::loadMore');
 $routes->get('review/write',        'ReviewController::write');   // 추후 구현
-$routes->get('review/(:num)',       'ReviewController::detail/$1'); // 추후 구현
+$routes->get('review/(:num)',       'ReviewController::detail/$1');
+
+$routes->get('curriculum',              'CurriculumController::index');
+$routes->get('curriculum/load_more',    'CurriculumController::loadMore');
+$routes->get('curriculum/(:num)',       'CurriculumController::detail/$1');
 
 
 $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
