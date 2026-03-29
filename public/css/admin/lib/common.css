@@ -324,6 +324,14 @@ body.menu-no-border #content-wrap #content { padding-top: 35px; }
 }
 .btn-icon-plus:hover { border-color: #ca1717 !important; color: #ca1717 !important; }
 
+.btn-icon-minus {
+ background: #fff url('/img/icon_minus_s_on.png') no-repeat 10px 55% !important;
+ padding: 0 15px 0 28px !important;
+ color: #fa2828 !important;
+ border: 1px solid #fa2828 !important;
+}
+
+
 .btn-gray {
  background: #bcbcbc;
  color: #fff;

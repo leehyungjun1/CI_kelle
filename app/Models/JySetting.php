@@ -12,7 +12,7 @@ class JySetting extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['code','code_name'];
+    protected $allowedFields    = ['code','code_name', 'use_yn', 'order_no'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

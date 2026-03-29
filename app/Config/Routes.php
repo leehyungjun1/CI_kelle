@@ -53,6 +53,18 @@ $routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
         $routes->post('manage_register', 'Admin\PolicyController::manage_register_save', ['as' => 'manage_save']);
         $routes->post('submit', 'Admin\PolicyController::submit');
         $routes->post('manage_action', 'Admin\PolicyController::manage_action');
+
+        $routes->get('code',             'Admin\PolicyController::code');
+        $routes->get('code_group',       'Admin\PolicyController::code_group');
+        $routes->get('code_items',       'Admin\PolicyController::code_items');
+        $routes->post('code_save',       'Admin\PolicyController::code_save');
+        $routes->post('code_delete',     'Admin\PolicyController::code_delete');
+
+        $routes->get('code_tree_list',     'Admin\PolicyController::code_tree_list');
+        $routes->get('code_children',      'Admin\PolicyController::code_children');
+        $routes->post('code_node_save',    'Admin\PolicyController::code_node_save');
+        $routes->post('code_node_delete',  'Admin\PolicyController::code_node_delete');
+        $routes->get('code_tree_data',     'Admin\PolicyController::code_tree_data');
     });
 
     // ── 배너 관리 ──

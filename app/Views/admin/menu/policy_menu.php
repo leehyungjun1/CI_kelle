@@ -15,8 +15,11 @@
         <li class="list-group-item <?= ($sideActive ?? '') === 'without' ? 'active' : '' ?>">
             <a href="<?= base_url('admin/policy/without') ?>">이용 / 탈퇴 안내</a>
         </li>
+<!--        <li class="list-group-item --><?php //= ($sideActive ?? '') === 'code' ? 'active' : '' ?><!--">-->
+<!--            <a href="--><?php //= base_url('admin/policy/code') ?><!--">코드 관리</a>-->
+<!--        </li>-->
         <li class="list-group-item <?= ($sideActive ?? '') === 'code' ? 'active' : '' ?>">
-            <a href="<?= base_url('admin/policy/code') ?>">코드 관리</a>
+            <a href="<?= base_url('admin/policy/code_tree_list') ?>">코드 관리 (트리)</a>
         </li>
     </ul>
     <div class="panel-heading menu-icon-minus <?= ($gnbActive ?? '') === 'manage' ? 'active' : '' ?>">
@@ -29,5 +32,7 @@
         <li class="list-group-item <?= ($sideActive ?? '') === 'banner_list' ? 'active' : '' ?>">
             <a href="<?= base_url('admin/banner/banner_list') ?>">배너 관리</a>
         </li>
+
+
     </ul>
 </div>

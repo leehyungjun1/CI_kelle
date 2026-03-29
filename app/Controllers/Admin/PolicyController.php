@@ -324,4 +324,234 @@ class PolicyController extends BaseController
 
         return $this->response->setJSON(['status' => 'success', 'message' => $message]);
     }
+
+    // ── 코드 관리 페이지 ──
+    public function code()
+    {
+        $jySettingModel = new JySetting();
+
+        // 3자리 구분 코드
+        $depth1 = $jySettingModel
+            ->where('use_yn', 'Y')
+            ->where('LENGTH(code)', 3)
+            ->orderBy('code', 'ASC')
+            ->findAll();
+
+        return $this->render('admin/policy/code_list', [
+            'gnbActive'  => 'policy',
+            'sideActive' => 'code',
+            'sideMenu'   => 'admin/menu/policy_menu',
+            'breadcrumb' => ['기본설정', '기본정책', '코드 관리'],
+            'depth1'     => $depth1,
+        ]);
+    }
+
+// ── depth1 선택 시 depth2 AJAX 로드 ──
+    public function code_group()
+    {
+        $depth1         = $this->request->getGet('depth1');
+        $jySettingModel = new JySetting();
+
+        $data = $jySettingModel
+            ->where('use_yn', 'Y')
+            ->where('LENGTH(code)', 6)
+            ->like('code', $depth1, 'after')
+            ->orderBy('code', 'ASC')
+            ->findAll();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $data,
+        ]);
+    }
+
+// ── depth2 선택 시 항목 AJAX 로드 ──
+    public function code_items()
+    {
+        $depth2         = $this->request->getGet('depth2');
+        $jySettingModel = new JySetting();
+
+        $data = $jySettingModel
+            ->where('LENGTH(code)', 9)
+            ->like('code', $depth2, 'after')
+            ->orderBy('order_no', 'ASC')
+            ->orderBy('code', 'ASC')
+            ->findAll();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => $data,
+        ]);
+    }
+
+// ── 코드 저장 ──
+    public function code_save()
+    {
+        $jySettingModel = new JySetting();
+        $rows           = json_decode($this->request->getPost('rows'), true);
+        $depth2         = $this->request->getPost('depth2');
+
+        if (empty($rows) || empty($depth2)) {
+            return $this->response->setJSON(['status' => 'error', 'message' => '데이터가 없습니다.']);
+        }
+
+        // 기존 9자리 코드 목록
+        $existing = $jySettingModel
+            ->where('LENGTH(code)', 9)
+            ->like('code', $depth2, 'after')
+            ->findAll();
+        $existingCodes = array_column($existing, 'code');
+
+        $orderNo = 1;
+        foreach ($rows as $row) {
+            $codeName = trim($row['code_name'] ?? '');
+            if ($codeName === '') continue;
+
+            if (!empty($row['id'])) {
+                // 수정
+                $jySettingModel->update($row['id'], [
+                    'code_name' => $codeName,
+                    'use_yn'    => $row['use_yn'] ?? 'Y',
+                    'order_no'  => $orderNo,
+                ]);
+            } else {
+                // 신규 - 코드 자동 생성
+                $newCode = $this->generateNextCode($depth2, $existingCodes);
+                if ($newCode) {
+                    $jySettingModel->insert([
+                        'code'      => $newCode,
+                        'code_name' => $codeName,
+                        'use_yn'    => $row['use_yn'] ?? 'Y',
+                        'order_no'  => $orderNo,
+                    ]);
+                    $existingCodes[] = $newCode;
+                }
+            }
+            $orderNo++;
+        }
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => '저장되었습니다.',
+        ]);
+    }
+
+// ── 코드 삭제 ──
+    public function code_delete()
+    {
+        $id             = $this->request->getPost('id');
+        $jySettingModel = new JySetting();
+        $jySettingModel->delete($id);
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => '삭제되었습니다.',
+        ]);
+    }
+
+// ── 다음 코드 자동 생성 ──
+    private function generateNextCode(string $depth2, array $existingCodes): ?string
+    {
+        // depth2(6자리) 기반 9자리 코드 생성
+        // 예: 103001 → 103001001, 103001002 ...
+        for ($i = 1; $i <= 999; $i++) {
+            $code = $depth2 . str_pad($i, 3, '0', STR_PAD_LEFT);
+            if (!in_array($code, $existingCodes)) {
+                return $code;
+            }
+        }
+        return null;
+    }
+
+
+    // ── 트리 페이지 ──
+    public function code_tree_list()
+    {
+        $jySettingModel = new JySetting();
+
+        $depth1 = $jySettingModel->where('use_yn', 'Y')
+            ->where('LENGTH(code)', 3)
+            ->orderBy('order_no', 'ASC')
+            ->findAll();
+
+        $depth2 = $jySettingModel->where('use_yn', 'Y')
+            ->where('LENGTH(code)', 6)
+            ->orderBy('order_no', 'ASC')
+            ->findAll();
+
+        return $this->render('admin/policy/code_tree_list', [
+            'gnbActive'  => 'policy',
+            'sideActive' => 'code',
+            'sideMenu'   => 'admin/menu/policy_menu',
+            'breadcrumb' => ['기본설정', '기본정책', '코드 관리'],
+            'depth1'     => $depth1,
+            'depth2'     => $depth2,
+        ]);
+    }
+
+// ── 하위 항목 로드 ──
+    public function code_children()
+    {
+        $parent         = $this->request->getGet('parent');
+        $len            = (int)$this->request->getGet('len');
+        $jySettingModel = new JySetting();
+
+        $data = $jySettingModel
+            ->where('LENGTH(code)', $len)
+            ->like('code', $parent, 'after')
+            ->orderBy('order_no', 'ASC')
+            ->orderBy('code', 'ASC')
+            ->findAll();
+
+        return $this->response->setJSON(['status' => 'success', 'data' => $data]);
+    }
+
+// ── 노드 이름 저장 ──
+    public function code_node_save()
+    {
+        $code           = $this->request->getPost('code');
+        $name           = $this->request->getPost('name');
+        $useYn          = $this->request->getPost('use_yn');
+        $jySettingModel = new JySetting();
+
+        $existing = $jySettingModel->where('code', $code)->first();
+        if ($existing) {
+            $jySettingModel->update($existing['id'], [
+                'code_name' => $name,
+                'use_yn'    => $useYn,
+            ]);
+        }
+
+        return $this->response->setJSON(['status' => 'success', 'message' => '저장되었습니다.']);
+    }
+
+// ── 노드 삭제 (하위 포함) ──
+    public function code_node_delete()
+    {
+        $code           = $this->request->getPost('code');
+        $jySettingModel = new JySetting();
+
+        // 해당 코드로 시작하는 모든 코드 삭제
+        $jySettingModel->like('code', $code, 'after')
+            ->delete();
+        // 자기 자신도 삭제
+        $jySettingModel->where('code', $code)->delete();
+
+        return $this->response->setJSON(['status' => 'success', 'message' => '삭제되었습니다.']);
+    }
+
+// ── 트리 데이터 AJAX ──
+    public function code_tree_data()
+    {
+        $jySettingModel = new JySetting();
+
+        $depth1 = $jySettingModel->where('use_yn', 'Y')->where('LENGTH(code)', 3)->orderBy('order_no','ASC')->findAll();
+        $depth2 = $jySettingModel->where('use_yn', 'Y')->where('LENGTH(code)', 6)->orderBy('order_no','ASC')->findAll();
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'data'   => ['depth1' => $depth1, 'depth2' => $depth2]
+        ]);
+    }
+
 }
