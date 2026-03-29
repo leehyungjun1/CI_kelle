@@ -6,13 +6,9 @@
 
     <div class="page-header">
         <h3>코드 관리</h3>
-        <div class="btn-group">
-            <input type="button" value="저장" class="btn btn-red" id="btnSave">
-        </div>
     </div>
 
     <div class="code-tree-wrap">
-
         <!-- ── 왼쪽: 트리 패널 ── -->
         <div class="code-tree-panel">
             <div class="code-tree-header">
