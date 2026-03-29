@@ -219,6 +219,7 @@ class PolicyController extends BaseController
     public function submit()
     {
         $adminModel = new JyAdmin();
+        $adminFieldModel = new \App\Models\JyAdminField();
         $id         = $this->request->getPost('id');
         $password   = $this->request->getPost('password');
         $pwConfirm  = $this->request->getPost('password_confirmation');
@@ -255,6 +256,7 @@ class PolicyController extends BaseController
                     $data['password'] = password_hash($password, PASSWORD_DEFAULT);
                 }
                 $adminModel->update($id, $data);
+                $savedId = $id;
                 $message = '관리자 정보가 수정되었습니다.';
             } else {
                 $data['admin_id'] = $this->request->getPost('admin_id');
@@ -271,8 +273,13 @@ class PolicyController extends BaseController
 
                 $data['password'] = password_hash($password, PASSWORD_DEFAULT);
                 $adminModel->insert($data);
+                $savedId = $adminModel->getInsertID();
                 $message = '새 관리자가 등록되었습니다.';
             }
+
+            // ── 담당 교육과정 저장 ──
+            $fieldCodes = $this->request->getPost('field_codes') ?? [];
+            $adminFieldModel->saveByAdmin((int)$savedId, $fieldCodes);
 
             return $this->response->setJSON([
                 'status'  => 'success',
