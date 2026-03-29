@@ -34,6 +34,15 @@ class AdminController extends BaseController {
              return redirect()->back()->with('error', '비밀번호가 올바르지 않습니다.');
         }
 
+        if($admin['employee_kind'] == "R") {
+            return redirect()->back()->with('error', '관리자 접근 권한이 없습니다.');
+        }
+
+        if($admin['regist_YN'] == "N") {
+            return redirect()->back()->with('error', '관리자 승인이 되지 않았습니다.');
+        }
+
+
         session()->set('admin', [
             'id'            => $admin['id'],
             'admin_id'      => $admin['admin_id'],
