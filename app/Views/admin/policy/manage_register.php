@@ -99,8 +99,11 @@
                     <input type="text" name="phone" value="<?= esc($admin['phone'] ?? '') ?>"
                            maxlength="13" class="form-control js-tel width-sm">
                 </td>
-                <th>관리자 레벨</th>
-                <td></td>
+                <th>우수 플래너.</th>
+                <td>
+                    <label class="radio-inline"><input type="radio" name="is_best" value="Y" <?=(!isset($admin['is_best']) || $admin['is_best'] == "Y") ? "checked" : '' ?>>예 </label>
+                    <label class="radio-inline"><input type="radio" name="is_best" value="N" <?=(isset($admin['is_best']) && $admin['is_best'] == "N") ? "checked" : '' ?>>아니오</label>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -114,20 +117,15 @@
             </colgroup>
             <tbody>
             <tr>
-                <th>직함</th>
-                <td>
+                <th>제목</th>
+                <td colspan="3">
                     <input type="text" name="title" value="<?= esc($admin['title'] ?? '') ?>"
                            class="form-control width-sm" placeholder="예: 학습 플래너">
-                </td>
-                <th>소속/관계</th>
-                <td>
-                    <input type="text" name="relations" value="<?= esc($admin['relations'] ?? '') ?>"
-                           class="form-control width-sm" placeholder="예: 학점은행제 전담팀">
-                </td>
+                </td>                
             </tr>
             <tr>
                 <th>프로필 사진</th>
-                <td colspan="3">
+                <td>
                     <div class="form-inline mgb5">
                         <label class="btn btn-gray btn-sm upload-label">
                             찾아보기
@@ -147,6 +145,10 @@
                         </div>
                     <?php endif; ?>
                     <div class="notice-info mgt5">권장 크기: 200x200px, JPG/PNG</div>
+                </td>
+                <th>자기소개</th>
+                <td>
+                    <textarea name="relations" rows="5" cols="" class="form-control width90p js-maxlength"><?= esc($admin['relations'] ?? '') ?></textarea>
                 </td>
             </tr>
             </tbody>

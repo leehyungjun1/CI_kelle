@@ -190,6 +190,7 @@ class PolicyController extends BaseController
             'title'           => '',
             'relations'       => '',
             'profile_path'    => '',
+            'is_best'         => 'Y',
         ];
 
         if ($id && !$admin) {
@@ -225,13 +226,14 @@ class PolicyController extends BaseController
         $pwConfirm  = $this->request->getPost('password_confirmation');
 
         $data = [
-            'name'            => $this->request->getPost('name'),
-            'department_code' => $this->request->getPost('department_code'),
-            'position_code'   => $this->request->getPost('position_code'),
-            'duty_code'       => $this->request->getPost('duty_code'),
-            'phone'           => $this->request->getPost('phone'),
-            'title'           => $this->request->getPost('title'),
-            'relations'       => $this->request->getPost('relations'),
+            'name'              => $this->request->getPost('name'),
+            'department_code'   => $this->request->getPost('department_code'),
+            'position_code'     => $this->request->getPost('position_code'),
+            'duty_code'         => $this->request->getPost('duty_code'),
+            'phone'             => $this->request->getPost('phone'),
+            'title'             => $this->request->getPost('title'),
+            'relations'         => $this->request->getPost('relations'),
+            'is_best'           => $this->request->getPost('is_best'),
         ];
 
         // ── 프로필 사진 업로드 ──

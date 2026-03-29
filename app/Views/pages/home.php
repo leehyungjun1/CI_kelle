@@ -214,15 +214,17 @@
     <div class="m-section">
         <div style="text-align:center; margin-bottom:20px;">
             <div class="m-sec-title">이달의 우수 플래너 🥇</div>
-            <div class="m-notice-label">가나라다라</div>
+            <div class="m-notice-label"><?= esc($planers['title'] ?? '') ?></div>
         </div>
         <div class="planner-card">
             <div class="planner-photo">
-                <img src="<?= base_url('images/banner/planner.jpg') ?>" alt="플래너 사진" />
+                <img src="<?= !empty($planers['profile_path'])
+                    ? base_url($planers['profile_path'])
+                    : base_url('images/banner/planner.jpg') ?>" alt="플래너 사진">
             </div>
             <div class="planner-info">
-                <div class="planner-name">이 &nbsp; 름</div>
-                <div class="planner-quote">"나를 어필하는 한마디"</div>
+                <div class="planner-name"><?= esc($planers['name'] ?? '') ?></div>
+                <div class="planner-quote"><?= nl2br($planers['relations'] ?? '') ?></div>
                 <div class="planner-btns">
                     <a href="#" class="btn-outline">자세히 보기</a>
                     <a href="#" class="btn-solid">상담하기</a>

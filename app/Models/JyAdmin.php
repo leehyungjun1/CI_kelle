@@ -14,7 +14,7 @@ class JyAdmin extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
-    protected $allowedFields    = ['admin_id','password','email','name','regist_YN', 'department_code','position_code','title','relations','profile_path', 'duty_code','phone','created_at','updated_at','deleted_at'];
+    protected $allowedFields    = ['admin_id','password','email','name','regist_YN', 'department_code','position_code','title','relations','profile_path', 'duty_code','is_best','phone','created_at','updated_at','deleted_at'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

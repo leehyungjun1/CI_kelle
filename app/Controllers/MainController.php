@@ -37,6 +37,7 @@ class MainController extends BaseController
         $boardSettingModel  = new \App\Models\JyBoardSetting();
         $headerModel        = new \App\Models\JyBoardHeader();
         $bannerModel        = new \App\Models\JyBanner();
+        $adminModel         = new \App\Models\JyAdmin();
 
         // ── 알림 말머리 맵핑 ──
         $noticeHeadersMap = $this->getBoardHeadersMap('notice');
@@ -68,11 +69,17 @@ class MainController extends BaseController
             ->limit(5)
             ->findAll();
 
+        // ── 이달의 우수 플래너. ──
+        $bestPlaner = $adminModel->where('is_best', 'Y')->first();
+
+
+
         return $this->render('pages/home', [
             'banners'          => $banners,
             'notices'          => $notices,
             'noticeHeadersMap' => $noticeHeadersMap,
             'reviews'          => $reviews,
+            'planers'          => $bestPlaner,
             'reviewHeadersMap' => $reviewHeadersMap,
             'active'           => 'home',
         ]);
