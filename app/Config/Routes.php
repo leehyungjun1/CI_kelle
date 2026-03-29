@@ -42,7 +42,7 @@ $routes->get('curriculum/load_more',    'CurriculumController::loadMore');
 $routes->get('curriculum/(:num)',       'CurriculumController::detail/$1');
 
 
-$routes->group('admin', ['filter' => 'adminAuth'], function ($routes) {
+$routes->group('admin', ['filter' => ['adminAuth', 'adminRole']], function($routes) {
     $routes->get('/', 'Admin\AdminController::index');
     $routes->get('dashboard', 'Admin\AdminController::dashboard');
     $routes->post('submit', 'Admin\AdminController::submit');

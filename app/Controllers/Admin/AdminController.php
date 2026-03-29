@@ -35,11 +35,11 @@ class AdminController extends BaseController {
         }
 
         session()->set('admin', [
-            'id'        => $admin['id'],
-            'admin_id'  => $admin['admin_id'],
-            'name'      => $admin['name'],
-            'role'      => 'admin',
-            'logged_in' => true
+            'id'            => $admin['id'],
+            'admin_id'      => $admin['admin_id'],
+            'name'          => $admin['name'],
+            'position_code' => $admin['position_code'],
+            'logged_in'     => true
         ]);
          return redirect()->to('/admin/dashboard');
     }

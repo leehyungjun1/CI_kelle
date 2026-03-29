@@ -1,3 +1,8 @@
+<?php
+$admin        = session()->get('admin');
+$isPlanner    = ($admin['position_code'] ?? '') === '102002002';
+?>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -41,7 +46,6 @@
     <?php endif; ?>
 </head>
 <body class="<?= $bodyClass ?? '' ?>">
-
 <div id="container-wrap">
 
     <!-- 상단 헤더 -->
@@ -130,6 +134,14 @@ $pageJsFile = FCPATH . 'js' . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_S
 if (!empty($pagePath) && file_exists($pageJsFile)):
     ?>
     <script src="<?= base_url('js/' . $pagePath . '.js') ?>"></script>
+<?php endif; ?>
+<script src="<?= base_url('script/jy_share/common.js') ?>"></script>
+<?php if (session()->getFlashdata('error')): ?>
+    <script>
+        $(document).ready(function() {
+            dialog_alert('<?= session()->getFlashdata('error') ?>', '알림');
+        });
+    </script>
 <?php endif; ?>
 
 </body>
