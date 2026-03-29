@@ -9,7 +9,7 @@
 <?= $this->section('content') ?>
 
     <div class="page-header">
-        <h3>게시글 보기</h3>
+        <h3><?=esc($board['board_name'] ?? '') ?> 게시글 보기</h3>
         <div class="btn-group">
             <input type="button" value="목록" class="btn btn-white btn-icon-list"
                    onclick="goList('<?= base_url('admin/board/article_list/'.esc($board['board_code'])) ?>')">
@@ -24,7 +24,7 @@
     </div>
 
     <div class="table-title">게시글 보기</div>
-<?= $this->include('components/board/view') ?>
+    <?= $this->include('components/board/view') ?>
 
     <div class="text-center mgt10">
         <a href="<?= base_url('admin/board/article_list/'.esc($board['board_code'])) ?>"

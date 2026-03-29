@@ -249,6 +249,15 @@ class BoardController extends BaseController
                 ->with('error', '해당 게시물이 존재하지 않습니다.');
         }
 
+        // ── boardSetting 추가 ──
+        $boardSettingModel = new \App\Models\JyBoardSetting();
+        $boardSetting      = $boardSettingModel->where('board_id', $board_id)->first();
+
+        // ── 말머리 추가 ──
+        $headerModel = new \App\Models\JyBoardHeader();
+        $headers     = $headerModel->where('board_setting_id', $boardSetting['id'])->findAll();
+        $headersMap  = array_column($headers, null, 'id');
+
         return $this->render('admin/board/article_view', [
             'gnbActive'  => 'board',
             'sideActive' => 'article_list',
@@ -257,6 +266,8 @@ class BoardController extends BaseController
             'board'      => $board,
             'files'      => $files,
             'board_id'   => $board_id,
+            'boardSetting' => $boardSetting,
+            'headersMap'   => $headersMap,
         ]);
     }
 

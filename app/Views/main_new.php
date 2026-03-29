@@ -378,10 +378,10 @@
                 </div>
                 <nav class="m-nav">
                     <a href="#" class="active">홈</a>
-                    <a href="#">학점은행제</a>
+                    <a href="#">센터소개</a>
                     <a href="#">교육과정</a>
+                    <a href="#">담당자</a>
                     <a href="#">후기</a>
-                    <a href="#">플래너</a>
                 </nav>
             </div>
         </div>
