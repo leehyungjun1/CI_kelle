@@ -64,4 +64,26 @@ class JySetting extends Model
             ->first();
         return $code_name['code_name'] ?? null;
     }
+
+    public function getCourseCodes() : array
+    {
+        $all = $this->where('use_yn','Y')
+            ->like('code', '103', 'after')
+            ->findAll();
+
+        $result = [
+            'depth1' => [],
+            'depth2' => [],
+            'depth3' => [],
+        ];
+
+        foreach($all as $row) {
+            $len = strlen($row['code']);
+            if($len === 3) $result['depth1'][] = $row;
+            elseif($len === 6) $result['depth2'][] = $row;
+            elseif($len === 9) $result['depth3'][] = $row;
+        }
+
+        return $result;
+    }
 }

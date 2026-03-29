@@ -4,7 +4,7 @@
 
 <?= $this->section('content') ?>
 
-    <form action="<?= site_url('admin/policy/submit') ?>" method="post" id="frm">
+    <form action="<?= site_url('admin/policy/submit') ?>" method="post" id="frm" enctype="multipart/form-data">
         <?= csrf_field() ?>
         <input type="hidden" name="id" value="<?= esc($admin['id']) ?>">
 
@@ -17,13 +17,12 @@
             </div>
         </div>
 
+        <!-- 기본정보 -->
         <div class="table-title">기본정보</div>
         <table class="table table-cols">
             <colgroup>
-                <col class="width-sm">
-                <col class="width-3xl">
-                <col class="width-sm">
-                <col class="">
+                <col class="width-sm"><col class="width-3xl">
+                <col class="width-sm"><col class="">
             </colgroup>
             <tbody>
             <tr>
@@ -52,8 +51,7 @@
             <tr>
                 <th class="require">이름</th>
                 <td>
-                    <input type="text" name="name"
-                           value="<?= esc($admin['name'] ?? '') ?>"
+                    <input type="text" name="name" value="<?= esc($admin['name'] ?? '') ?>"
                            class="form-control width-sm" maxlength="20">
                 </td>
                 <th>부서</th>
@@ -98,8 +96,7 @@
             <tr>
                 <th>전화번호</th>
                 <td>
-                    <input type="text" name="phone"
-                           value="<?= esc($admin['phone'] ?? '') ?>"
+                    <input type="text" name="phone" value="<?= esc($admin['phone'] ?? '') ?>"
                            maxlength="13" class="form-control js-tel width-sm">
                 </td>
                 <th>관리자 레벨</th>
@@ -107,6 +104,105 @@
             </tr>
             </tbody>
         </table>
-    </form>
 
+        <!-- 추가정보 -->
+        <div class="table-title">추가정보</div>
+        <table class="table table-cols">
+            <colgroup>
+                <col class="width-sm"><col class="width-3xl">
+                <col class="width-sm"><col class="">
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>직함</th>
+                <td>
+                    <input type="text" name="title" value="<?= esc($admin['title'] ?? '') ?>"
+                           class="form-control width-sm" placeholder="예: 학습 플래너">
+                </td>
+                <th>소속/관계</th>
+                <td>
+                    <input type="text" name="relations" value="<?= esc($admin['relations'] ?? '') ?>"
+                           class="form-control width-sm" placeholder="예: 학점은행제 전담팀">
+                </td>
+            </tr>
+            <tr>
+                <th>프로필 사진</th>
+                <td colspan="3">
+                    <div class="form-inline mgb5">
+                        <label class="btn btn-gray btn-sm upload-label">
+                            찾아보기
+                            <input type="file" name="profile_path" accept="image/*" style="display:none;">
+                        </label>
+                        <span class="upload-filename text-muted" style="margin-left:5px; font-size:12px;">선택된 파일 없음</span>
+                    </div>
+                    <?php if (!empty($admin['profile_path'])): ?>
+                        <div class="mgt5">
+                            <img id="profilePreview" src="<?= base_url($admin['profile_path']) ?>" alt="프로필"
+                                 style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+                        </div>
+                    <?php else: ?>
+                        <div class="mgt5" id="profilePreviewWrap" style="display:none;">
+                            <img id="profilePreview" src="" alt="프로필"
+                                 style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+                        </div>
+                    <?php endif; ?>
+                    <div class="notice-info mgt5">권장 크기: 200x200px, JPG/PNG</div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- 담당 교육과정 -->
+        <div class="table-title">담당 교육과정</div>
+        <table class="table table-cols">
+            <colgroup>
+                <col class="width-sm"><col>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th>담당 과정</th>
+                <td>
+                    <?php if (!empty($courseCodes['depth2'])): ?>
+                        <?php
+                        $depth3ByParent = [];
+                        foreach ($courseCodes['depth3'] as $d3) {
+                            $parent = substr($d3['code'], 0, 6);
+                            $depth3ByParent[$parent][] = $d3;
+                        }
+                        ?>
+                        <div class="course-field-wrap">
+                            <?php foreach ($courseCodes['depth2'] as $d2): ?>
+                                <div class="course-group">
+                                    <label class="course-parent">
+                                        <input type="checkbox" class="chk-parent"
+                                               data-parent="<?= esc($d2['code']) ?>"
+                                               value="<?= esc($d2['code']) ?>">
+                                        <strong><?= esc($d2['code_name']) ?></strong>
+                                    </label>
+                                    <?php if (!empty($depth3ByParent[$d2['code']])): ?>
+                                        <div class="course-children" data-group="<?= esc($d2['code']) ?>">
+                                            <?php foreach ($depth3ByParent[$d2['code']] as $d3): ?>
+                                                <label class="course-child">
+                                                    <input type="checkbox" name="field_codes[]"
+                                                           class="chk-child"
+                                                           data-parent="<?= esc($d2['code']) ?>"
+                                                           value="<?= esc($d3['code']) ?>"
+                                                        <?= in_array($d3['code'], $adminCodes ?? []) ? 'checked' : '' ?>>
+                                                    <?= esc($d3['code_name']) ?>
+                                                </label>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <span class="text-muted">등록된 교육과정이 없습니다.</span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </form>
 <?= $this->endSection() ?>

@@ -1,0 +1,19 @@
+.course-field-wrap { display: flex; flex-direction: column; gap: 12px; }
+.course-group { border: 1px solid #e6e6e6; border-radius: 6px; overflow: hidden; }
+.course-parent {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; background: #f6f6f6; cursor: pointer;
+    font-size: 13px; border-bottom: 1px solid #e6e6e6;
+}
+.course-parent input { margin: 0; }
+.course-children { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; }
+.course-child {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 12px; color: #444; cursor: pointer;
+    padding: 3px 8px; border: 1px solid #ddd;
+    border-radius: 4px; background: #fff; transition: all .15s;
+}
+.course-child.checked {
+    border-color: #1A56C4; background: #EEF4FF; color: #1A56C4;
+}
+.course-child input { margin: 0; }

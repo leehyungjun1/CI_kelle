@@ -168,23 +168,28 @@ class PolicyController extends BaseController
 
     public function manage_register($id = null)
     {
-        $adminModel     = new JyAdmin();
-        $jySettingModel = new JySetting();
+        $adminModel      = new JyAdmin();
+        $jySettingModel  = new JySetting();
+        $adminFieldModel = new \App\Models\JyAdminField();
 
         $prefixes = ['102001', '102002', '102003'];
         $codes    = $jySettingModel->getCodesByPrefixes($prefixes);
 
-        $mode = $id ? 'edit' : 'create';
+        // ── 103 교육과정 계층 구조 ──
+        $courseCodes = $jySettingModel->getCourseCodes();
+
+        $mode  = $id ? 'edit' : 'create';
         $admin = $id ? $adminModel->find($id) : [
             'id'              => '',
             'admin_id'        => '',
-            'email'           => '',
-            'password'        => '',
             'name'            => '',
             'department_code' => '',
             'position_code'   => '',
             'duty_code'       => '',
             'phone'           => '',
+            'title'           => '',
+            'relations'       => '',
+            'profile_path'    => '',
         ];
 
         if ($id && !$admin) {
@@ -192,18 +197,22 @@ class PolicyController extends BaseController
                 ->with('error', '해당 관리자를 찾을 수 없습니다.');
         }
 
+        // ── 기존 담당 코드 ──
+        $adminCodes = $id ? $adminFieldModel->getCodesByAdmin((int)$id) : [];
+
         $pageTitle = $mode === 'edit' ? '관리자 정보 수정' : '신규 관리자 등록';
 
         return $this->render('admin/policy/manage_register', [
-            'gnbActive'  => 'manage',
-            'sideActive' => 'manage',
-            'sideMenu'   => 'admin/menu/policy_menu',
-            'breadcrumb' => ['기본설정', '관리 정책', $pageTitle],
-            'admin'      => $admin,
-            'codes'      => $codes,
-            'jySetting'  => $jySettingModel,
-            'pageTitle'  => $pageTitle,
-            'mode'       => $mode,
+            'gnbActive'   => 'manage',
+            'sideActive'  => 'manage',
+            'sideMenu'    => 'admin/menu/policy_menu',
+            'breadcrumb'  => ['기본설정', '관리 정책', $pageTitle],
+            'admin'       => $admin,
+            'codes'       => $codes,
+            'courseCodes' => $courseCodes,
+            'adminCodes'  => $adminCodes,
+            'pageTitle'   => $pageTitle,
+            'mode'        => $mode,
         ]);
     }
 
@@ -220,7 +229,18 @@ class PolicyController extends BaseController
             'position_code'   => $this->request->getPost('position_code'),
             'duty_code'       => $this->request->getPost('duty_code'),
             'phone'           => $this->request->getPost('phone'),
+            'title'           => $this->request->getPost('title'),
+            'relations'       => $this->request->getPost('relations'),
         ];
+
+        // ── 프로필 사진 업로드 ──
+        $file = $this->request->getFile('profile_path');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(WRITEPATH . 'uploads/profile', $newName);
+            $data['profile_path'] = 'uploads/profile/' . $newName;
+        }
+
 
         try {
             if ($id) {
