@@ -69,4 +69,78 @@
                 display: 'inline-block',
             }).text(name);
         });
+
+        // ── 유형 변경 시 권한 행 토글 ───────────────────────────────
+        $('[name="type"]').on('change', function () {
+            var isQ = $(this).val() === 'Q';
+            $('.perm-reply-row').toggle(isQ);
+            $('.perm-comment-row').toggle(!isQ);
+        });
+
+        // ── 권한 모드 라디오 변경 → grade 박스 토글 ─────────────────
+        $('.perm-mode-radio').on('change', function () {
+            var action = $(this).data('action');
+            var mode   = $(this).val();
+            $('#gradeBox_' + action).toggle(mode === 'grade');
+        });
+
+        // ── 등급 드롭다운 → 태그 추가 ───────────────────────────────
+        $('.perm-grade-select').on('change', function () {
+            var action    = $(this).data('action');
+            var code      = $(this).val();
+            var name      = $(this).find('option:selected').text().trim();
+            var $tagsWrap = $('#gradeTags_' + action);
+
+            if (!code) return;
+
+            // 중복 방지
+            if ($tagsWrap.find('[data-code="' + code + '"]').length) {
+                $(this).val('');
+                return;
+            }
+
+            var tag = '<span class="label label-default perm-grade-tag" '
+                + 'data-code="' + code + '" '
+                + 'style="font-size:12px; padding:4px 8px; cursor:pointer;">'
+                + name
+                + ' <i class="fa fa-times" style="margin-left:4px;"></i>'
+                + '<input type="hidden" '
+                + 'name="permissions[' + action + '][grades][]" '
+                + 'value="' + code + '">'
+                + '</span>';
+
+            $tagsWrap.append(tag);
+            $(this).val(''); // 선택 초기화
+        });
+
+        // ── 태그 클릭 → 제거 ────────────────────────────────────────
+        $(document).on('click', '.perm-grade-tag', function () {
+            $(this).remove();
+        });
+
+        // ── 전체 버튼 → 모든 등급 추가 ──────────────────────────────
+        $('.perm-grade-all').on('click', function () {
+            var action    = $(this).data('action');
+            var $select   = $('#gradeSelect_' + action);
+            var $tagsWrap = $('#gradeTags_' + action);
+
+            $tagsWrap.empty();
+
+            $select.find('option[value!=""]').each(function () {
+                var code = $(this).val();
+                var name = $(this).text().trim();
+
+                var tag = '<span class="label label-default perm-grade-tag" '
+                    + 'data-code="' + code + '" '
+                    + 'style="font-size:12px; padding:4px 8px; cursor:pointer;">'
+                    + name
+                    + ' <i class="fa fa-times" style="margin-left:4px;"></i>'
+                    + '<input type="hidden" '
+                    + 'name="permissions[' + action + '][grades][]" '
+                    + 'value="' + code + '">'
+                    + '</span>';
+
+                $tagsWrap.append(tag);
+            });
+        });
     });

@@ -176,7 +176,10 @@ class PolicyController extends BaseController
         $codes    = $jySettingModel->getCodesByPrefixes($prefixes);
 
         // ── 103 교육과정 계층 구조 ──
-        $courseCodes = $jySettingModel->getCourseCodes();
+        $courseCodes = [
+            'depth2' => $jySettingModel->getCodesByDepth(2, '103'),
+            'depth3' => $jySettingModel->getCodesByDepth(3, '103'),
+        ];
 
         $mode  = $id ? 'edit' : 'create';
         $admin = $id ? $adminModel->find($id) : [

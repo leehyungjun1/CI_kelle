@@ -41,6 +41,7 @@ $routes->get('curriculum',              'CurriculumController::index');
 $routes->get('curriculum/load_more',    'CurriculumController::loadMore');
 $routes->get('curriculum/(:num)',       'CurriculumController::detail/$1');
 
+$routes->get('about', 'AboutController::index');
 
 $routes->group('admin', ['filter' => ['adminAuth', 'adminRole']], function($routes) {
     $routes->get('/', 'Admin\AdminController::index');
@@ -58,17 +59,23 @@ $routes->group('admin', ['filter' => ['adminAuth', 'adminRole']], function($rout
         $routes->post('submit', 'Admin\PolicyController::submit');
         $routes->post('manage_action', 'Admin\PolicyController::manage_action');
 
-        $routes->get('code',             'Admin\PolicyController::code');
-        $routes->get('code_group',       'Admin\PolicyController::code_group');
-        $routes->get('code_items',       'Admin\PolicyController::code_items');
-        $routes->post('code_save',       'Admin\PolicyController::code_save');
-        $routes->post('code_delete',     'Admin\PolicyController::code_delete');
+//        $routes->get('code',             'Admin\PolicyController::code');
+//        $routes->get('code_group',       'Admin\PolicyController::code_group');
+//        $routes->get('code_items',       'Admin\PolicyController::code_items');
+//        $routes->post('code_save',       'Admin\PolicyController::code_save');
+//        $routes->post('code_delete',     'Admin\PolicyController::code_delete');
 
-        $routes->get('code_tree_list',     'Admin\PolicyController::code_tree_list');
-        $routes->get('code_children',      'Admin\PolicyController::code_children');
-        $routes->post('code_node_save',    'Admin\PolicyController::code_node_save');
-        $routes->post('code_node_delete',  'Admin\PolicyController::code_node_delete');
-        $routes->get('code_tree_data',     'Admin\PolicyController::code_tree_data');
+//        $routes->get('code_tree_list',     'Admin\PolicyController::code_tree_list');
+        $routes->get('code_children',        'Admin\PolicyController::code_children');
+        $routes->post('code_node_save',      'Admin\PolicyController::code_node_save');
+        $routes->post('code_node_delete',    'Admin\PolicyController::code_node_delete');
+        $routes->get('code_tree_data',       'Admin\PolicyController::code_tree_data');
+
+        $routes->get('code_tree_list',           'Admin\CodeController::index');
+        $routes->post('code/save',     'Admin\CodeController::save');
+        $routes->post('code/delete',   'Admin\CodeController::delete');
+        $routes->post('code/reorder',  'Admin\CodeController::reorder');
+        $routes->get('code/get',       'Admin\CodeController::get');
     });
 
     // ── 배너 관리 ──

@@ -8,6 +8,8 @@ use App\Models\JyBoardFile;
 use App\Models\JyBoardHeader;
 use App\Models\JyBoardReplies;
 use App\Models\JyBoardSetting;
+use App\Models\JyBoardPermissionsModel;
+use App\Models\JySetting;
 use App\Services\DynamicBoardService;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -21,7 +23,8 @@ class BoardController extends BaseController
         $this->service = new DynamicBoardService();
     }
 
-    public function board_list() {
+    public function board_list()
+    {
         $boardModel = new JyBoardSetting();
         $get        = $this->request->getGet();
 
@@ -51,18 +54,21 @@ class BoardController extends BaseController
 
     public function board_register($id = null)
     {
-        $boardModel  = new JyBoardSetting();
-        $headerModel = new JyBoardHeader();
+        $boardModel       = new JyBoardSetting();
+        $headerModel      = new JyBoardHeader();
+        $permissionsModel = new JyBoardPermissionsModel();
+        $settingModel     = new \App\Models\JySetting();
 
         $mode  = $id ? 'edit' : 'create';
         $board = $id ? $boardModel->find($id) : [
-            'id'          => '',
-            'board_id'    => '',
-            'name'        => '',
-            'use_yn'      => 'Y',
-            'type'        => 'D',
-            'is_category' => 'N',
+            'id'           => '',
+            'board_id'     => '',
+            'name'         => '',
+            'use_yn'       => 'Y',
+            'type'         => 'D',
+            'is_category'  => 'N',
             'extra_fields' => '{}',
+            'list_count'   => 20,
         ];
 
         if ($id && !$board) {
@@ -74,26 +80,41 @@ class BoardController extends BaseController
             ? $headerModel->where('board_setting_id', $id)->orderBy('order_no', 'asc')->findAll()
             : [];
 
+        // 회원 등급 (104로 시작하는 6자리 코드)
+        $memberGrades = (clone $settingModel)
+            ->like('code', '104', 'after')
+            ->where('depth', 2)
+            ->where('use_yn', 'Y')
+            ->orderBy('order_no', 'asc')
+            ->findAll();
+
+        // 현재 저장된 권한 맵
+        $permMap = $id
+            ? $permissionsModel->getPermissionMap($board['board_id'])
+            : [];
+
         return $this->render('admin/board/board_register', [
-            'gnbActive'  => 'board',
-            'sideActive' => 'board_register',
-            'sideMenu'   => 'admin/menu/board_menu',
-            'breadcrumb' => ['게시판', '게시판 관리', $mode === 'edit' ? '게시판 수정' : '게시판 등록'],
-            'board'      => $board,
-            'mode'       => $mode,
-            'pageTitle'  => $mode === 'edit' ? '게시판 수정' : '게시판 등록',
-            'headers'    => $headers,
+            'gnbActive'    => 'board',
+            'sideActive'   => 'board_register',
+            'sideMenu'     => 'admin/menu/board_menu',
+            'breadcrumb'   => ['게시판', '게시판 관리', $mode === 'edit' ? '게시판 수정' : '게시판 등록'],
+            'board'        => $board,
+            'mode'         => $mode,
+            'pageTitle'    => $mode === 'edit' ? '게시판 수정' : '게시판 등록',
+            'headers'      => $headers,
+            'permMap'      => $permMap,
+            'memberGrades' => $memberGrades,
         ]);
     }
 
-    public function board_delete($article_id = null) {
-
+    public function board_delete($article_id = null)
+    {
         $article_id = $this->request->getPost('ids');
 
         if (empty($article_id)) {
             return $this->response->setJSON([
-                'status'    => 'error',
-                'message'    => '삭제할 항목이 없습니다.'
+                'status'  => 'error',
+                'message' => '삭제할 항목이 없습니다.',
             ]);
         }
 
@@ -101,17 +122,17 @@ class BoardController extends BaseController
         $boardModel->delete($article_id);
 
         return $this->response->setJSON([
-            'status'    => 'success',
-            'message'   => '삭제되었습니다.'
+            'status'  => 'success',
+            'message' => '삭제되었습니다.',
         ]);
     }
 
     public function submit()
     {
-        $boardModel = new JyBoardSetting();
-        $id         = $this->request->getPost('id');
+        $boardModel       = new JyBoardSetting();
+        $permissionsModel = new JyBoardPermissionsModel();
+        $id               = $this->request->getPost('id');
 
-        // ── extra_fields 처리 ──
         $extraFieldsPost = $this->request->getPost('extra_fields') ?? [];
         $extraFields = json_encode([
             'manager'    => !empty($extraFieldsPost['manager']),
@@ -125,6 +146,7 @@ class BoardController extends BaseController
             'use_yn'       => $this->request->getPost('use_yn'),
             'is_category'  => $this->request->getPost('is_category') ?? 'N',
             'extra_fields' => $extraFields,
+            'list_count'   => (int) ($this->request->getPost('list_count') ?? 20),
         ];
 
         try {
@@ -133,10 +155,11 @@ class BoardController extends BaseController
                 if (!$board) {
                     return $this->response->setJSON([
                         'status'  => 'error',
-                        'message' => '해당 게시판 정보를 찾을 수 없습니다.'
+                        'message' => '해당 게시판 정보를 찾을 수 없습니다.',
                     ]);
                 }
                 $boardModel->update($id, $data);
+                $boardId = $board['board_id'];
                 $message = '게시판 정보가 수정되었습니다.';
             } else {
                 $data['board_id'] = $this->request->getPost('board_id');
@@ -144,17 +167,19 @@ class BoardController extends BaseController
                 if ($boardModel->where('board_id', $data['board_id'])->first()) {
                     return $this->response->setJSON([
                         'status'  => 'error',
-                        'message' => '이미 존재하는 게시판 아이디입니다.'
+                        'message' => '이미 존재하는 게시판 아이디입니다.',
                     ]);
                 }
 
                 $boardModel->insert($data);
-                $id = $boardModel->getInsertID();
-                $this->createBoardTable($data['board_id']);
+                $id      = $boardModel->getInsertID();
+                $boardId = $data['board_id'];
+                $this->createBoardTable($boardId);
                 $message = '새 게시판이 등록되었습니다.';
             }
 
             $this->saveCategoryHeader($id);
+            $this->savePermissions($permissionsModel, $boardId);
 
             return $this->response->setJSON([
                 'status'  => 'success',
@@ -165,10 +190,36 @@ class BoardController extends BaseController
         } catch (\Exception $e) {
             return $this->response->setJSON([
                 'status'  => 'error',
-                'message' => '오류: ' . $e->getMessage()
+                'message' => '오류: ' . $e->getMessage(),
             ]);
         }
     }
+
+    // ── 권한 저장 (private) ──────────────────────────────────────
+    private function savePermissions(
+        JyBoardPermissionsModel $permissionsModel,
+        string $boardId
+    ): void {
+        $postPerms = $this->request->getPost('permissions') ?? [];
+        $permissions = [];
+
+        foreach (array_keys(JyBoardPermissionsModel::ACTIONS) as $action) {
+            $mode   = $postPerms[$action]['mode']   ?? 'all';
+            $grades = $postPerms[$action]['grades'] ?? [];
+
+            // grade 모드가 아니면 grades 무시
+            $permissions[$action] = [
+                'mode'   => $mode,
+                'grades' => ($mode === 'grade') ? array_filter($grades) : [],
+            ];
+        }
+
+        $permissionsModel->savePermissions($boardId, $permissions);
+    }
+
+    // ────────────────────────────────────────────────────────────
+    // 이하 기존 메서드 그대로
+    // ────────────────────────────────────────────────────────────
 
     public function article_list($board_id = null)
     {
@@ -201,17 +252,16 @@ class BoardController extends BaseController
             $filters['endDate']   = $entryDt[1] ?? null;
         }
 
-        // ── 말머리 불러오기 추가 ──
         $boardSetting = $boardSettingModel->where('board_id', $board_id)->first();
-        $headers = [];
+        $headers      = [];
         $headersMap   = [];
+
         if (!empty($boardSetting) && $boardSetting['is_category'] === 'Y') {
             $headers = $headerModel->where('board_setting_id', $boardSetting['id'])
                 ->where('is_use', 'Y')
                 ->orderBy('order_no', 'asc')
                 ->findAll();
 
-            // id 기준으로 맵핑
             foreach ($headers as $header) {
                 $headersMap[$header['id']] = $header;
             }
@@ -223,15 +273,15 @@ class BoardController extends BaseController
             'headers'      => $headers,
             'headersMap'   => $headersMap,
             'boardSetting' => $boardSetting,
-            'gnbActive'  => 'board',
-            'sideActive' => 'article_list',
-            'sideMenu'   => 'admin/menu/board_menu',
-            'breadcrumb' => ['게시판', '게시글 관리'],
-            'boardLists' => $boardLists,
-            'boards'     => $boards,
-            'board_id'   => $board_id,
-            'filters'    => $filters,
-            'get'        => $get,
+            'gnbActive'    => 'board',
+            'sideActive'   => 'article_list',
+            'sideMenu'     => 'admin/menu/board_menu',
+            'breadcrumb'   => ['게시판', '게시글 관리'],
+            'boardLists'   => $boardLists,
+            'boards'       => $boards,
+            'board_id'     => $board_id,
+            'filters'      => $filters,
+            'get'          => $get,
         ]);
     }
 
@@ -245,57 +295,57 @@ class BoardController extends BaseController
         $files = $this->service->getFiles($board_id, $article_id);
 
         if (!is_array($board) || empty($board)) {
-            return redirect()->to('/admin/board/article_list/'.$board_id)
+            return redirect()->to('/admin/board/article_list/' . $board_id)
                 ->with('error', '해당 게시물이 존재하지 않습니다.');
         }
 
-        // ── boardSetting 추가 ──
-        $boardSettingModel = new \App\Models\JyBoardSetting();
+        $boardSettingModel = new JyBoardSetting();
         $boardSetting      = $boardSettingModel->where('board_id', $board_id)->first();
 
-        // ── 말머리 추가 ──
-        $headerModel = new \App\Models\JyBoardHeader();
+        $headerModel = new JyBoardHeader();
         $headers     = $headerModel->where('board_setting_id', $boardSetting['id'])->findAll();
         $headersMap  = array_column($headers, null, 'id');
 
         return $this->render('admin/board/article_view', [
-            'gnbActive'  => 'board',
-            'sideActive' => 'article_list',
-            'sideMenu'   => 'admin/menu/board_menu',
-            'breadcrumb' => ['게시판', '게시글 관리', '게시글 보기'],
-            'board'      => $board,
-            'files'      => $files,
-            'board_id'   => $board_id,
+            'gnbActive'    => 'board',
+            'sideActive'   => 'article_list',
+            'sideMenu'     => 'admin/menu/board_menu',
+            'breadcrumb'   => ['게시판', '게시글 관리', '게시글 보기'],
+            'board'        => $board,
+            'files'        => $files,
+            'board_id'     => $board_id,
             'boardSetting' => $boardSetting,
             'headersMap'   => $headersMap,
         ]);
     }
 
-    public function article_delete($board_id = null, $article_id = null) {
-        if(empty($board_id)) {
+    public function article_delete($board_id = null, $article_id = null)
+    {
+        if (empty($board_id)) {
             return redirect()->back()->with('error', '잘못된 접근입니다.');
         }
+
         $article_id = $this->request->getPost('ids');
 
         if (empty($article_id)) {
             return $this->response->setJSON([
-                'status'    => 'error',
-                'message'    => '삭제할 항목이 없습니다.'
+                'status'  => 'error',
+                'message' => '삭제할 항목이 없습니다.',
             ]);
         }
 
         $board = $this->service->articleDelete($board_id, $article_id);
 
         return $this->response->setJSON([
-            'status'    => 'success',
-            'message'   => '삭제되었습니다.'
+            'status'  => 'success',
+            'message' => '삭제되었습니다.',
         ]);
     }
 
     public function article_register($board_id = null, $id = null)
     {
         $boardSettingModel = new JyBoardSetting();
-        $headerModel        = new JyBoardHeader();
+        $headerModel       = new JyBoardHeader();
 
         $boardLists = $boardSettingModel->where('use_yn', 'Y')->orderBy('id', 'desc')->findAll();
 
@@ -314,7 +364,6 @@ class BoardController extends BaseController
                 ->with('error', '해당 게시판 설정을 찾을 수 없습니다.');
         }
 
-        // ── 말머리 불러오기 ──
         $headers = [];
         if (!empty($boardSetting) && ($boardSetting['is_category'] ?? 'N') === 'Y') {
             $headers = $headerModel
@@ -353,35 +402,35 @@ class BoardController extends BaseController
         $pageTitle = $mode === 'edit' ? '게시글 수정' : '신규 게시글 등록';
 
         return $this->render('admin/board/article_register', [
-            'gnbActive'  => 'board',
-            'sideActive' => 'article_register',
-            'sideMenu'   => 'admin/menu/board_menu',
-            'breadcrumb' => ['게시판', '게시글 관리', $pageTitle],
-            'mode'       => 'article',
-            'board_id'   => $board_id,
-            'boardLists' => $boardLists,
-            'article'    => $article,
-            'pageTitle'  => $pageTitle,
-            'files'      => $files,
+            'gnbActive'    => 'board',
+            'sideActive'   => 'article_register',
+            'sideMenu'     => 'admin/menu/board_menu',
+            'breadcrumb'   => ['게시판', '게시글 관리', $pageTitle],
+            'mode'         => 'article',
+            'board_id'     => $board_id,
+            'boardLists'   => $boardLists,
+            'article'      => $article,
+            'pageTitle'    => $pageTitle,
+            'files'        => $files,
             'headers'      => $headers,
             'boardSetting' => $boardSetting,
         ]);
     }
 
-    public function article_submit() {
-        $post = $this->request->getPost();
+    public function article_submit()
+    {
+        $post        = $this->request->getPost();
         $post['mode'] = 'article';
-        $uploadFiles = $this->request->getFiles()['upfiles'] ?? [];
-        $file_ids = $this->request->getPost('file_ids') ?? [];
+        $uploadFiles  = $this->request->getFiles()['upfiles'] ?? [];
+        $file_ids     = $this->request->getPost('file_ids') ?? [];
 
-        if(isset($post['delFile'])) {
+        if (isset($post['delFile'])) {
             $jyBoadModel = new JyBoardFile();
             $this->service->deleteFiles($post['delFile']);
             $jyBoadModel->whereIn('id', $post['delFile'])->delete();
         }
 
-        $result = $this->service->articleSave($post);
-
+        $result     = $this->service->articleSave($post);
         $board_code = $post['board_code'] ?? '';
         $article_id = $result['id'];
 
@@ -393,77 +442,72 @@ class BoardController extends BaseController
         return $this->response->setJSON($result);
     }
 
-    public function reply_register($board_id = null, $article_id=null, $replies_id = null) {
-
+    public function reply_register($board_id = null, $article_id = null, $replies_id = null)
+    {
         $board = $this->service->articleView($board_id, $article_id);
 
         $article = [
-            'id' => '',
-            'title' => 'RE : '.$board['title']  ,
-            'content' => '',
-            'writer' => '',
-            'writer_id' => '',
-            'name' => '',
-            'use_yn' => '',
-            'type'  => '',
+            'id'         => '',
+            'title'      => 'RE : ' . $board['title'],
+            'content'    => '',
+            'writer'     => '',
+            'writer_id'  => '',
+            'name'       => '',
+            'use_yn'     => '',
+            'type'       => '',
         ];
 
-        if($replies_id) {
-            $article = $repliesModel -> find($replies_id);
+        if ($replies_id) {
+            $article = $repliesModel->find($replies_id);
         }
 
         $files = new JyBoardFile();
-
         $files = $files->where('board_id', $board_id)->where('article_id', $article_id)->first() ?? [];
 
-
         return view('admin/board/replies_register', [
-            'mode'          => 'replies',
-            'article'       => $article,
-            'board'         => $board,
-            'files'         => $files,
-            'pageTitle'     => '게시글 답변',
+            'mode'      => 'replies',
+            'article'   => $article,
+            'board'     => $board,
+            'files'     => $files,
+            'pageTitle' => '게시글 답변',
         ]);
     }
 
-    public function replies_submit() {
-        $post = $this->request->getPost();
-        $post['mode'] = 'reply';
+    public function replies_submit()
+    {
+        $post                = $this->request->getPost();
+        $post['mode']        = 'reply';
         $post['writer_type'] = 'admin';
-        $result = $this->service->articleSave($post);
+        $result              = $this->service->articleSave($post);
         return $this->response->setJSON($result);
     }
 
-
-    function extractImages($content) {
+    function extractImages($content)
+    {
         preg_match_all('/<img[^>]+src="([^">]+)"/', $content, $matches);
         return $matches[1] ?? [];
     }
 
-    function moveImageToBoardFolder($src, $board_id, $board_type = 'editor') {
+    function moveImageToBoardFolder($src, $board_id, $board_type = 'editor')
+    {
         $year  = date('Y');
         $month = date('m');
 
-        // 절대 경로
-        $src = str_replace(base_url(), '', $src);
+        $src          = str_replace(base_url(), '', $src);
         $relativePath = ltrim(str_replace('/uploads', '', $src), '/');
-        $srcPath = WRITEPATH . $relativePath;
+        $srcPath      = WRITEPATH . $relativePath;
 
-        // 새 경로
         $newDir = WRITEPATH . "uploads/{$board_type}/{$board_id}/{$year}/{$month}/";
         if (!is_dir($newDir)) mkdir($newDir, 0777, true);
 
-        $ext = pathinfo($srcPath, PATHINFO_EXTENSION);
-        // 유니크 파일명 생성
+        $ext      = pathinfo($srcPath, PATHINFO_EXTENSION);
         $fileName = uniqid('img_', true) . '.' . $ext;
         $destPath = $newDir . $fileName;
 
-        // 파일 이동
         if (file_exists($srcPath)) {
             rename($srcPath, $destPath);
         }
 
-        // 리턴할 새 URL
         return "/uploads/{$board_type}/{$board_id}/{$year}/{$month}/{$fileName}";
     }
 
@@ -474,7 +518,6 @@ class BoardController extends BaseController
 
         $tableName = "jy_board_" . $setting_name;
 
-        // 이미 있으면 스킵
         if ($db->tableExists($tableName)) return;
 
         $fields = [
@@ -482,120 +525,120 @@ class BoardController extends BaseController
                 'type'           => 'BIGINT',
                 'unsigned'       => true,
                 'auto_increment' => true,
-                'comment'        => '고유 ID'
+                'comment'        => '고유 ID',
             ],
             'board_id' => [
-                'type'          => 'BIGINT',
-                'unsigned'       => true,
-                'comment'        => '게시판 고유 번호'
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'comment'  => '게시판 고유 번호',
             ],
             'group_id' => [
-                'type'          => 'BIGINT',
-                'unsigned'      => true,
-                'null'          => true,
-                'comment'       => '원글 그룹 ID'
+                'type'    => 'BIGINT',
+                'unsigned' => true,
+                'null'    => true,
+                'comment' => '원글 그룹 ID',
             ],
             'parent_id' => [
-                'type'           => 'TINYINT',
-                'unsigned'       => true,
-                'comment'        => '상위 게시판 아이디'
+                'type'     => 'TINYINT',
+                'unsigned' => true,
+                'comment'  => '상위 게시판 아이디',
             ],
             'depth' => [
-                'type'           => 'TINYINT',
-                'unsigned'       => true,
-                'comment'        => '깊이'
+                'type'     => 'TINYINT',
+                'unsigned' => true,
+                'comment'  => '깊이',
             ],
             'order_no' => [
-                'type'           => 'INT',
-                'unsigned'       => true,
-                'default'        => 0,
-                'comment'        => '댓글 순서'
+                'type'     => 'INT',
+                'unsigned' => true,
+                'default'  => 0,
+                'comment'  => '댓글 순서',
             ],
             'header_id' => [
                 'type'     => 'BIGINT',
                 'unsigned' => true,
                 'null'     => true,
                 'default'  => null,
-                'comment'  => '카테고리 ID'
+                'comment'  => '카테고리 ID',
             ],
             'title' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
                 'null'       => true,
-                'comment'    => '제목'
+                'comment'    => '제목',
             ],
             'content' => [
-                'type'      => 'TEXT',
-                'null'      => true,
-                'comment'   => '내용'
+                'type'    => 'TEXT',
+                'null'    => true,
+                'comment' => '내용',
             ],
             'rating' => [
-                'type'           => 'TINYINT',
-                'unsigned'       => true,
-                'comment'        => '별점'
+                'type'     => 'TINYINT',
+                'unsigned' => true,
+                'comment'  => '별점',
             ],
             'writer_type' => [
-                'type' => 'ENUM',
-                'constraint' => ['admin','user'],
-                'default' => 'user'
+                'type'       => 'ENUM',
+                'constraint' => ['admin', 'user'],
+                'default'    => 'user',
             ],
             'writer_id' => [
-                'type' => 'BIGINT',
+                'type'     => 'BIGINT',
                 'unsigned' => true,
-                'null' => true
+                'null'     => true,
             ],
             'writer' => [
-                'type'      => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => '100',
                 'null'       => true,
-                'comment'    => '작성자'
-            ],            
+                'comment'    => '작성자',
+            ],
             'is_notice' => [
-                'type' => 'ENUM',
-                'constraint' => ['Y','N'],
-                'default' => 'N'
+                'type'       => 'ENUM',
+                'constraint' => ['Y', 'N'],
+                'default'    => 'N',
             ],
             'is_secret' => [
-                'type' => 'ENUM',
-                'constraint' => ['Y','N'],
-                'default' => 'N'
+                'type'       => 'ENUM',
+                'constraint' => ['Y', 'N'],
+                'default'    => 'N',
             ],
             'is_use' => [
-                'type' => 'ENUM',
-                'constraint' => ['Y','N'],
-                'default' => 'N',
-                'comment'    => '보여지기 여부'
+                'type'       => 'ENUM',
+                'constraint' => ['Y', 'N'],
+                'default'    => 'N',
+                'comment'    => '보여지기 여부',
             ],
             'keywords' => [
-                'type'    => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => 200,
-                'null'    => true,
-                'default' => null,
-                'comment' => '키워드'
+                'null'       => true,
+                'default'    => null,
+                'comment'    => '키워드',
             ],
             'status' => [
                 'type'       => 'SET',
                 'constraint' => ['popular', 'recommend', 'new'],
                 'null'       => true,
                 'default'    => null,
-                'comment'    => '상태'
+                'comment'    => '상태',
             ],
-            'hit'   => [
-                'type'           => 'BIGINT',
-                'unsigned'       => true,
-                'comment'        => '조회수'
+            'hit' => [
+                'type'     => 'BIGINT',
+                'unsigned' => true,
+                'comment'  => '조회수',
             ],
             'is_main' => [
-                'type' => 'ENUM',
-                'constraint' => ['Y','N'],
-                'default' => 'N',
-                'comment'    => '메인 보여지기 여부'
+                'type'       => 'ENUM',
+                'constraint' => ['Y', 'N'],
+                'default'    => 'N',
+                'comment'    => '메인 보여지기 여부',
             ],
             'ip' => [
-                'type' => 'VARCHAR',
+                'type'       => 'VARCHAR',
                 'constraint' => '16',
-                'null' => true,
-                'comment' => '아이피'
+                'null'       => true,
+                'comment'    => '아이피',
             ],
             'created_at' => ['type' => 'DATETIME', 'null' => true],
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
@@ -607,19 +650,17 @@ class BoardController extends BaseController
         $forge->createTable($tableName, true);
     }
 
-
     private function saveCategoryHeader($id): void
     {
         $headerModel = new JyBoardHeader();
 
         $isCategory = $this->request->getPost('is_category') ?? 'N';
-        $names      = $this->request->getPost('header_name') ?? [];
-        $bgColors   = $this->request->getPost('badge_color') ?? [];
-        $textColors = $this->request->getPost('text_color')  ?? [];
+        $names      = $this->request->getPost('header_name')  ?? [];
+        $bgColors   = $this->request->getPost('badge_color')  ?? [];
+        $textColors = $this->request->getPost('text_color')   ?? [];
         $isUses     = $this->request->getPost('header_is_use') ?? [];
-        $ids        = $this->request->getPost('category_id') ?? [];
+        $ids        = $this->request->getPost('category_id')  ?? [];
 
-        // is_category 미사용이면 기존 헤더 전부 삭제
         if ($isCategory !== 'Y') {
             $headerModel->where('board_setting_id', $id)->delete();
             return;
@@ -646,21 +687,19 @@ class BoardController extends BaseController
 
             if ($headerId) {
                 $headerModel->update($headerId, $rowData);
-                $usedIds[] = (int)$headerId;
+                $usedIds[] = (int) $headerId;
             } else {
                 $newId     = $headerModel->insert($rowData);
-                $usedIds[] = (int)$newId;
+                $usedIds[] = (int) $newId;
             }
         }
 
-        // 삭제된 헤더 처리
         $deleteIds = array_diff($oldIds, $usedIds);
         if (!empty($deleteIds)) {
             $headerModel->whereIn('id', $deleteIds)->delete();
         }
     }
 
-    // ── 게시판 카운트 업데이트 메서드 ──
     private function updateBoardCount(string $board_code): void
     {
         $boardSettingModel = new JyBoardSetting();
@@ -671,11 +710,8 @@ class BoardController extends BaseController
         $dynamicModel = new \App\Models\DynamicBoardModel();
         $dynamicModel->setTableName('jy_board_' . $board_code);
 
-        // 전체 글 수
         $total = $dynamicModel->where('deleted_at', null)->countAllResults();
-
-        // 신규 글 수 (오늘 날짜 기준)
-        $new = $dynamicModel
+        $new   = $dynamicModel
             ->where('deleted_at', null)
             ->where('DATE(created_at)', date('Y-m-d'))
             ->countAllResults();

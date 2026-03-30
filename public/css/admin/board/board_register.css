@@ -1,0 +1,7 @@
+#permissionTable td {
+    white-space: nowrap;
+}
+
+.perm-grade-box { display: flex !important; }
+.perm-grade-box[style*="display:none"] { display: none !important; }
+.perm-grade-tags { display: flex !important; flex-wrap: wrap; gap: 4px; align-items: center; }

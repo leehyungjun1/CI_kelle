@@ -52,9 +52,21 @@
                 </tr>
                 <tr>
                     <th class="require">게시판명</th>
-                    <td colspan="3">
+                    <td>
                         <input type="text" name="name" value="<?= esc($board['name'] ?? '') ?>"
                                class="form-control width-sm" maxlength="20">
+                    </td>
+                    <th>리스트 목록수</th>
+                    <td>
+                        <div class="form-group">
+                            <select name="list_count" class="form-control input-sm" style="width:100px">
+                                <?php foreach ([10, 20, 30, 50, 100] as $n): ?>
+                                    <option value="<?= $n ?>" <?= (int)($board['list_count'] ?? 20) == $n ? 'selected' : '' ?>>
+                                        <?= $n ?>개
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -62,10 +74,10 @@
                     <td colspan="3">
                         <div style="display:flex; gap:20px;">
                             <?php foreach ([
-                                               'D' => ['label' => '일반형',    'img' => 'type_default'],
-                                               'G' => ['label' => '갤러리형',  'img' => 'type_gallery'],
-                                               'E' => ['label' => '이벤트형',  'img' => 'type_event'],
-                                               'Q' => ['label' => '1:1 문의형','img' => 'type_qa'],
+                                               'D' => ['label' => '일반형',     'img' => 'type_default'],
+                                               'G' => ['label' => '갤러리형',   'img' => 'type_gallery'],
+                                               'E' => ['label' => '이벤트형',   'img' => 'type_event'],
+                                               'Q' => ['label' => '1:1 문의형', 'img' => 'type_qa'],
                                            ] as $value => $info): ?>
                                 <label class="radio-inline">
                                     <input type="radio" name="type" value="<?= $value ?>"
@@ -83,11 +95,10 @@
                     </td>
                 </tr>
                 <tr>
-                <tr>
                     <th>추가 필드</th>
                     <td colspan="3">
                         <?php
-                        $extraFields = json_decode($board['extra_fields'] ?? '{}', true) ?? [];
+                        $extraFields  = json_decode($board['extra_fields'] ?? '{}', true) ?? [];
                         $fieldOptions = [
                             'manager'    => '담당자',
                             'rating'     => '별점',
@@ -110,182 +121,203 @@
                         </div>
                     </td>
                 </tr>
-                <th>말머리 기능</th>
-                <td colspan="3">
-                    <!-- 미체크 시 N 전송 -->
-                    <input type="hidden" name="is_category" value="N">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" name="is_category" value="Y" id="is_category"
-                            <?= ($board['is_category'] ?? 'N') === 'Y' ? 'checked' : '' ?>>
-                        말머리 사용
-                    </label>
+                <tr>
+                    <th>말머리 기능</th>
+                    <td colspan="3">
+                        <input type="hidden" name="is_category" value="N">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="is_category" value="Y" id="is_category"
+                                <?= ($board['is_category'] ?? 'N') === 'Y' ? 'checked' : '' ?>>
+                            말머리 사용
+                        </label>
 
-                    <div id="categoryBox" style="display:none; padding-top:10px;">
-                        <table class="table table-cols">
-                            <colgroup>
-                                <col class="width-sm">
-                                <col>
-                                <col class="width-sm">
-                                <col class="width-sm">
-                                <col class="width-sm">
-                            </colgroup>
-                            <tbody id="categoryTbody">
-                            <tr>
-                                <th>말머리명</th>
-                                <th>배경색</th>
-                                <th>글자색</th>
-                                <th>사용여부</th>
-                                <th>관리</th>
-                            </tr>
-                            <?php if (!empty($headers)): ?>
-                                <?php foreach ($headers as $header): ?>
-                                    <tr>
-                                        <td>
-                                            <input type="hidden" name="category_id[]" value="<?= esc($header['id']) ?>">
-                                            <input type="text" name="header_name[]" class="form-control"
-                                                   value="<?= esc($header['header_name']) ?>" placeholder="말머리명">
-                                        </td>
-                                        <td>
-                                            <input type="color" name="badge_color[]"
-                                                   value="<?= esc($header['badge_color'] ?? '#ff0000') ?>"
-                                                   style="width:50px; padding:0; border:none; cursor:pointer;">
-                                        </td>
-                                        <td>
-                                            <input type="color" name="text_color[]"
-                                                   value="<?= esc($header['text_color'] ?? '#ffffff') ?>"
-                                                   style="width:50px; padding:0; border:none; cursor:pointer;">
-                                        </td>
-                                        <td>
-                                            <label class="checkbox-inline">
+                        <div id="categoryBox" style="display:none; padding-top:10px;">
+                            <table class="table table-cols">
+                                <colgroup>
+                                    <col class="width-sm">
+                                    <col>
+                                    <col class="width-sm">
+                                    <col class="width-sm">
+                                    <col class="width-sm">
+                                </colgroup>
+                                <tbody id="categoryTbody">
+                                <tr>
+                                    <th>말머리명</th>
+                                    <th>배경색</th>
+                                    <th>글자색</th>
+                                    <th>사용여부</th>
+                                    <th>관리</th>
+                                </tr>
+                                <?php if (!empty($headers)): ?>
+                                    <?php foreach ($headers as $header): ?>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="category_id[]" value="<?= esc($header['id']) ?>">
+                                                <input type="text" name="header_name[]" class="form-control"
+                                                       value="<?= esc($header['header_name']) ?>" placeholder="말머리명">
+                                            </td>
+                                            <td>
+                                                <input type="color" name="badge_color[]"
+                                                       value="<?= esc($header['badge_color'] ?? '#ff0000') ?>"
+                                                       style="width:50px; padding:0; border:none; cursor:pointer;">
+                                            </td>
+                                            <td>
+                                                <input type="color" name="text_color[]"
+                                                       value="<?= esc($header['text_color'] ?? '#ffffff') ?>"
+                                                       style="width:50px; padding:0; border:none; cursor:pointer;">
+                                            </td>
+                                            <td>
                                                 <select name="header_is_use[]" class="form-control">
                                                     <option value="Y" <?= ($header['is_use'] ?? 'Y') === 'Y' ? 'selected' : '' ?>>사용</option>
                                                     <option value="N" <?= ($header['is_use'] ?? '') === 'N' ? 'selected' : '' ?>>미사용</option>
                                                 </select>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-sm btn-white btn-icon-minus btn-del-category">삭제</button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td>
+                                            <input type="text" name="header_name[]" class="form-control"
+                                                   placeholder="말머리명" value="">
+                                        </td>
+                                        <td>
+                                            <input type="color" name="badge_color[]" value="#ff0000"
+                                                   style="width:50px; padding:0; border:none; cursor:pointer;">
+                                        </td>
+                                        <td>
+                                            <input type="color" name="text_color[]" value="#ffffff"
+                                                   style="width:50px; padding:0; border:none; cursor:pointer;">
+                                        </td>
+                                        <td>
+                                            <label class="checkbox-inline">
+                                                <input type="checkbox" name="is_use[]" value="Y" checked> 사용
                                             </label>
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-sm btn-white btn-icon-minus btn-del-category">삭제</button>
+                                            <button type="button" class="btn btn-sm btn-white btn-icon-plus btn-add-category">추가</button>
                                         </td>
                                     </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td>
-                                        <input type="text" name="header_name[]" class="form-control"
-                                               placeholder="말머리명" value="">
-                                    </td>
-                                    <td>
-                                        <input type="color" name="badge_color[]"
-                                               value="#ff0000"
-                                               style="width:50px; padding:0; border:none; cursor:pointer;">
-                                    </td>
-                                    <td>
-                                        <input type="color" name="text_color[]"
-                                               value="#ffffff"
-                                               style="width:50px; padding:0; border:none; cursor:pointer;">
-                                    </td>
-                                    <td>
-                                        <label class="checkbox-inline">
-                                            <input type="checkbox" name="is_use[]" value="Y" checked>
-                                            사용
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-white btn-icon-plus btn-add-category">추가</button>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </td>
+                                <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
+
+        <!-- ====================================================
+             권한 설정
+        ===================================================== -->
+        <?php
+        use App\Models\JyBoardPermissionsModel;
+
+        $actions   = JyBoardPermissionsModel::ACTIONS;
+        $modes     = JyBoardPermissionsModel::MODES;
+        $boardType = $board['type'] ?? 'D';
+
+        // Q타입 아니면 reply 제외
+        if ($boardType !== 'Q') unset($actions['reply']);
+        // Q타입이면 comment 제외
+        if ($boardType === 'Q') unset($actions['comment']);
+        ?>
+
+        <div class="table-title" style="margin-top:30px">권한 설정</div>
+        <div>
+            <table class="table table-cols" id="permissionTable">
+                <colgroup>
+                    <col class="width-sm">
+                    <col>
+                </colgroup>
+                <tbody>
+                <?php foreach ($actions as $actionKey => $actionLabel): ?>
+                    <?php
+                    $perm        = $permMap[$actionKey] ?? ['mode' => 'all', 'grades' => []];
+                    $currentMode = $perm['mode'];
+                    $currentGrades = $perm['grades']; // 배열
+                    ?>
+                    <tr <?= $actionKey === 'reply' ? 'class="perm-reply-row"' : '' ?>
+                        <?= $actionKey === 'comment' ? 'class="perm-comment-row"' : '' ?>>
+                        <th><?= $actionLabel ?></th>
+                        <td>
+                            <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+
+                                <?php foreach ($modes as $modeKey => $modeLabel): ?>
+                                    <label class="radio-inline" style="margin-right:4px; white-space:nowrap; flex-shrink:0;">
+                                        <input type="radio"
+                                               name="permissions[<?= $actionKey ?>][mode]"
+                                               value="<?= $modeKey ?>"
+                                               class="perm-mode-radio"
+                                               data-action="<?= $actionKey ?>"
+                                            <?= $currentMode === $modeKey ? 'checked' : '' ?>>
+                                        <?= $modeLabel ?>
+                                    </label>
+                                <?php endforeach; ?>
+
+                                <!-- 특정 회원등급 선택 영역 -->
+                                <div class="perm-grade-box"
+                                     id="gradeBox_<?= $actionKey ?>"
+                                     style="display:<?= $currentMode === 'grade' ? 'flex' : 'none' ?>;
+                                             align-items:center; gap:6px; margin-left:6px; flex:1; min-width:0;">
+                                    <!-- 전체 버튼 -->
+                                    <button type="button"
+                                            class="btn btn-xs btn-default perm-grade-all"
+                                            data-action="<?= $actionKey ?>">전체</button>
+                                    <!-- 등급 선택 드롭다운 -->
+                                    <select class="form-control input-sm perm-grade-select"
+                                            id="gradeSelect_<?= $actionKey ?>"
+                                            style="width:150px"
+                                            data-action="<?= $actionKey ?>">
+                                        <option value="">회원등급 선택</option>
+                                        <?php foreach ($memberGrades as $g): ?>
+                                            <option value="<?= esc($g['code']) ?>">
+                                                <?= esc($g['code_name']) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+
+                                    <!-- 선택된 등급 태그 목록 -->
+                                    <div class="perm-grade-tags" id="gradeTags_<?= $actionKey ?>"
+                                         style="display:flex; gap:4px; flex-wrap:wrap; align-items:center; flex:1;">
+                                        <?php foreach ($currentGrades as $gradeCode):
+                                            // 등급명 찾기
+                                            $gradeName = '';
+                                            foreach ($memberGrades as $g) {
+                                                if ($g['code'] === $gradeCode) {
+                                                    $gradeName = $g['code_name'];
+                                                    break;
+                                                }
+                                            }
+                                            if (!$gradeName) continue;
+                                            ?>
+                                            <span class="label label-default perm-grade-tag"
+                                                  data-code="<?= esc($gradeCode) ?>"
+                                                  style="font-size:12px; padding:4px 8px; cursor:pointer;">
+                                        <?= esc($gradeName) ?>
+                                        <i class="fa fa-times" style="margin-left:4px;"></i>
+                                        <input type="hidden"
+                                               name="permissions[<?= $actionKey ?>][grades][]"
+                                               value="<?= esc($gradeCode) ?>">
+                                    </span>
+                                        <?php endforeach; ?>
+                                    </div>
+
+
+
+                                </div><!-- /.perm-grade-box -->
+
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
     </form>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('js') ?>
-    <script>
-        $(document).ready(function() {
-
-            // ── 말머리 초기 상태 ──
-            if ($('#is_category').is(':checked')) {
-                $('#categoryBox').show();
-                $('#categoryBox input, #categoryBox select').prop('disabled', false);
-            } else {
-                $('#categoryBox').hide();
-                $('#categoryBox input, #categoryBox select').prop('disabled', true);
-            }
-
-            // ── 말머리 토글 ──
-            $(document).on('change', '#is_category', function() {
-                if ($(this).is(':checked')) {
-                    $('#categoryBox').slideDown();
-                    $('#categoryBox input, #categoryBox select').prop('disabled', false);
-                } else {
-                    $('#categoryBox').slideUp();
-                    $('#categoryBox input, #categoryBox select').prop('disabled', true);
-                }
-            });
-
-            // ── 말머리 추가 ──
-            $(document).on('click', '.btn-add-category', function() {
-                $('#categoryTbody').append(`
-            <tr>
-                <td>
-                    <input type="text" name="header_name[]" class="form-control" placeholder="말머리명" value="">
-                </td>
-                <td>
-                    <input type="color" name="badge_color[]" value="#ff0000"
-                           style="width:50px; padding:0; border:none; cursor:pointer;">
-                </td>
-                <td>
-                    <input type="color" name="text_color[]" value="#ffffff"
-                           style="width:50px; padding:0; border:none; cursor:pointer;">
-                </td>
-                <td>
-                    <label class="checkbox-inline">
-                        <input type="checkbox" name="is_use[]" value="Y" checked> 사용
-                    </label>
-                </td>
-                <td>
-                    <button type="button" class="btn btn-sm btn-white btn-icon-minus btn-del-category">삭제</button>
-                </td>
-            </tr>
-        `);
-            });
-
-            // ── 말머리 삭제 ──
-            $(document).on('click', '.btn-del-category', function() {
-                $(this).closest('tr').remove();
-            });
-
-            // ── 색상 미리보기 ──
-            $(document).on('input', 'input[name="badge_color[]"], input[name="text_color[]"]', function() {
-                const $row      = $(this).closest('tr');
-                const bgColor   = $row.find('input[name="badge_color[]"]').val();
-                const textColor = $row.find('input[name="text_color[]"]').val();
-                const name      = $row.find('input[name="header_name[]"]').val() || '미리보기';
-
-                let $preview = $row.find('.badge-preview');
-                if (!$preview.length) {
-                    $row.find('td:first').append('<span class="badge-preview"></span>');
-                    $preview = $row.find('.badge-preview');
-                }
-                $preview.css({
-                    background: bgColor,
-                    color: textColor,
-                    padding: '2px 8px',
-                    borderRadius: '3px',
-                    fontSize: '11px',
-                    marginLeft: '5px',
-                    display: 'inline-block',
-                }).text(name);
-            });
-
-        });
-    </script>
 <?= $this->endSection() ?>

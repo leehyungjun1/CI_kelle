@@ -93,12 +93,6 @@ ul { list-style: none; }
     background: white; border-left: 1px solid #ccc;
 }
 
-/* ── 반응형 ── */
-@media (max-width: 768px) {
-    .left-panel { display: none; }
-    .right-panel { width: 100%; border-left: none; }
-}
-
 /* ── 모바일 헤더 ── */
 .m-header {
     background: white; border-bottom: 1px solid var(--border);
@@ -123,16 +117,84 @@ ul { list-style: none; }
 }
 .m-logo-txt .ko { font-size: 13px; font-weight: 700; }
 .m-logo-txt .en { font-size: 9px; color: var(--blue); font-weight: 600; }
-.m-nav { display: flex; width: 100%; justify-content: center; gap: 50px; padding: 0 16px; }
+.m-nav {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;  /* gap 대신 균등 배분 */
+    padding: 0 16px;
+    box-sizing: border-box;
+}
 .m-nav a {
-    font-family: 'Pretendard', sans-serif;
-    font-size: 19px; font-weight: 500; color: var(--text-mid);
-    height: 30px; display: flex; align-items: center;
-    border-bottom: 2px solid transparent; white-space: nowrap;
-    transition: color .2s, border-color .2s;
+    font-size: 13px;
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
 }
 .m-nav a:hover { color: var(--blue); border-bottom: 2px solid var(--blue); }
 .m-nav a.active { color: var(--blue); font-weight: 700; border-bottom: 2px solid var(--blue); }
+
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+    .left-panel { display: none; }
+    .right-panel { width: 100%; border-left: none; }
+
+    .m-nav {
+        gap: 16px;
+        justify-content: space-between;
+        padding: 0 12px;
+    }
+    .m-nav a {
+        font-size: 13px;
+    }
+
+}
+
+@media (max-width: 640px) {
+    /* 플로우 3열 유지하되 크기 줄임 */
+    .flow-row {
+        gap: 8px;
+    }
+    .flow-item {
+        max-width: calc(33.333% - 6px);
+        min-width: 0;
+        padding: 0 2px;
+    }
+    .flow-circle {
+        width: 52px;
+        height: 52px;
+    }
+    .flow-circle svg {
+        width: 22px;
+        height: 22px;
+    }
+    /* 가로선 top 위치도 circle 크기에 맞게 조정 */
+    .flow-row::before {
+        top: 26px; /* 52px / 2 */
+    }
+    .flow-title {
+        font-size: 13px !important;
+        margin-bottom: 4px;
+    }
+    .flow-desc {
+        font-size: 11px !important;
+        line-height: 1.5;
+    }
+}
+
+@media (max-width: 380px) {
+    .flow-title { font-size: 11px !important; }
+    .flow-desc  { font-size: 10px !important; }
+    .flow-circle {
+        width: 44px;
+        height: 44px;
+    }
+    .flow-row::before {
+        top: 22px;
+    }
+}
+
+
 
 /* ── 히어로 배너 ── */
 .m-hero { position: relative; height: 380px; overflow: hidden; }
@@ -216,6 +278,8 @@ ul { list-style: none; }
 @media (max-width: 560px) {
     .m-ci-txt { display: none; }
     .m-phone-sub { white-space: nowrap; font-size: 9px; }
+
+
 }
 
 /* ── 공통 섹션 ── */
